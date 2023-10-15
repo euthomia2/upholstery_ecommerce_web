@@ -10,6 +10,7 @@ import {
   closeCategories,
   SectionItem,
 } from '@/slices/categoriesSlice';
+import Link from 'next/link';
 
 const CategoriesModal = ({ classNames }) => {
   const { open, navigation } = useSelector(
@@ -134,12 +135,12 @@ const CategoriesModal = ({ classNames }) => {
 
                 <div className='space-y-6 border-t border-gray-200 px-4 py-6'>
                   <div className='flow-root'>
-                    <a
-                      href='#'
+                    <Link
+                      href='/buyer/login'
                       className='-m-2 block p-2 font-medium text-gray-900'
                     >
                       Login
-                    </a>
+                    </Link>
                   </div>
                   <div className='flow-root'>
                     <a

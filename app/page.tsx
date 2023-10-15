@@ -1,4 +1,5 @@
 'use client';
+
 import Header from '@/components/header/Header';
 /*
   This example requires some changes to your config:
@@ -15,8 +16,6 @@ import Header from '@/components/header/Header';
   }
   ```
 */
-import { useState } from 'react';
-
 const trendingProducts = [
   {
     id: 1,

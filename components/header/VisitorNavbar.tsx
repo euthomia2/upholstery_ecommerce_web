@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { openCategories } from '@/slices/categoriesSlice';
+import Link from 'next/link';
 
 const VisitorNavbar = ({ classNames }) => {
   const { navigation } = useSelector((state) => state.categories);
@@ -146,12 +147,12 @@ const VisitorNavbar = ({ classNames }) => {
 
           <div className='ml-auto flex items-center'>
             <div className='hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6'>
-              <a
-                href='#'
+              <Link
+                href='/buyer/login'
                 className='text-sm font-medium text-gray-700 hover:text-gray-800'
               >
                 Login
-              </a>
+              </Link>
               <span className='h-6 w-px bg-gray-200' aria-hidden='true' />
               <a
                 href='#'
