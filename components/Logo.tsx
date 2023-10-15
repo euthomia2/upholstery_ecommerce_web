@@ -4,8 +4,8 @@ const Logo = () => {
   return (
     <Image
       src='/assets/logo.jpg'
-      width={60}
-      height={60}
+      width={50}
+      height={50}
       quality={100}
       alt='CCLDO Icon'
     />

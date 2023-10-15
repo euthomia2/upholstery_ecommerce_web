@@ -1,17 +1,29 @@
+'use client';
+
+import { useEffect } from 'react';
 import CategoriesModal from './CategoriesModal';
-import VisitorNavbar from './VisitorNavbar';
+import Navbar from './Navbar';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const Header = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
 
+  useEffect(() => {
+    NProgress.done();
+    return () => {
+      NProgress.start();
+    };
+  }, []);
+
   return (
     <>
       <CategoriesModal classNames={classNames} />
 
       <header className='relative overflow-hidden'>
-        <VisitorNavbar classNames={classNames} />
+        <Navbar classNames={classNames} />
 
         {/* Hero section */}
         <div className='pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40'>

@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '@/services/authentication';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import Cookies from 'js-cookie';
 
 const LoginForm = () => {
   const [login, { isLoading }] = useLoginMutation();
@@ -26,7 +27,14 @@ const LoginForm = () => {
         login(values)
           .unwrap()
           .then((payload) => {
+            const inThreeHours = new Date(
+              new Date().getTime() + 3 * 60 * 60 * 1000
+            );
+
+            Cookies.set('is_authenticated', true, { expires: inThreeHours });
+
             router.push('/', { scroll: false });
+            setSubmitting(false);
           })
           .catch((error) => setErrors({ email: error.data?.message }));
       }}
@@ -138,9 +146,9 @@ const LoginForm = () => {
             <button
               type='submit'
               className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200'
-              disabled={isSubmitting || !dirty || !isValid}
+              disabled={isSubmitting || !dirty || !isValid || isLoading}
             >
-              {isSubmitting ? 'Loading...' : 'Login'}
+              {isSubmitting || isLoading ? 'Loading...' : 'Login'}
             </button>
           </div>
         </form>

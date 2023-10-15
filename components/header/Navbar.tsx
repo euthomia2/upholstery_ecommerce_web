@@ -1,6 +1,7 @@
 'use client';
 
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { Popover, Transition } from '@headlessui/react';
 import {
   Bars3Icon,
@@ -9,12 +10,25 @@ import {
 } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { openCategories } from '@/slices/categoriesSlice';
+import AuthenticatedNavItem from './AuthenticatedNavItem';
+import VisitorNavItem from './VisitorNavItem';
 import Link from 'next/link';
+import Logo from '../Logo';
+import LoadingText from '../LoadingText';
 
-const VisitorNavbar = ({ classNames }) => {
+const Navbar = ({ classNames }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { navigation } = useSelector((state) => state.categories);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (Cookies.get('is_authenticated')) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
 
   return (
     <nav
@@ -34,14 +48,9 @@ const VisitorNavbar = ({ classNames }) => {
 
           {/* Logo */}
           <div className='ml-4 flex lg:ml-0'>
-            <a href='#'>
-              <span className='sr-only'>Your Company</span>
-              <img
-                className='h-8 w-auto'
-                src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
-                alt=''
-              />
-            </a>
+            <Link href='/'>
+              <Logo />
+            </Link>
           </div>
 
           {/* Flyout menus */}
@@ -146,21 +155,13 @@ const VisitorNavbar = ({ classNames }) => {
           </Popover.Group>
 
           <div className='ml-auto flex items-center'>
-            <div className='hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6'>
-              <Link
-                href='/buyer/login'
-                className='text-sm font-medium text-gray-700 hover:text-gray-800'
-              >
-                Login
-              </Link>
-              <span className='h-6 w-px bg-gray-200' aria-hidden='true' />
-              <a
-                href='#'
-                className='text-sm font-medium text-gray-700 hover:text-gray-800'
-              >
-                Create account
-              </a>
-            </div>
+            {isLoading ? (
+              <LoadingText />
+            ) : isAuthenticated && !isLoading ? (
+              <AuthenticatedNavItem />
+            ) : (
+              <VisitorNavItem />
+            )}
 
             {/* Search */}
             <div className='flex lg:ml-6'>
@@ -190,4 +191,4 @@ const VisitorNavbar = ({ classNames }) => {
   );
 };
 
-export default VisitorNavbar;
+export default Navbar;
