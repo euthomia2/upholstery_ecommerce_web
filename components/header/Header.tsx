@@ -1,22 +1,10 @@
-'use client';
-
-import { useEffect } from 'react';
 import CategoriesModal from './CategoriesModal';
 import Navbar from './Navbar';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
 
 const Header = () => {
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
-
-  useEffect(() => {
-    NProgress.done();
-    return () => {
-      NProgress.start();
-    };
-  }, []);
 
   return (
     <>

@@ -1,4 +1,3 @@
-'use client';
 import { useRouter } from 'next/navigation';
 import { useLoginMutation } from '@/services/authentication';
 import { Formik } from 'formik';

@@ -17,6 +17,7 @@
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "next": "13.5.4",
+    "next-auth": "^4.23.2",
     "nprogress": "^0.2.0",
     "react": "^18",
     "react-dom": "^18",

@@ -15,6 +15,8 @@ import VisitorNavItem from './VisitorNavItem';
 import Link from 'next/link';
 import Logo from '../Logo';
 import LoadingText from '../LoadingText';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const Navbar = ({ classNames }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -28,6 +30,12 @@ const Navbar = ({ classNames }) => {
       setIsAuthenticated(true);
     }
     setIsLoading(false);
+
+    NProgress.done();
+
+    return () => {
+      NProgress.start();
+    };
   }, []);
 
   return (
