@@ -26,13 +26,13 @@ const LoginForm = () => {
         login(values)
           .unwrap()
           .then((payload) => {
-            const inThreeHours = new Date(
-              new Date().getTime() + 3 * 60 * 60 * 1000
+            const inOneDay = new Date(
+              new Date().getTime() + 24 * 60 * 60 * 1000
             );
 
-            Cookies.set('is_authenticated', true, { expires: inThreeHours });
+            Cookies.set('is_authenticated', true, { expires: inOneDay });
 
-            router.push('/', { scroll: false });
+            router.push('/');
             setSubmitting(false);
           })
           .catch((error) => setErrors({ email: error.data?.message }));

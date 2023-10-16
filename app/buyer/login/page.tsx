@@ -14,7 +14,7 @@ export default function Login() {
 
   useEffect(() => {
     if (Cookies.get('is_authenticated')) {
-      router.push('/', { scroll: false });
+      router.push('/');
     }
     setIsLoading(false);
 
@@ -26,7 +26,7 @@ export default function Login() {
   }, []);
 
   if (isLoading) {
-    return <div className='flex min-h-full flex-1 '>Loading...</div>;
+    return <div className='flex h-full flex-1 bg-white'></div>;
   }
 
   return (
