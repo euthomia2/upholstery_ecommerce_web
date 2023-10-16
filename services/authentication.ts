@@ -51,7 +51,7 @@ export const authentication = createApi({
     }),
     logout: builder.mutation({
       query: () => ({
-        url: `auth/logout`,
+        url: `auth/customer/logout`,
         method: 'POST',
         withCredentials: true,
       }),
@@ -59,7 +59,7 @@ export const authentication = createApi({
     }),
     getUser: builder.query({
       query: () => ({
-        url: `auth/user`,
+        url: `auth/customer/user`,
         method: 'GET',
         withCredentials: true,
       }),
@@ -67,7 +67,7 @@ export const authentication = createApi({
     }),
     updateUser: builder.mutation({
       query: (details) => ({
-        url: `auth/user`,
+        url: `auth/customer/user`,
         method: 'POST',
         withCredentials: true,
         body: { details },
@@ -76,7 +76,7 @@ export const authentication = createApi({
     }),
     updatePass: builder.mutation({
       query: (details) => ({
-        url: `auth/password`,
+        url: `auth/customer/password`,
         method: 'POST',
         withCredentials: true,
         body: { details },

@@ -2,16 +2,12 @@ import CategoriesModal from './CategoriesModal';
 import Navbar from './Navbar';
 
 const Header = () => {
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ');
-  }
-
   return (
     <>
-      <CategoriesModal classNames={classNames} />
+      <CategoriesModal />
 
       <header className='relative overflow-hidden'>
-        <Navbar classNames={classNames} />
+        <Navbar />
 
         {/* Hero section */}
         <div className='pb-80 pt-16 sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40'>

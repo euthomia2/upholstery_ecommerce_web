@@ -12,12 +12,16 @@ import {
 } from '@/slices/categoriesSlice';
 import Link from 'next/link';
 
-const CategoriesModal = ({ classNames }) => {
+const CategoriesModal = () => {
   const { open, navigation } = useSelector(
     (state: CategoriesStateType) => state.categories
   );
 
   const dispatch = useDispatch();
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ');
+  }
 
   return (
     <>

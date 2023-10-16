@@ -2,7 +2,7 @@
 
 import Header from '@/components/header/Header';
 /*
-  This example requires some changes to your config:
+  This Home requires some changes to your config:
   
   ```
   // tailwind.config.js
@@ -95,7 +95,7 @@ const footerNavigation = {
   ],
 };
 
-export default function Example() {
+export default function Home() {
   return (
     <div className='bg-white'>
       <Header />

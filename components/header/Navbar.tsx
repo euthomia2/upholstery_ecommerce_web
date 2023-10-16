@@ -18,12 +18,16 @@ import LoadingText from '../LoadingText';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
-const Navbar = ({ classNames }) => {
+const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { navigation } = useSelector((state) => state.categories);
 
   const dispatch = useDispatch();
+
+  function classNames(...classes) {
+    return classes.filter(Boolean).join(' ');
+  }
 
   useEffect(() => {
     if (Cookies.get('is_authenticated')) {
