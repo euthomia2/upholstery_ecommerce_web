@@ -9,15 +9,18 @@ const ProductCard = ({ product }) => {
           <img
             src={product.image_file}
             alt={product.name}
-            className='h-full w-full object-cover object-center'
+            className='h-full w-full object-cover object-center group-hover:opacity-75'
           />
         </div>
         <div className='mt-6'>
           <p className='text-sm text-gray-500'>{product.category?.title}</p>
           <h3 className='mt-1 font-semibold text-gray-900 truncate whitespace-nowrap'>
-            {product.name}
+            <a href='/'>
+              <span className='absolute inset-0' />
+              {product.name}
+            </a>
           </h3>
-          <p className='mt-1 text-gray-900'>₱{product.price}</p>
+          <p className='mt-1 text-gray-900'>₱{product.price.toFixed(2)}</p>
         </div>
       </div>
 

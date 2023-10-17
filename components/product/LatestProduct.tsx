@@ -1,10 +1,11 @@
 'use client';
 
-import { useGetProductsQuery } from '@/services/crud-product';
+import { useGetLatestProductsQuery } from '@/services/crud-product';
 import ProductCard from './ProductCard';
+import SkeletonProductCards from './SkeletonProductCards';
 
 const LatestProduct = () => {
-  const { data: productsData } = useGetProductsQuery();
+  const { data: productsData } = useGetLatestProductsQuery();
 
   return (
     <section aria-labelledby='trending-heading' className='bg-white'>
@@ -31,6 +32,10 @@ const LatestProduct = () => {
               role='list'
               className='mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-x-8 lg:space-x-0'
             >
+              {!productsData || productsData?.length === 0 ? (
+                <SkeletonProductCards />
+              ) : null}
+
               {productsData?.map((product) => (
                 <ProductCard product={product} />
               ))}

@@ -30,9 +30,9 @@ export const crudProduct = createApi({
   }),
   tagTypes: ['Products'],
   endpoints: (builder) => ({
-    getProducts: builder.query({
+    getLatestProducts: builder.query({
       query: () => ({
-        url: `product/all`,
+        url: `product/latest-products`,
         method: 'GET',
         withCredentials: true,
       }),
@@ -49,4 +49,4 @@ export const crudProduct = createApi({
   }),
 });
 
-export const { useGetProductsQuery, useGetProductQuery } = crudProduct;
+export const { useGetLatestProductsQuery, useGetProductQuery } = crudProduct;
