@@ -8,7 +8,7 @@ const LatestProduct = () => {
   const { data: productsData } = useGetLatestProductsQuery();
 
   return (
-    <section aria-labelledby='trending-heading' className='bg-white'>
+    <section aria-labelledby='trending-heading' className='bg-gray-50'>
       <div className='py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8 lg:py-32'>
         <div className='flex items-center justify-between px-4 sm:px-6 lg:px-0'>
           <h2
@@ -37,7 +37,7 @@ const LatestProduct = () => {
               ) : null}
 
               {productsData?.map((product) => (
-                <ProductCard product={product} />
+                <ProductCard key={product.id} product={product} />
               ))}
             </ul>
           </div>

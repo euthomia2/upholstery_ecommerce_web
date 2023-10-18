@@ -1,12 +1,16 @@
 import { authentication } from '@/services/authentication';
+import { crudCategory } from '@/services/crud-category';
 import { crudProduct } from '@/services/crud-product';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import categoriesReducer from '../slices/categoriesSlice';
+import cartReducer from '../slices/cartSlice';
 
 const rootReducer = combineReducers({
   categories: categoriesReducer,
+  cart: cartReducer,
   [authentication.reducerPath]: authentication.reducer,
   [crudProduct.reducerPath]: crudProduct.reducer,
+  [crudCategory.reducerPath]: crudCategory.reducer,
 });
 
 export const store = configureStore({
@@ -14,7 +18,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(authentication.middleware)
-      .concat(crudProduct.middleware),
+      .concat(crudProduct.middleware)
+      .concat(crudCategory.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

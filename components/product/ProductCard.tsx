@@ -1,4 +1,11 @@
+'use client';
+
+import { addProduct } from '@/slices/cartSlice';
+import { useDispatch } from 'react-redux';
+
 const ProductCard = ({ product }) => {
+  const dispatch = useDispatch();
+
   return (
     <li
       key={product?.id}
@@ -20,12 +27,20 @@ const ProductCard = ({ product }) => {
               {product.name}
             </a>
           </h3>
-          <p className='mt-1 text-gray-900'>₱{product.price.toFixed(2)}</p>
+          <p className='mt-1 text-gray-900'>
+            ₱
+            {product.price.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+            })}
+          </p>
         </div>
       </div>
 
       <div className='mt-auto'>
-        <button className='border rounded-lg border-gray-900 text-gray-900 w-full text-sm py-4 hover:bg-gray-100 duration-150 transition'>
+        <button
+          onClick={() => dispatch(addProduct(product))}
+          className='border rounded-lg border-gray-900 text-gray-900 w-full text-sm py-4 hover:bg-gray-100 duration-150 transition'
+        >
           Add to Cart
         </button>
       </div>

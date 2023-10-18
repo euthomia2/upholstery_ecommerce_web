@@ -30,7 +30,7 @@ const CategoriesModal = () => {
         <Dialog
           as='div'
           className='relative z-40 lg:hidden'
-          onClose={dispatch(closeCategories())}
+          onClose={() => dispatch(closeCategories())}
         >
           <Transition.Child
             as={Fragment}

@@ -4,7 +4,7 @@ const SkeletonProductCard = () => {
       role='status'
       className='max-w-sm mt-6 rounded shadow animate-pulse  dark:border-gray-700'
     >
-      <div className='flex items-center justify-center h-72 mb-4 bg-gray-300 rounded dark:bg-gray-700'>
+      <div className='flex items-center justify-center h-72 mb-8 bg-gray-300 rounded dark:bg-gray-700'>
         <svg
           className='w-10 h-10 text-gray-200 dark:text-gray-600'
           aria-hidden='true'
@@ -21,7 +21,7 @@ const SkeletonProductCard = () => {
       <div className='h-4 mx-auto bg-gray-200 rounded-full dark:bg-gray-700 mb-4 w-24'></div>
 
       <div className='flex items-center mt-6 space-x-3'>
-        <div className='h-10 w-full bg-gray-200 rounded-full dark:bg-gray-700'></div>
+        <div className='h-12 w-full bg-gray-200 rounded-full dark:bg-gray-700'></div>
       </div>
       <span className='sr-only'>Loading...</span>
     </div>
