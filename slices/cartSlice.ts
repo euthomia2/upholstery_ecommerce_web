@@ -1,5 +1,6 @@
 import { toast } from 'react-hot-toast';
 import { createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 
 export type Product = {
   id: number;
@@ -17,6 +18,7 @@ export type Product = {
 };
 
 export type InitialState = {
+  isLoading: boolean;
   open: boolean;
   products: Product[];
   totalQuantity: number;
@@ -24,6 +26,7 @@ export type InitialState = {
 };
 
 const initialState = {
+  isLoading: false,
   open: false,
   products: [],
   totalQuantity: 0,
@@ -39,6 +42,32 @@ const cartSlice = createSlice({
     },
     closeCart(state: InitialState) {
       state.open = false;
+    },
+    fetchingProducts(state: InitialState, action) {
+      state.isLoading = true;
+    },
+    fetchProducts(state: InitialState, action) {
+      state.products = action.payload;
+
+      if (state.products.length !== 0) {
+        const newTotalQuantity = state.products.reduce(
+          (accu, el) => accu + el.quantity,
+          0
+        );
+
+        const newTotalPrice = state.products.reduce(
+          (accu, el) => accu + el.price,
+          0
+        );
+
+        state.totalQuantity = newTotalQuantity;
+        state.totalPrice = newTotalPrice;
+      }
+
+      state.isLoading = false;
+    },
+    fetchProductsError(state: InitialState, action) {
+      state.isLoading = false;
     },
     addProduct(state: InitialState, action) {
       const sameProduct = state.products.find(
@@ -74,6 +103,16 @@ const cartSlice = createSlice({
       state.totalQuantity = newTotalQuantity;
       state.totalPrice = newTotalPrice;
 
+      const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+      localStorage.setItem(
+        'cart',
+        JSON.stringify({
+          data: state.products,
+          expiration: inOneDay.toISOString(),
+        })
+      );
+
       toast.success('Product added to cart!');
     },
     removeProduct(state: InitialState, action) {
@@ -95,10 +134,27 @@ const cartSlice = createSlice({
 
       state.totalQuantity = newTotalQuantity;
       state.totalPrice = newTotalPrice;
+
+      const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+      localStorage.setItem(
+        'cart',
+        JSON.stringify({
+          data: state.products,
+          expiration: inOneDay.toISOString(),
+        })
+      );
     },
   },
 });
 
-export const { openCart, closeCart, addProduct, removeProduct } =
-  cartSlice.actions;
+export const {
+  fetchingProducts,
+  fetchProducts,
+  fetchProductsError,
+  openCart,
+  closeCart,
+  addProduct,
+  removeProduct,
+} = cartSlice.actions;
 export default cartSlice.reducer;

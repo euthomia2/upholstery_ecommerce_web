@@ -4,11 +4,17 @@ import { Fragment, useEffect } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
-import { closeCart, removeProduct } from '@/slices/cartSlice';
+import { closeCart, fetchingProducts, removeProduct } from '@/slices/cartSlice';
 
 const Cart = () => {
-  const { open, products, totalPrice } = useSelector((state) => state.cart);
+  const { open, products, totalPrice, isLoading } = useSelector(
+    (state) => state.cart
+  );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchingProducts());
+  }, [dispatch]);
 
   return (
     <Transition.Root show={open} as={Fragment}>
