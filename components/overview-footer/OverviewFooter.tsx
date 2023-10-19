@@ -1,25 +1,23 @@
 const OverviewFooter = () => {
-    const footerNavigation = {
-        shop: [
-          { name: 'Bags', href: '#' },
-          { name: 'Tees', href: '#' },
-          { name: 'Objects', href: '#' },
-          { name: 'Home Goods', href: '#' },
-          { name: 'Accessories', href: '#' },
-        ],
-      
-        account: [
-          { name: 'Manage Account', href: '#' },
-          { name: 'Returns & Exchanges', href: '#' },
-          { name: 'Redeem a Discount Voucher', href: '#' },
-        ],
-        connect: [
-          { name: 'Contact Us', href: '#' },
-          { name: 'Twitter', href: '#' },
-          { name: 'Instagram', href: '#' },
-          { name: 'Pinterest', href: '#' },
-        ],
-      };
+  const footerNavigation = {
+    shop: [
+      { name: 'Products', href: '#' },
+      { name: 'Categories', href: '#' },
+      { name: 'Discount Vouchers', href: '#' },
+    ],
+
+    account: [
+      { name: 'Manage Account', href: '#' },
+      { name: 'Returns & Exchanges', href: '#' },
+      { name: 'Seller Centre', href: '#' },
+    ],
+    connect: [
+      { name: 'Email Us', href: 'https://gmail.com/' },
+      { name: 'Facebook', href: 'https://www.facebook.com/CCLDOCabuyao/' },
+      { name: 'Twitter', href: 'https://twitter.com/CabuyaoCcldo' },
+      { name: 'Instagram', href: 'https://www.instagram.com/ccldo.cabuyao' },
+    ],
+  };
 
   return (
     <>
@@ -69,6 +67,8 @@ const OverviewFooter = () => {
                     <li key={item.name} className='text-sm'>
                       <a
                         href={item.href}
+                        target='_blank'
+                        rel='noopener noreferrer'
                         className='text-gray-500 hover:text-gray-600'
                       >
                         {item.name}

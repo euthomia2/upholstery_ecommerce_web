@@ -71,7 +71,7 @@ const cartSlice = createSlice({
     },
     addProduct(state: InitialState, action) {
       const sameProduct = state.products.find(
-        (el) => el.name === action.payload.name
+        (el) => el.id === action.payload.id
       );
 
       if (sameProduct) {

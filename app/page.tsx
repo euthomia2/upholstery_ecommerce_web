@@ -22,14 +22,14 @@ export default function Home() {
       <OverviewCategories />
 
       <main>
-        {/* Get Started section */}
-        <OverviewGetStarted />
-
         {/* Featured section */}
         <OverviewFeatured />
 
+        {/* Get Started section */}
+        <OverviewGetStarted />
+
         {/* Favorites section */}
-        <OverviewFavorites />
+        {/* <OverviewFavorites /> */}
 
         {/* CTA section */}
         <OverviewCTA />
