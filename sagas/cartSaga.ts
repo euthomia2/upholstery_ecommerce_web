@@ -1,10 +1,17 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { fetchProducts } from '@/slices/cartSlice';
+import { fetchProducts, checkAuth } from '@/slices/cartSlice';
 import Cookies from 'js-cookie';
 
 function* workFetchingProducts() {
   const cart = yield call(() => localStorage.getItem('cart'));
   const formattedCart = yield JSON.parse(cart);
+
+  if (!Cookies.get('is_authenticated')) {
+    yield put(checkAuth(false));
+    return;
+  } else {
+    yield put(checkAuth(true));
+  }
 
   if (formattedCart) {
     const expirationDate = new Date(formattedCart.expiration);

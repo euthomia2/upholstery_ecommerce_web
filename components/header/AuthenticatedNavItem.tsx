@@ -8,6 +8,8 @@ import { useGetUserQuery, useLogoutMutation } from '@/services/authentication';
 import { useRouter } from 'next/navigation';
 import LoadingText from '../LoadingText';
 import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '@/slices/cartSlice';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -17,13 +19,15 @@ const AuthenticatedNavItem = () => {
   const { data: user, isLoading, isFetching, isError } = useGetUserQuery();
   const router = useRouter();
   const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
 
   const handleLogOut = useCallback(async () => {
+    dispatch(clearCart());
     const log = await logout()
       .unwrap()
       .then(() => {
         Cookies.remove('is_authenticated');
-        router.push('/buyer/login');
+        router.push('/customer/login');
       })
       .catch((error) => console.log(error));
 
