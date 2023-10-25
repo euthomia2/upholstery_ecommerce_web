@@ -7,9 +7,10 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
 import { useCustomerGetUserQuery } from '@/services/authentication';
-import SellerDashboardMain from '@/components/seller-dashboard/SellerDashboardMain';
+import SellerReturnRefundMain from '@/components/seller-dashboard/SellerReturnRefundMain';
+import SellerProductsMain from '@/components/seller-dashboard/SellerProductsMain';
 
-const SellerDashboardPage = () => {
+const SellerMyProductsPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -39,9 +40,9 @@ const SellerDashboardPage = () => {
 
   return (
     <SellerDashboard>
-      <SellerDashboardMain />
+      <SellerProductsMain />
     </SellerDashboard>
   );
 };
 
-export default SellerDashboardPage;
+export default SellerMyProductsPage;

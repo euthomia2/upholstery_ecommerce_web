@@ -7,9 +7,9 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
 import { useCustomerGetUserQuery } from '@/services/authentication';
-import SellerDashboardMain from '@/components/seller-dashboard/SellerDashboardMain';
+import SellerOrdersMain from '@/components/seller-dashboard/SellerOrdersMain';
 
-const SellerDashboardPage = () => {
+const SellerMyOrdersPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -39,9 +39,9 @@ const SellerDashboardPage = () => {
 
   return (
     <SellerDashboard>
-      <SellerDashboardMain />
+      <SellerOrdersMain />
     </SellerDashboard>
   );
 };
 
-export default SellerDashboardPage;
+export default SellerMyOrdersPage;
