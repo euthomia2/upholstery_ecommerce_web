@@ -40,7 +40,7 @@ export const authentication = createApi({
   }),
   tagTypes: ['Authentication'],
   endpoints: (builder) => ({
-    login: builder.mutation({
+    customerLogin: builder.mutation({
       query: ({ email, password }) => ({
         url: `auth/customer/login`,
         method: 'POST',
@@ -49,7 +49,7 @@ export const authentication = createApi({
       }),
       invalidatesTags: ['Authentication'],
     }),
-    logout: builder.mutation({
+    customerLogout: builder.mutation({
       query: () => ({
         url: `auth/customer/logout`,
         method: 'POST',
@@ -57,7 +57,7 @@ export const authentication = createApi({
       }),
       invalidatesTags: ['Authentication'],
     }),
-    getUser: builder.query({
+    customerGetUser: builder.query({
       query: () => ({
         url: `auth/customer/user`,
         method: 'GET',
@@ -65,7 +65,7 @@ export const authentication = createApi({
       }),
       providesTags: ['Authentication'],
     }),
-    updateUser: builder.mutation({
+    customerUpdateUser: builder.mutation({
       query: (details) => ({
         url: `auth/customer/user`,
         method: 'POST',
@@ -74,9 +74,52 @@ export const authentication = createApi({
       }),
       invalidatesTags: ['Authentication'],
     }),
-    updatePass: builder.mutation({
+    customerUpdatePass: builder.mutation({
       query: (details) => ({
         url: `auth/customer/password`,
+        method: 'POST',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerLogin: builder.mutation({
+      query: ({ email, password }) => ({
+        url: `auth/seller/login`,
+        method: 'POST',
+        withCredentials: true,
+        body: { email, password },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerLogout: builder.mutation({
+      query: () => ({
+        url: `auth/seller/logout`,
+        method: 'POST',
+        withCredentials: true,
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerGetUser: builder.query({
+      query: () => ({
+        url: `auth/seller/user`,
+        method: 'GET',
+        withCredentials: true,
+      }),
+      providesTags: ['Authentication'],
+    }),
+    sellerUpdateUser: builder.mutation({
+      query: (details) => ({
+        url: `auth/seller/user`,
+        method: 'POST',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerUpdatePass: builder.mutation({
+      query: (details) => ({
+        url: `auth/seller/password`,
         method: 'POST',
         withCredentials: true,
         body: { details },
@@ -87,9 +130,14 @@ export const authentication = createApi({
 });
 
 export const {
-  useLoginMutation,
-  useLogoutMutation,
-  useGetUserQuery,
-  useUpdateUserMutation,
-  useUpdatePassMutation,
+  useCustomerLoginMutation,
+  useCustomerLogoutMutation,
+  useCustomerGetUserQuery,
+  useCustomerUpdateUserMutation,
+  useCustomerUpdatePassMutation,
+  useSellerLoginMutation,
+  useSellerLogoutMutation,
+  useSellerGetUserQuery,
+  useSellerUpdateUserMutation,
+  useSellerUpdatePassMutation,
 } = authentication;

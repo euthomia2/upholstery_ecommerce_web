@@ -1,11 +1,11 @@
 import { useRouter } from 'next/navigation';
-import { useLoginMutation } from '@/services/authentication';
+import { useCustomerLoginMutation } from '@/services/authentication';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Cookies from 'js-cookie';
 
 const LoginForm = () => {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useCustomerLoginMutation();
   const router = useRouter();
   const initialValues = {
     email: '',

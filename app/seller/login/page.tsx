@@ -14,7 +14,7 @@ const SellerLogin = () => {
 
   useEffect(() => {
     if (Cookies.get('is_authenticated')) {
-      router.push('/');
+      router.push('/seller/dashboard');
     }
     setIsLoading(false);
 

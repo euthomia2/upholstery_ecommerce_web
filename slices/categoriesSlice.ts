@@ -97,7 +97,7 @@ const initialState = {
     pages: [
       { name: 'Products', href: '#' },
       { name: 'Seller Centre', href: '/seller/login' },
-      { name: 'Start Selling', href: '#' },
+      { name: 'Start Selling', href: '/seller/signup' },
     ],
   },
 };

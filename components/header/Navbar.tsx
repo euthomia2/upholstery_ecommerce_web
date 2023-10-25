@@ -18,22 +18,37 @@ import LoadingText from '../LoadingText';
 import NProgress from 'nprogress';
 import { openCart } from '@/slices/cartSlice';
 import 'nprogress/nprogress.css';
+import { useSellerGetUserQuery } from '@/services/authentication';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
+  const { data: user, isError } = useSellerGetUserQuery();
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { navigation } = useSelector((state) => state.categories);
   const { totalQuantity } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ');
   }
 
   useEffect(() => {
-    if (Cookies.get('is_authenticated')) {
-      setIsAuthenticated(true);
+    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+
+    if (
+      user &&
+      isAuthenticatedCookie !== null &&
+      isAuthenticatedCookie !== undefined
+    ) {
+      if (user?.user.user_type === 1) {
+        router.push('/seller/dashboard');
+      } else {
+        setIsAuthenticated(true);
+      }
     }
+
     setIsLoading(false);
 
     NProgress.done();
@@ -41,7 +56,7 @@ const Navbar = () => {
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
   return (
     <nav

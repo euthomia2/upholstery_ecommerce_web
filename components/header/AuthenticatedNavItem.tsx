@@ -4,7 +4,10 @@ import Link from 'next/link';
 import { Fragment, useCallback } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { useGetUserQuery, useLogoutMutation } from '@/services/authentication';
+import {
+  useCustomerGetUserQuery,
+  useCustomerLogoutMutation,
+} from '@/services/authentication';
 import { useRouter } from 'next/navigation';
 import LoadingText from '../LoadingText';
 import Cookies from 'js-cookie';
@@ -16,9 +19,14 @@ function classNames(...classes) {
 }
 
 const AuthenticatedNavItem = () => {
-  const { data: user, isLoading, isFetching, isError } = useGetUserQuery();
+  const {
+    data: user,
+    isLoading,
+    isFetching,
+    isError,
+  } = useCustomerGetUserQuery();
   const router = useRouter();
-  const [logout] = useLogoutMutation();
+  const [logout] = useCustomerLogoutMutation();
   const dispatch = useDispatch();
 
   const handleLogOut = useCallback(async () => {

@@ -1,11 +1,11 @@
 import { useRouter } from 'next/navigation';
-import { useLoginMutation } from '@/services/authentication';
+import { useSellerLoginMutation } from '@/services/authentication';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import Cookies from 'js-cookie';
 
 const LoginForm = () => {
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading }] = useSellerLoginMutation();
   const router = useRouter();
   const initialValues = {
     email: '',
@@ -32,7 +32,7 @@ const LoginForm = () => {
 
             Cookies.set('is_authenticated', true, { expires: inOneDay });
 
-            router.push('/');
+            router.push('/seller/dashboard');
             setSubmitting(false);
           })
           .catch((error) => setErrors({ email: error.data?.message }));
