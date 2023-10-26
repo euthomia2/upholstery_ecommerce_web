@@ -1,13 +1,14 @@
-import { authentication } from '@/services/authentication';
-import { crudCategory } from '@/services/crud-category';
-import { crudProduct } from '@/services/crud-product';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
 import categoriesReducer from '../slices/categoriesSlice';
 import cartReducer from '../slices/cartSlice';
 import cartSaga from '../sagas/cartSaga';
+import { authentication } from '@/services/authentication';
+import { crudCategory } from '@/services/crud-category';
+import { crudProduct } from '@/services/crud-product';
 import { crudCustomer } from '@/services/crud-customer';
 import { crudSeller } from '@/services/crud-seller';
+import { crudShop } from '@/services/crud-shop';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
   [crudCategory.reducerPath]: crudCategory.reducer,
   [crudCustomer.reducerPath]: crudCustomer.reducer,
   [crudSeller.reducerPath]: crudSeller.reducer,
+  [crudShop.reducerPath]: crudShop.reducer,
 });
 
 export const store = configureStore({
@@ -30,7 +32,8 @@ export const store = configureStore({
       .concat(crudProduct.middleware)
       .concat(crudCategory.middleware)
       .concat(crudCustomer.middleware)
-      .concat(crudSeller.middleware),
+      .concat(crudSeller.middleware)
+      .concat(crudShop.middleware),
 });
 
 sagaMiddleware.run(cartSaga);

@@ -19,11 +19,11 @@ const SellerMyShopsPage = () => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
 
     if (!isAuthenticatedCookie) {
-      router.push('/');
+      router.push('/seller/login');
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push('/seller/login');
     }
     setIsLoading(false);
 

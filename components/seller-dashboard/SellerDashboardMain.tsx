@@ -1,4 +1,58 @@
+import {
+  BuildingStorefrontIcon,
+  ClipboardIcon,
+  NoSymbolIcon,
+  ReceiptRefundIcon,
+  ShoppingBagIcon,
+  BanknotesIcon,
+  WalletIcon,
+  CreditCardIcon,
+} from '@heroicons/react/20/solid';
+
 const SellerDashboardMain = () => {
+  const dashboard = [
+    {
+      name: 'Total Shops',
+      title: '0',
+      icon: BuildingStorefrontIcon,
+    },
+    {
+      name: 'Total Orders',
+      title: '0',
+      icon: ClipboardIcon,
+    },
+    {
+      name: 'Total Cancellation',
+      title: '0',
+      icon: NoSymbolIcon,
+    },
+    {
+      name: 'Total Return/Refund',
+      title: '0',
+      icon: ReceiptRefundIcon,
+    },
+    {
+      name: 'Total Products',
+      title: '0',
+      icon: ShoppingBagIcon,
+    },
+    {
+      name: 'Total Income',
+      title: '₱0.00',
+      icon: BanknotesIcon,
+    },
+    {
+      name: 'Total Balance',
+      title: '₱0.00',
+      icon: WalletIcon,
+    },
+    {
+      name: 'Total Bank Accounts',
+      title: '0',
+      icon: CreditCardIcon,
+    },
+  ];
+
   return (
     <>
       <div className='xl:pl-72'>
@@ -10,29 +64,33 @@ const SellerDashboardMain = () => {
           </header>
 
           {/* Dashboard List */}
-          <ul role='list' className='divide-y divide-white/5'>
-            <li className='relative flex items-center space-x-4 px-4 py-4 sm:px-6 lg:px-8'>
-              <div className='min-w-0 flex-auto'>
-                <div className='flex items-center gap-x-3'>
-                  <h2 className='min-w-0 text-sm font-semibold leading-6 text-gray-900'>
-                    <span className='truncate'>Test</span>
-                    <span className='text-gray-700'>/</span>
-                    <span className='whitespace-nowrap'>Test</span>
-                    <span className='absolute inset-0' />
-                  </h2>
+          <ul
+            role='list'
+            className='grid p-8 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
+          >
+            {dashboard.map((item) => (
+              <li
+                key={item.name}
+                className='col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow'
+              >
+                <div className='flex w-full items-center justify-between space-x-6 p-6'>
+                  <div className='flex-1 truncate'>
+                    <div className='flex items-center space-x-3'>
+                      <h3 className='truncate text-lg font-medium text-gray-900'>
+                        {item.name}
+                      </h3>
+                    </div>
+                    <p className='mt-1 truncate text-md text-gray-500'>
+                      {item.title}
+                    </p>
+                  </div>
+                  <item.icon
+                    className='h-8 w-8 shrink-0 text-gray-900'
+                    aria-hidden='true'
+                  />
                 </div>
-                <div className='mt-3 flex items-center gap-x-2.5 text-xs leading-5 text-gray-400'>
-                  <p className='truncate'>Test</p>
-                  <svg
-                    viewBox='0 0 2 2'
-                    className='h-0.5 w-0.5 flex-none fill-gray-300'
-                  >
-                    <circle cx={1} cy={1} r={1} />
-                  </svg>
-                  <p className='whitespace-nowrap'>Test</p>
-                </div>
-              </div>
-            </li>
+              </li>
+            ))}
           </ul>
         </main>
       </div>

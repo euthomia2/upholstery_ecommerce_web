@@ -68,8 +68,6 @@ const LoginForm = () => {
                 onBlur={handleBlur}
                 name='email'
                 type='email'
-                autoComplete='email'
-                required
                 className={`${
                   touched.email && errors.email
                     ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '

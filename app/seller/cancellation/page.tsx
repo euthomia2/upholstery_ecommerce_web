@@ -7,7 +7,7 @@ import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
 import { useCustomerGetUserQuery } from '@/services/authentication';
-import SellerCancellationMain from '@/components/seller-dashboard/SellerCancellationMain';
+import SellerCancellationMain from '@/components/seller-dashboard/SellerCancellationsMain';
 
 const SellerMyCancellationPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
@@ -18,11 +18,11 @@ const SellerMyCancellationPage = () => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
 
     if (!isAuthenticatedCookie) {
-      router.push('/');
+      router.push('/seller/login');
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push('/seller/login');
     }
     setIsLoading(false);
 

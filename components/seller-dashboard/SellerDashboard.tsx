@@ -1,14 +1,9 @@
 'use client';
 
 import { Fragment, useCallback, useState } from 'react';
-import { Dialog, Menu, Transition } from '@headlessui/react';
+import { Dialog, Transition } from '@headlessui/react';
 import {
-  ChartBarSquareIcon,
   Cog6ToothIcon,
-  FolderIcon,
-  GlobeAltIcon,
-  ServerIcon,
-  SignalIcon,
   XMarkIcon,
   LockClosedIcon,
   SquaresPlusIcon,
@@ -21,16 +16,11 @@ import {
   WalletIcon,
   CreditCardIcon,
 } from '@heroicons/react/24/outline';
-import {
-  Bars3Icon,
-  ChevronRightIcon,
-  ChevronUpDownIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/20/solid';
 import { usePathname, useRouter } from 'next/navigation';
 import TransparentLogo from '../TransparentLogo';
-import { useCustomerLogoutMutation } from '@/services/authentication';
+import { useSellerLogoutMutation } from '@/services/authentication';
 import Cookies from 'js-cookie';
+import Link from 'next/link';
 
 const navigation = [
   {
@@ -113,19 +103,6 @@ const environments = {
   Preview: 'text-gray-400 bg-gray-400/10 ring-gray-400/20',
   Production: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
 };
-const deployments = [
-  {
-    id: 1,
-    href: '#',
-    projectName: 'ios-app',
-    teamName: 'Planetaria',
-    status: 'offline',
-    statusText: 'Initiated 1m 32s ago',
-    description: 'Deploys from GitHub',
-    environment: 'Preview',
-  },
-  // More deployments...
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -134,7 +111,7 @@ function classNames(...classes) {
 const SellerDashboard = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
-  const [logout] = useCustomerLogoutMutation();
+  const [logout] = useSellerLogoutMutation();
   const router = useRouter();
 
   const handleLogOut = useCallback(async () => {
@@ -217,7 +194,7 @@ const SellerDashboard = (props) => {
                           <ul role='list' className='-mx-2 space-y-1'>
                             {navigation.map((item) => (
                               <li key={item.name}>
-                                <a
+                                <Link
                                   href={item.href}
                                   className={classNames(
                                     item.href === pathname
@@ -231,7 +208,7 @@ const SellerDashboard = (props) => {
                                     aria-hidden='true'
                                   />
                                   {item.name}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -305,7 +282,7 @@ const SellerDashboard = (props) => {
                   <ul role='list' className='-mx-2 space-y-1'>
                     {navigation.map((item) => (
                       <li key={item.name}>
-                        <a
+                        <Link
                           href={item.href}
                           className={classNames(
                             item.href === pathname
@@ -319,7 +296,7 @@ const SellerDashboard = (props) => {
                             aria-hidden='true'
                           />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
                     ))}
                   </ul>

@@ -1,34 +1,34 @@
-const return_refund = [
+const cancellations = [
   // {
   //   name: 'shpfrntr123',
   //   description:
-  //     'This is the item where all of the best quality furnitures will be located',
+  //     'This is the cancellation where all of the best quality furnitures will be located',
   //   status: 'Activated',
   //   created_at: '10/26/2023',
   // },
 ];
 
-const SellerReturnRefundMain = () => {
+const SellerCancellationsMain = () => {
   return (
     <>
       <div className='xl:pl-72'>
         <main>
           <header className='flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
             <h1 className='text-base font-semibold leading-7 text-gray-900'>
-              My Return / Refund
+              My Cancellations
             </h1>
           </header>
 
-          {/* ReturnRefund List */}
+          {/* Cancellations List */}
           <div>
             <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8'>
               <div className='sm:flex sm:items-center'>
                 <div className='sm:flex-auto'>
                   <h1 className='text-base font-semibold leading-6 text-gray-900'>
-                    Return / Refund
+                    Cancellations
                   </h1>
                   <p className='mt-2 text-sm text-gray-700'>
-                    A list of all the return / refund in your seller centre
+                    A list of all the cancellations in your seller centre
                     account.
                   </p>
                 </div>
@@ -71,32 +71,32 @@ const SellerReturnRefundMain = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {return_refund.length === 0 && (
+                    {cancellations.length === 0 && (
                       <tr>
                         <td
                           colSpan={4}
                           className='hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell'
                         >
-                          No Return / Refund Found...
+                          No Cancellations Found...
                         </td>
                       </tr>
                     )}
 
-                    {return_refund?.map((item) => (
-                      <tr key={item.name}>
+                    {cancellations?.map((cancellation) => (
+                      <tr key={cancellation.name}>
                         <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
-                          {item.name}
+                          {cancellation.name}
                           <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
                           <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
                         </td>
                         <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
-                          {item.description}
+                          {cancellation.description}
                         </td>
                         <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                          {item.status}
+                          {cancellation.status}
                         </td>
                         <td className='px-3 py-4 text-sm text-gray-500'>
-                          {item.created_at}
+                          {cancellation.created_at}
                         </td>
                         <td className='relative py-4 pl-3 text-right text-sm font-medium'>
                           <a
@@ -104,7 +104,9 @@ const SellerReturnRefundMain = () => {
                             className='text-indigo-600 hover:text-indigo-900'
                           >
                             Edit
-                            <span className='sr-only'>, {item.name}</span>
+                            <span className='sr-only'>
+                              , {cancellation.name}
+                            </span>
                           </a>
                         </td>
                       </tr>
@@ -120,4 +122,4 @@ const SellerReturnRefundMain = () => {
   );
 };
 
-export default SellerReturnRefundMain;
+export default SellerCancellationsMain;
