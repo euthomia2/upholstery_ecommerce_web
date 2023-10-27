@@ -9,6 +9,7 @@ import { crudProduct } from '@/services/crud-product';
 import { crudCustomer } from '@/services/crud-customer';
 import { crudSeller } from '@/services/crud-seller';
 import { crudShop } from '@/services/crud-shop';
+import { crudOrder } from '@/services/crud-order';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   [crudCustomer.reducerPath]: crudCustomer.reducer,
   [crudSeller.reducerPath]: crudSeller.reducer,
   [crudShop.reducerPath]: crudShop.reducer,
+  [crudOrder.reducerPath]: crudOrder.reducer,
 });
 
 export const store = configureStore({
@@ -33,7 +35,8 @@ export const store = configureStore({
       .concat(crudCategory.middleware)
       .concat(crudCustomer.middleware)
       .concat(crudSeller.middleware)
-      .concat(crudShop.middleware),
+      .concat(crudShop.middleware)
+      .concat(crudOrder.middleware),
 });
 
 sagaMiddleware.run(cartSaga);

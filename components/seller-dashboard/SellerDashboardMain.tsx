@@ -9,11 +9,11 @@ import {
   CreditCardIcon,
 } from '@heroicons/react/20/solid';
 
-const SellerDashboardMain = () => {
+const SellerDashboardMain = ({ totalShop }) => {
   const dashboard = [
     {
       name: 'Total Shops',
-      title: '0',
+      title: totalShop,
       icon: BuildingStorefrontIcon,
     },
     {

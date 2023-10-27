@@ -10,24 +10,26 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from '@/services/authentication';
-import SellerProductsMain from '@/components/seller-dashboard/SellerProductsMain';
-import { useGetProductsQuery } from '@/services/crud-product';
+import SellerProductsAdd from '@/components/seller-dashboard/SellerProductsAdd';
+import { useGetCategoriesQuery } from '@/services/crud-category';
+import { useGetShopsQuery } from '@/services/crud-shop';
 
-const SellerMyProductsPage = () => {
+const SellerMyProductsAddPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
-  const { data: products, isFetching: productsFetching } =
-    useGetProductsQuery();
+  const { data: categories, isFetching: categoriesFetching } =
+    useGetCategoriesQuery();
+    const { data: shops, isFetching: shopsFetching } = useGetShopsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
-  const sellerProducts = useMemo(() => {
-    if (products && seller) {
-      return products.filter((el) => el.shop.seller.id === seller.id);
+  const sellerShops = useMemo(() => {
+    if (shops && seller) {
+      return shops.filter((el) => el.seller.id === seller.id);
     }
 
     return [];
-  }, [seller, products]);
+  }, [seller, shops]);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -48,15 +50,15 @@ const SellerMyProductsPage = () => {
     };
   }, []);
 
-  if (isLoading || sellerFetching || productsFetching) {
+  if (isLoading || sellerFetching || categoriesFetching || shopsFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 
   return (
     <SellerDashboard>
-      <SellerProductsMain products={sellerProducts} />
+      <SellerProductsAdd seller={seller} categories={categories} shops={sellerShops} />
     </SellerDashboard>
   );
 };
 
-export default SellerMyProductsPage;
+export default SellerMyProductsAddPage;

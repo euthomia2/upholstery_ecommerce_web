@@ -1,18 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
-import { useCustomerGetUserQuery } from '@/services/authentication';
+import {
+  useCustomerGetUserQuery,
+  useSellerGetUserQuery,
+} from '@/services/authentication';
 import SellerDashboardMain from '@/components/seller-dashboard/SellerDashboardMain';
+import { useGetShopsQuery } from '@/services/crud-shop';
 
 const SellerDashboardPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
+  const { data: seller } = useSellerGetUserQuery();
+  const { data: shops } = useGetShopsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+
+  const sellerShopsCount = useMemo(() => {
+    if (shops && seller) {
+      return shops?.filter((el) => el.seller.id === seller.id).length;
+    }
+
+    return 0;
+  }, [seller, shops]);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -39,7 +53,7 @@ const SellerDashboardPage = () => {
 
   return (
     <SellerDashboard>
-      <SellerDashboardMain />
+      <SellerDashboardMain totalShop={sellerShopsCount} />
     </SellerDashboard>
   );
 };

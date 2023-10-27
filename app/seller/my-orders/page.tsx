@@ -1,18 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
-import { useCustomerGetUserQuery } from '@/services/authentication';
+import {
+  useCustomerGetUserQuery,
+  useSellerGetUserQuery,
+} from '@/services/authentication';
 import SellerOrdersMain from '@/components/seller-dashboard/SellerOrdersMain';
+import { useGetOrdersQuery } from '@/services/crud-order';
 
 const SellerMyOrdersPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
+  const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
+  const { data: orders, isFetching: ordersFetching } = useGetOrdersQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+
+  const sellerOrders = useMemo(() => {
+    if (orders && seller) {
+      return orders.filter((el) => el.shop.seller.id === seller.id);
+    }
+
+    return [];
+  }, [seller, orders]);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -33,13 +47,13 @@ const SellerMyOrdersPage = () => {
     };
   }, []);
 
-  if (isLoading) {
+  if (isLoading || sellerFetching || ordersFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 
   return (
     <SellerDashboard>
-      <SellerOrdersMain />
+      <SellerOrdersMain orders={sellerOrders} />
     </SellerDashboard>
   );
 };

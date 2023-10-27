@@ -30,6 +30,14 @@ export const crudProduct = createApi({
   }),
   tagTypes: ['Products'],
   endpoints: (builder) => ({
+    getProducts: builder.query({
+      query: () => ({
+        url: `product/all`,
+        method: 'GET',
+        withCredentials: true,
+      }),
+      providesTags: ['Products'],
+    }),
     getLatestProducts: builder.query({
       query: () => ({
         url: `product/latest-products`,
@@ -46,7 +54,74 @@ export const crudProduct = createApi({
       }),
       providesTags: ['Products'],
     }),
+    createProduct: builder.mutation({
+      query: (details) => {
+        const formData = new FormData();
+        formData.append(
+          'image_file',
+          details.image_file,
+          details.image_file.name
+        );
+        formData.append('details', JSON.stringify(details));
+
+        return {
+          url: `product/add`,
+          method: 'POST',
+          withCredentials: true,
+          body: formData,
+          formData: true,
+        };
+      },
+      invalidatesTags: ['Products'],
+    }),
+    updateProduct: builder.mutation({
+      query: (details) => {
+        const formData = new FormData();
+
+        if (details?.image_file) {
+          formData.append(
+            'image_file',
+            details.image_file,
+            details.image_file.name
+          );
+        }
+        formData.append('details', JSON.stringify(details));
+
+        return {
+          url: `product/update/${details?.id}`,
+          method: 'PATCH',
+          withCredentials: true,
+          body: formData,
+          formData: true,
+        };
+      },
+      invalidatesTags: ['Products'],
+    }),
+    deactivateProduct: builder.mutation({
+      query: (id) => ({
+        url: `product/deactivate/${id}`,
+        method: 'PATCH',
+        withCredentials: true,
+      }),
+      invalidatesTags: ['Products'],
+    }),
+    activateProduct: builder.mutation({
+      query: (id) => ({
+        url: `product/activate/${id}`,
+        method: 'PATCH',
+        withCredentials: true,
+      }),
+      invalidatesTags: ['Products'],
+    }),
   }),
 });
 
-export const { useGetLatestProductsQuery, useGetProductQuery } = crudProduct;
+export const {
+  useGetLatestProductsQuery,
+  useGetProductsQuery,
+  useGetProductQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useActivateProductMutation,
+  useDeactivateProductMutation,
+} = crudProduct;

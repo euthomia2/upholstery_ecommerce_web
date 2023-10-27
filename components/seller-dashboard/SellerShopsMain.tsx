@@ -1,15 +1,7 @@
-import { useSellerGetUserQuery } from '@/services/authentication';
-import { useGetShopsQuery } from '@/services/crud-shop';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
-const SellerShopsMain = () => {
-  const { data: seller } = useSellerGetUserQuery();
-  const { data: shops } = useGetShopsQuery();
-
-  console.log(seller);
-  console.log(shops);
-
+const SellerShopsMain = ({ shops }) => {
   return (
     <>
       <div className='xl:pl-72'>
@@ -93,65 +85,62 @@ const SellerShopsMain = () => {
                       </tr>
                     )}
 
-                    {seller &&
-                      shops
-                        ?.filter((el) => el.seller.id === seller.id)
-                        .map((shop) => {
-                          const createdDate = new Date(shop.created_at);
-                          const createdAt = format(createdDate, 'yyyy-MM-dd');
+                    {shops?.map((shop) => {
+                      const createdDate = new Date(shop.created_at);
+                      const createdAt = format(createdDate, 'yyyy-MM-dd');
 
-                          return (
-                            <tr key={shop.name}>
-                              <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
-                                {shop.name}
-                                <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
-                                <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
-                              </td>
-                              <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
-                                {shop.description}
-                              </td>
-                              <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                                {shop.is_active === 1 && (
-                                  <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
-                                    <svg
-                                      className='h-1.5 w-1.5 fill-green-500'
-                                      viewBox='0 0 6 6'
-                                      aria-hidden='true'
-                                    >
-                                      <circle cx={3} cy={3} r={3} />
-                                    </svg>
-                                    Activated
-                                  </span>
-                                )}
-
-                                {shop.is_active === 0 && (
-                                  <span className='inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                    <svg
-                                      className='h-1.5 w-1.5 fill-red-500'
-                                      viewBox='0 0 6 6'
-                                      aria-hidden='true'
-                                    >
-                                      <circle cx={3} cy={3} r={3} />
-                                    </svg>
-                                    Deactivated
-                                  </span>
-                                )}
-                              </td>
-                              <td className='px-3 py-4 text-sm text-gray-500 whitespace-nowrap'>
-                                {createdAt}
-                              </td>
-                              <td className='relative py-4 text-center text-sm font-medium'>
-                                <Link
-                                  href={`/seller/my-shops/edit/${shop.name}`}
-                                  className='text-indigo-600 hover:text-indigo-900'
+                      return (
+                        <tr key={shop.name}>
+                          <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
+                            {shop.name}
+                            <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
+                            <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {shop.description}
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+                            {shop.is_active === 1 && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-green-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
                                 >
-                                  Edit
-                                  <span className='sr-only'>, {shop.name}</span>
-                                </Link>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Activated
+                              </span>
+                            )}
+
+                            {shop.is_active === 0 && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-red-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Deactivated
+                              </span>
+                            )}
+                          </td>
+                          <td className='px-3 py-4 text-sm text-gray-500 whitespace-nowrap'>
+                            {createdAt}
+                          </td>
+                          <td className='relative py-4 text-center text-sm font-medium'>
+                            <Link
+                              href={`/seller/my-shops/edit/${shop.name}`}
+                              className='text-indigo-600 hover:text-indigo-900'
+                            >
+                              Edit
+                              <span className='sr-only'>, {shop.name}</span>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

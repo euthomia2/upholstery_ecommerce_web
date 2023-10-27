@@ -1,14 +1,6 @@
-const orders = [
-  // {
-  //   name: 'shpfrntr123',
-  //   description:
-  //     'This is the order where all of the best quality furnitures will be located',
-  //   status: 'Activated',
-  //   created_at: '10/26/2023',
-  // },
-];
+import { format } from 'date-fns';
 
-const SellerOrdersMain = () => {
+const SellerOrdersMain = ({ orders }) => {
   return (
     <>
       <div className='xl:pl-72'>
@@ -42,7 +34,7 @@ const SellerOrdersMain = () => {
                         scope='col'
                         className='relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'
                       >
-                        Shop Name
+                        Order ID
                         <div className='absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200' />
                         <div className='absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200' />
                       </th>
@@ -50,13 +42,37 @@ const SellerOrdersMain = () => {
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell'
                       >
-                        Description
+                        Customer's Name
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Status
+                        Product's Name
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Price
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Shop's Name
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Delivery Status
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Active Status
                       </th>
                       <th
                         scope='col'
@@ -73,7 +89,7 @@ const SellerOrdersMain = () => {
                     {orders.length === 0 && (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={8}
                           className='hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell'
                         >
                           No Orders Found...
@@ -81,32 +97,132 @@ const SellerOrdersMain = () => {
                       </tr>
                     )}
 
-                    {orders?.map((order) => (
-                      <tr key={order.name}>
-                        <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
-                          {order.name}
-                          <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
-                          <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
-                        </td>
-                        <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
-                          {order.description}
-                        </td>
-                        <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                          {order.status}
-                        </td>
-                        <td className='px-3 py-4 text-sm text-gray-500'>
-                          {order.created_at}
-                        </td>
-                        <td className='relative py-4 pl-3 text-right text-sm font-medium'>
-                          <a
-                            href='#'
-                            className='text-indigo-600 hover:text-indigo-900'
-                          >
-                            Edit<span className='sr-only'>, {order.name}</span>
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
+                    {orders?.map((order) => {
+                      const createdDate = new Date(order.created_at);
+                      const createdAt = format(createdDate, 'yyyy-MM-dd');
+
+                      return (
+                        <tr key={order.order_id}>
+                          <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
+                            {order.order_id}
+                            <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
+                            <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.customer.first_name}{' '}
+                            {order.customer.last_name}
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+                            {order.product.name}
+                          </td>
+                          <td className='px-3 py-4 text-sm text-gray-500'>
+                            ₱
+                            {order.product.price.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className='px-3 py-4 text-sm text-gray-500'>
+                            {order.shop.name}
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+                            {order.status === 'Processing' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-gray-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Processing
+                              </span>
+                            )}
+
+                            {order.status === 'Packed' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-gray-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Packed
+                              </span>
+                            )}
+
+                            {order.status === 'Shipped' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-blue-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Shipped
+                              </span>
+                            )}
+
+                            {order.status === 'Out For Delivery' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-blue-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Out For Delivery
+                              </span>
+                            )}
+
+                            {order.status === 'Delivered' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-green-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Delivered
+                              </span>
+                            )}
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+                            {order.is_active === 1 && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-green-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Activated
+                              </span>
+                            )}
+
+                            {order.is_active === 0 && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-red-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Deactivated
+                              </span>
+                            )}
+                          </td>
+                          <td className='px-3 py-4 text-sm text-gray-500'>
+                            {createdAt}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

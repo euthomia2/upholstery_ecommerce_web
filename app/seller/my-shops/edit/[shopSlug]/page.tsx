@@ -18,6 +18,7 @@ const SellerMyShopsEditPage = () => {
   const { data: shop, isFetching } = useGetShopBySlugQuery(params.shopSlug);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -28,6 +29,10 @@ const SellerMyShopsEditPage = () => {
 
     if (user && isAuthenticatedCookie) {
       router.push('/seller/login');
+    }
+
+    if (shop) {
+      setIsVerified(true);
     }
 
     setIsLoading(false);
@@ -43,7 +48,7 @@ const SellerMyShopsEditPage = () => {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 
-  if (!shop) {
+  if (!isFetching && !shop && !isVerified) {
     return <NotFound />;
   }
 
