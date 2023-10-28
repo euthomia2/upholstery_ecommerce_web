@@ -4,24 +4,45 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
-import { useCreateProductMutation } from '@/services/crud-product';
+import { useUpdateProductMutation } from '@/services/crud-product';
 import { CloudArrowUpIcon } from '@heroicons/react/20/solid';
 
-const SellerProductsAdd = ({ seller, categories, shops }) => {
+const SellerProductsEdit = ({ seller, categories, shops, product }) => {
   const fileInputRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState('/assets/empty_product.jpg');
-  const [imageFileName, setImageFileName] = useState('');
-  const [createProduct, { isLoading }] = useCreateProductMutation();
+  const [imagePreview, setImagePreview] = useState(product.image_file);
+  const [imageFileName, setImageFileName] = useState(
+    product.image_name.replace(/^[^-]+-/, '')
+  );
+  const [updateProduct, { isLoading }] = useUpdateProductMutation();
   const router = useRouter();
+
   const initialValues = {
-    name: '',
-    description: '',
-    price: '',
-    quantity: '',
-    category_id: '',
-    shop_id: '',
-    image_file: '',
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    quantity: product.quantity,
+    category_id: product.category.id,
+    shop_id: product.shop.id,
+    image_file: product.image_file,
   };
+
+  function findChangedProperties(oldObj, newObj, id: number | undefined) {
+    const changedProperties = {};
+
+    // Iterate through the keys of newObj
+    for (const key in newObj) {
+      if (Object.prototype.hasOwnProperty.call(newObj, key)) {
+        // Check if the key exists in oldObj and the values are different
+        if (oldObj[key] !== newObj[key]) {
+          changedProperties[key] = newObj[key];
+        }
+      }
+    }
+
+    changedProperties.id = id;
+
+    return changedProperties;
+  }
 
   return (
     <Formik
@@ -38,12 +59,18 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
         image_file: Yup.string().required('Image is required'),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        createProduct(values)
+        const updatedValues = findChangedProperties(
+          initialValues,
+          values,
+          product?.id
+        );
+
+        updateProduct(updatedValues)
           .unwrap()
           .then((payload) => {
             router.push('/seller/my-products');
 
-            toast.success('Added Product Successfully!');
+            toast.success('Updated Product Successfully!');
           })
           .catch((error) => setErrors({ name: error.data?.message }));
       }}
@@ -367,7 +394,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
                   className='flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200'
                   disabled={isSubmitting || !dirty || !isValid || isLoading}
                 >
-                  {isSubmitting || isLoading ? 'Loading...' : 'Save'}
+                  {isSubmitting || isLoading ? 'Loading...' : 'Update details'}
                 </button>
               </div>
             </form>
@@ -378,4 +405,4 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
   );
 };
 
-export default SellerProductsAdd;
+export default SellerProductsEdit;

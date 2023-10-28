@@ -10,25 +10,13 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from '@/services/authentication';
-import SellerOrdersMain from '@/components/seller-dashboard/SellerOrdersMain';
-import { useGetOrdersQuery } from '@/services/crud-order';
+import SellerAccountSettings from '@/components/seller-dashboard/SellerAccountSettings';
 
-const SellerMyOrdersPage = () => {
+const SellerAccountSettingsPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
-  const { data: orders, isFetching: ordersFetching } = useGetOrdersQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-
-  const sellerOrders = useMemo(() => {
-    if (orders && seller) {
-      return orders
-        .filter((el) => el.shop.seller.id === seller.id)
-        .sort((a, b) => b.id - a.id);
-    }
-
-    return [];
-  }, [seller, orders]);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -49,15 +37,15 @@ const SellerMyOrdersPage = () => {
     };
   }, []);
 
-  if (isLoading || sellerFetching || ordersFetching) {
+  if (isLoading || sellerFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 
   return (
     <SellerDashboard>
-      <SellerOrdersMain orders={sellerOrders} />
+      <SellerAccountSettings seller={seller} />
     </SellerDashboard>
   );
 };
 
-export default SellerMyOrdersPage;
+export default SellerAccountSettingsPage;

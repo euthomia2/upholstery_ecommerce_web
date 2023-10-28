@@ -1,3 +1,4 @@
+import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 
 const SellerOrdersMain = ({ orders }) => {
@@ -6,9 +7,34 @@ const SellerOrdersMain = ({ orders }) => {
       <div className='xl:pl-72'>
         <main>
           <header className='flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
-            <h1 className='text-base font-semibold leading-7 text-gray-900'>
-              My Orders
-            </h1>
+            <div className='flex items-center text-base  leading-7 text-gray-900'>
+              <span>
+                <HomeIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='ml-2 text-gray-400'>Home</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='text-gray-400'>Transactions</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='font-semibold'>My Orders</span>
+            </div>
           </header>
 
           {/* Orders List */}
@@ -55,6 +81,12 @@ const SellerOrdersMain = ({ orders }) => {
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
                         Price
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Quantity
                       </th>
                       <th
                         scope='col'
@@ -120,6 +152,10 @@ const SellerOrdersMain = ({ orders }) => {
                             {order.product.price.toLocaleString('en-US', {
                               minimumFractionDigits: 2,
                             })}
+                          </td>
+                          <td className='px-3 py-4 text-sm text-gray-500'>
+                            {order.quantity ?? 0}{' '}
+                            {order.quantity ? 'pcs' : 'pc'}
                           </td>
                           <td className='px-3 py-4 text-sm text-gray-500'>
                             {order.shop.name}
@@ -217,7 +253,7 @@ const SellerOrdersMain = ({ orders }) => {
                               </span>
                             )}
                           </td>
-                          <td className='px-3 py-4 text-sm text-gray-500'>
+                          <td className='px-3 py-4 text-sm text-gray-500 whitespace-nowrap'>
                             {createdAt}
                           </td>
                         </tr>

@@ -1,3 +1,4 @@
+import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 const incomes = [
   // {
   //   name: 'shpfrntr123',
@@ -14,9 +15,34 @@ const SellerIncomeMain = () => {
       <div className='xl:pl-72'>
         <main>
           <header className='flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
-            <h1 className='text-base font-semibold leading-7 text-gray-900'>
-              My Income
-            </h1>
+            <div className='flex items-center text-base  leading-7 text-gray-900'>
+              <span>
+                <HomeIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='ml-2 text-gray-400'>Home</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='text-gray-400'>Transactions</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='font-semibold'>My Income</span>
+            </div>
           </header>
 
           {/* Income List */}

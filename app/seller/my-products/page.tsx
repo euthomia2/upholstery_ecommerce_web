@@ -23,7 +23,9 @@ const SellerMyProductsPage = () => {
 
   const sellerProducts = useMemo(() => {
     if (products && seller) {
-      return products.filter((el) => el.shop.seller.id === seller.id);
+      return products
+        .filter((el) => el.shop.seller.id === seller.id)
+        .sort((a, b) => b.id - a.id);
     }
 
     return [];

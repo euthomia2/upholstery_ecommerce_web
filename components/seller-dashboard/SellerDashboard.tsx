@@ -42,8 +42,8 @@ const navigation = [
     current: false,
   },
   {
-    name: 'Cancellation',
-    href: '/seller/cancellation',
+    name: 'Cancellations',
+    href: '/seller/cancellations',
     icon: NoSymbolIcon,
     current: false,
   },
@@ -82,27 +82,18 @@ const settings = [
   {
     id: 1,
     name: 'Account Settings',
-    href: '#',
+    href: '/seller/account-settings',
     icon: Cog6ToothIcon,
     current: false,
   },
   {
     id: 2,
     name: 'Forgot Password',
-    href: '#',
+    href: '/seller/forgot-password',
     icon: LockClosedIcon,
     current: false,
   },
 ];
-const statuses = {
-  offline: 'text-gray-500 bg-gray-100/10',
-  online: 'text-green-400 bg-green-400/10',
-  error: 'text-rose-400 bg-rose-400/10',
-};
-const environments = {
-  Preview: 'text-gray-400 bg-gray-400/10 ring-gray-400/20',
-  Production: 'text-indigo-400 bg-indigo-400/10 ring-indigo-400/30',
-};
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -277,9 +268,12 @@ const SellerDashboard = (props) => {
               </div>
             </div>
             <nav className='flex flex-1 flex-col'>
+              <div className='text-md font-semibold leading-6 text-gray-800'>
+                Transactions
+              </div>
               <ul role='list' className='flex flex-1 flex-col gap-y-7'>
                 <li>
-                  <ul role='list' className='-mx-2 space-y-1'>
+                  <ul role='list' className='-mx-2 mt-2 space-y-1'>
                     {navigation.map((item) => (
                       <li key={item.name}>
                         <Link

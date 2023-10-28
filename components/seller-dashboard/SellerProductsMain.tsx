@@ -1,3 +1,4 @@
+import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
 import Link from 'next/link';
 
@@ -7,9 +8,34 @@ const SellerProductsMain = ({ products }) => {
       <div className='xl:pl-72'>
         <main>
           <header className='flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
-            <h1 className='text-base font-semibold leading-7 text-gray-900'>
-              My Products
-            </h1>
+            <div className='flex items-center text-base  leading-7 text-gray-900'>
+              <span>
+                <HomeIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='ml-2 text-gray-400'>Home</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='text-gray-400'>Transactions</span>
+
+              <span>
+                <ChevronRightIcon
+                  className='h-5 w-5 shrink-0 text-gray-900'
+                  aria-hidden='true'
+                />
+              </span>
+
+              <span className='font-semibold'>My Products</span>
+            </div>
           </header>
 
           {/* Products List */}
@@ -41,7 +67,7 @@ const SellerProductsMain = ({ products }) => {
                     <tr>
                       <th
                         scope='col'
-                        className='relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'
+                        className='relative text-center isolate py-3.5 pr-3 text-sm font-semibold text-gray-900'
                       >
                         Product Image
                         <div className='absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200' />
@@ -64,6 +90,12 @@ const SellerProductsMain = ({ products }) => {
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
                         Price
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Quantity
                       </th>
                       <th
                         scope='col'
@@ -101,7 +133,7 @@ const SellerProductsMain = ({ products }) => {
                     {products.length === 0 && (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={10}
                           className='hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell'
                         >
                           No Products Found...
@@ -135,9 +167,14 @@ const SellerProductsMain = ({ products }) => {
                             {product.description}
                           </td>
                           <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
-                            ₱{product.price.toLocaleString('en-US', {
-                                          minimumFractionDigits: 2,
-                                        })}
+                            ₱
+                            {product.price.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                            })}
+                          </td>
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {product.quantity ?? 0}{' '}
+                            {product.quantity ? 'pcs' : 'pc'}
                           </td>
                           <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
                             {product.category.title}
@@ -176,13 +213,13 @@ const SellerProductsMain = ({ products }) => {
                             {createdAt}
                           </td>
                           <td className='relative py-4  text-center text-sm font-medium'>
-                            <a
-                              href='#'
+                            <Link
+                              href={`/seller/my-products/edit/${product.slug}`}
                               className='text-indigo-600 hover:text-indigo-900'
                             >
                               Edit
                               <span className='sr-only'>, {product.name}</span>
-                            </a>
+                            </Link>
                           </td>
                         </tr>
                       );

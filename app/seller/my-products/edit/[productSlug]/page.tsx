@@ -10,21 +10,29 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from '@/services/authentication';
-import SellerShopsMain from '@/components/seller-dashboard/SellerShopsMain';
+import SellerProductsEdit from '@/components/seller-dashboard/SellerProductsEdit';
+import { useGetCategoriesQuery } from '@/services/crud-category';
 import { useGetShopsQuery } from '@/services/crud-shop';
+import { useParams } from 'next/navigation';
+import { useGetProductBySlugQuery } from '@/services/crud-product';
+import NotFound from '@/components/NotFound';
 
-const SellerMyShopsPage = () => {
+const SellerMyProductsEditPage = () => {
+  const params = useParams();
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
+  const { data: categories, isFetching: categoriesFetching } =
+    useGetCategoriesQuery();
   const { data: shops, isFetching: shopsFetching } = useGetShopsQuery();
+  const { data: product, isFetching: productFetching } =
+    useGetProductBySlugQuery(params.productSlug);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
 
   const sellerShops = useMemo(() => {
     if (shops && seller) {
-      return shops
-        .filter((el) => el.seller.id === seller.id)
-        .sort((a, b) => b.id - a.id);
+      return shops.filter((el) => el.seller.id === seller.id);
     }
 
     return [];
@@ -40,6 +48,11 @@ const SellerMyShopsPage = () => {
     if (user && isAuthenticatedCookie) {
       router.push('/seller/login');
     }
+
+    if (product) {
+      setIsVerified(true);
+    }
+
     setIsLoading(false);
 
     NProgress.done();
@@ -49,15 +62,24 @@ const SellerMyShopsPage = () => {
     };
   }, []);
 
-  if (isLoading || sellerFetching || shopsFetching) {
+  if (isLoading || sellerFetching || categoriesFetching || shopsFetching || productFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
+  }
+
+  if (!productFetching && !product && !isVerified) {
+    return <NotFound />;
   }
 
   return (
     <SellerDashboard>
-      <SellerShopsMain shops={sellerShops} />
+      <SellerProductsEdit
+        seller={seller}
+        categories={categories}
+        shops={sellerShops}
+        product={product}
+      />
     </SellerDashboard>
   );
 };
 
-export default SellerMyShopsPage;
+export default SellerMyProductsEditPage;
