@@ -88,8 +88,8 @@ const settings = [
   },
   {
     id: 2,
-    name: 'Forgot Password',
-    href: '/seller/forgot-password',
+    name: 'Update Password',
+    href: '/seller/update-password',
     icon: LockClosedIcon,
     current: false,
   },

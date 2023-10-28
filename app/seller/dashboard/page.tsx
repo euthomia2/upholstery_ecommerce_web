@@ -57,16 +57,19 @@ const SellerDashboardPage = () => {
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push('/');
     }
-    setIsLoading(false);
+
+    if (seller && isAuthenticatedCookie) {
+      setIsLoading(false);
+    }
 
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
   if (
     isLoading ||

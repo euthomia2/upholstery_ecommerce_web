@@ -46,23 +46,31 @@ const SellerMyProductsEditPage = () => {
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push('/');
+    }
+
+    if (seller && isAuthenticatedCookie) {
+      setIsLoading(false);
     }
 
     if (product) {
       setIsVerified(true);
     }
 
-    setIsLoading(false);
-
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
-  if (isLoading || sellerFetching || categoriesFetching || shopsFetching || productFetching) {
+  if (
+    isLoading ||
+    sellerFetching ||
+    categoriesFetching ||
+    shopsFetching ||
+    productFetching
+  ) {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 

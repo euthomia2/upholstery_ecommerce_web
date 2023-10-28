@@ -5,8 +5,11 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeCart, fetchingProducts, removeProduct } from '@/slices/cartSlice';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Cart = () => {
+  const router = useRouter();
   const { open, products, totalPrice, isLoading } = useSelector(
     (state) => state.cart
   );
@@ -160,12 +163,15 @@ const Cart = () => {
                             Checkout
                           </button>
                         ) : (
-                          <a
-                            href='#'
+                          <button
+                            onClick={() => {
+                              dispatch(closeCart());
+                              router.push('/order-summary');
+                            }}
                             className='flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'
                           >
                             Checkout
-                          </a>
+                          </button>
                         )}
                       </div>
                       <div className='-ml-1 mt-6 flex justify-center text-center text-sm text-gray-500'>

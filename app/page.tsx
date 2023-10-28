@@ -1,5 +1,6 @@
 import Cart from '@/components/cart/Cart';
 import Header from '@/components/header/Header';
+import HeroSection from '@/components/header/HeroSection';
 import OverviewCategories from '@/components/overview-categories/OverviewCategories';
 import OverviewCTA from '@/components/overview-cta/OverviewCTA';
 import OverviewFavorites from '@/components/overview-favorites/OverviewFavorites';
@@ -13,7 +14,9 @@ export default function Home() {
     <div className='bg-white'>
       <Cart />
 
-      <Header />
+      <Header>
+        <HeroSection />
+      </Header>
 
       {/* Latest Products section */}
       <LatestProduct />

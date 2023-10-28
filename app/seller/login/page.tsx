@@ -7,15 +7,24 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { useCustomerGetUserQuery } from '@/services/authentication';
 
 const SellerLogin = () => {
   const router = useRouter();
+  const { data: user, isError } = useCustomerGetUserQuery();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (Cookies.get('is_authenticated')) {
+    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+
+    if (user && isAuthenticatedCookie) {
+      router.push('/');
+    }
+
+    if (!user && isAuthenticatedCookie) {
       router.push('/seller/dashboard');
     }
+
     setIsLoading(false);
 
     NProgress.done();
@@ -23,7 +32,7 @@ const SellerLogin = () => {
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
   if (isLoading) {
     return <div className='flex h-full flex-1 bg-white'></div>;

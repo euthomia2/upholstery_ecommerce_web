@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useSellerUpdatePassMutation } from '@/services/authentication';
 
-const SellerForgotPassword: React.FC = () => {
+const SellerUpdatePassword: React.FC = () => {
   const [updatePass, { isLoading }] = useSellerUpdatePassMutation();
   const router = useRouter();
 
@@ -88,14 +88,14 @@ const SellerForgotPassword: React.FC = () => {
                   />
                 </span>
 
-                <span className='font-semibold'>Forgot Password</span>
+                <span className='font-semibold'>Update Password</span>
               </div>
             </header>
             <form noValidate onSubmit={handleSubmit}>
               <div className='space-y-12 sm:space-y-16 p-8 '>
                 <div>
                   <h2 className='text-base font-semibold leading-7 text-gray-900'>
-                    Forgot Password
+                    Update Password
                   </h2>
                   <p className='mt-1 max-w-2xl text-sm leading-6 text-gray-600'>
                     You can change the password of your account in this section.
@@ -225,4 +225,4 @@ const SellerForgotPassword: React.FC = () => {
   );
 };
 
-export default SellerForgotPassword;
+export default SellerUpdatePassword;

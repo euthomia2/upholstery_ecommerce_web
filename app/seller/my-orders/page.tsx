@@ -38,16 +38,19 @@ const SellerMyOrdersPage = () => {
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push('/');
     }
-    setIsLoading(false);
+
+    if (seller && isAuthenticatedCookie) {
+      setIsLoading(false);
+    }
 
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
   if (isLoading || sellerFetching || ordersFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;

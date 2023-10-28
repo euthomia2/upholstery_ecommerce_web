@@ -19,7 +19,7 @@ const SellerMyProductsAddPage = () => {
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
   const { data: categories, isFetching: categoriesFetching } =
     useGetCategoriesQuery();
-    const { data: shops, isFetching: shopsFetching } = useGetShopsQuery();
+  const { data: shops, isFetching: shopsFetching } = useGetShopsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -39,16 +39,19 @@ const SellerMyProductsAddPage = () => {
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push('/');
     }
-    setIsLoading(false);
+
+    if (seller && isAuthenticatedCookie) {
+      setIsLoading(false);
+    }
 
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
   if (isLoading || sellerFetching || categoriesFetching || shopsFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
@@ -56,7 +59,11 @@ const SellerMyProductsAddPage = () => {
 
   return (
     <SellerDashboard>
-      <SellerProductsAdd seller={seller} categories={categories} shops={sellerShops} />
+      <SellerProductsAdd
+        seller={seller}
+        categories={categories}
+        shops={sellerShops}
+      />
     </SellerDashboard>
   );
 };

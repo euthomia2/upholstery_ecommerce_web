@@ -6,11 +6,15 @@ import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
-import { useCustomerGetUserQuery } from '@/services/authentication';
+import {
+  useCustomerGetUserQuery,
+  useSellerGetUserQuery,
+} from '@/services/authentication';
 import SellerShopsAdd from '@/components/seller-dashboard/SellerShopsAdd';
 
 const SellerMyShopsAddPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
+  const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,18 +26,21 @@ const SellerMyShopsAddPage = () => {
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push('/');
     }
-    setIsLoading(false);
+
+    if (seller && isAuthenticatedCookie) {
+      setIsLoading(false);
+    }
 
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, []);
+  }, [user]);
 
-  if (isLoading) {
+  if (isLoading || sellerFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
   }
 

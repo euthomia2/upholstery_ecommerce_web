@@ -37,11 +37,8 @@ const Navbar = () => {
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
 
-    if (
-      user &&
-      isAuthenticatedCookie !== null &&
-      isAuthenticatedCookie !== undefined
-    ) {
+    if (isAuthenticatedCookie !== null && isAuthenticatedCookie !== undefined) {
+      console.log(user);
       if (user?.user.user_type === 1) {
         router.push('/seller/dashboard');
       } else {
@@ -170,15 +167,27 @@ const Navbar = () => {
                 </Popover>
               ))}
 
-              {navigation.pages.map((page) => (
-                <a
-                  key={page.name}
-                  href={page.href}
-                  className='flex items-center text-sm font-medium text-gray-700 hover:text-gray-800'
-                >
-                  {page.name}
-                </a>
-              ))}
+              {isAuthenticated && !isLoading
+                ? navigation.pages
+                    .filter((el) => el.name == 'Products')
+                    .map((page) => (
+                      <a
+                        key={page.name}
+                        href={page.href}
+                        className='flex items-center text-sm font-medium text-gray-700 hover:text-gray-800'
+                      >
+                        {page.name}
+                      </a>
+                    ))
+                : navigation.pages.map((page) => (
+                    <a
+                      key={page.name}
+                      href={page.href}
+                      className='flex items-center text-sm font-medium text-gray-700 hover:text-gray-800'
+                    >
+                      {page.name}
+                    </a>
+                  ))}
             </div>
           </Popover.Group>
 
