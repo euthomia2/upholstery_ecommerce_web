@@ -34,6 +34,7 @@ const initialState = {
   products: [],
   totalQuantity: 0,
   totalPrice: 0,
+  shippingFee: 39,
 };
 
 const cartSlice = createSlice({

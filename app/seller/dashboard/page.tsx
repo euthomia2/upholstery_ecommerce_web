@@ -69,7 +69,7 @@ const SellerDashboardPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller]);
 
   if (
     isLoading ||

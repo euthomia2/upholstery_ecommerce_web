@@ -5,7 +5,6 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useSelector, useDispatch } from 'react-redux';
 import { closeCart, fetchingProducts, removeProduct } from '@/slices/cartSlice';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const Cart = () => {
@@ -168,7 +167,7 @@ const Cart = () => {
                               dispatch(closeCart());
                               router.push('/order-summary');
                             }}
-                            className='flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'
+                            className='flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700'
                           >
                             Checkout
                           </button>

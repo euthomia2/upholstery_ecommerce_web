@@ -1,433 +1,669 @@
-
-import { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronUpIcon } from '@heroicons/react/20/solid';
+import { Product } from '@/models/Product';
+import { Customer } from '@/models/Customer';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { RadioGroup } from '@headlessui/react';
+import { CheckCircleIcon, TrashIcon } from '@heroicons/react/20/solid';
+import { useCreateOrderMutation } from '@/services/crud-order';
+import { useRouter } from 'next/navigation';
+import { toast } from 'react-hot-toast';
 
-const products = [
+type OrderSummaryProps = {
+  customer: Customer;
+  products: Product[];
+  totalPrice: number;
+  shippingFee: number;
+};
+
+const deliveryMethods = [
   {
     id: 1,
-    name: 'Micro Backpack',
-    href: '#',
-    price: '$70.00',
-    color: 'Moss',
-    size: '5L',
-    imageSrc:
-      'https://tailwindui.com/img/ecommerce-images/checkout-page-04-product-01.jpg',
-    imageAlt:
-      'Moss green canvas compact backpack with double top zipper, zipper front pouch, and matching carry handle and backpack straps.',
+    title: 'Cash on Delivery',
+    turnaround: 'Pay right after the delivery',
   },
-  // More products...
+  {
+    id: 2,
+    title: 'E-Wallet',
+    turnaround: 'Pay after confirming the order',
+  },
+];
+const paymentMethods = [
+  { id: 'gcash', title: 'GCash', url: '/assets/gcash.png' },
+  { id: 'maya', title: 'Maya', url: '/assets/maya.png' },
+  { id: 'coins-ph', title: 'Coins PH', url: '/assets/coins-ph.png' },
+  { id: 'grab-pay', title: 'Grab Pay', url: '/assets/grab-pay.png' },
 ];
 
-const OrderSummary = () => {
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ');
+}
+
+const OrderSummary: React.FC<OrderSummaryProps> = ({
+  customer,
+  products,
+  totalPrice,
+  shippingFee,
+}) => {
+  const router = useRouter();
+  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
+    deliveryMethods[0]
+  );
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
+  const subtotalPrice = totalPrice + shippingFee;
+
+  const initialValues = {
+    first_name: customer.first_name,
+    last_name: customer.last_name,
+    email: customer.user.email,
+    contact_number: customer.contact_number,
+    region: customer.region,
+    province: customer.province,
+    city: customer.city,
+    barangay: customer.barangay,
+    zip_code: customer.zip_code,
+    street_address: customer.street_address,
+  };
+
+  useEffect(() => {
+    if (selectedDeliveryMethod.title === deliveryMethods[0].title) {
+      setSelectedPaymentMethod(null);
+    }
+  }, [selectedDeliveryMethod]);
+
   return (
-    <div className='bg-white'>
-      {/* Background color split screen for large screens */}
-      <div
-        className='fixed left-0 top-0 hidden h-full w-1/2 bg-white lg:block'
-        aria-hidden='true'
-      />
-      <div
-        className='fixed right-0 top-0 hidden h-full w-1/2 bg-gray-50 lg:block'
-        aria-hidden='true'
-      />
+    <Formik
+      initialValues={initialValues}
+      validationSchema={Yup.object().shape({
+        email: Yup.string()
+          .email('Must be a valid email')
+          .max(255)
+          .required('Email Address is required'),
+      })}
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        createOrder(values)
+          .unwrap()
+          .then((payload) => {
+            router.push('/');
 
-      <div className='relative mx-auto grid max-w-7xl grid-cols-1 gap-x-16 lg:grid-cols-2 lg:px-8 xl:gap-x-48'>
-        <h1 className='sr-only'>Order information</h1>
+            toast.success('Ordered Successfully!');
+          })
+          .catch((error) => setErrors({ email: error.data?.message }));
+      }}
+    >
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        setFieldValue,
+        isSubmitting,
+        touched,
+        values,
+        dirty,
+        isValid,
+      }) => (
+        <div className='bg-gray-50'>
+          <div className='mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8'>
+            <h2 className='sr-only'>Checkout</h2>
 
-        <section
-          aria-labelledby='summary-heading'
-          className='bg-gray-50 px-4 pb-10 pt-16 sm:px-6 lg:col-start-2 lg:row-start-1 lg:bg-transparent lg:px-0 lg:pb-16'
-        >
-          <div className='mx-auto max-w-lg lg:max-w-none'>
-            <h2
-              id='summary-heading'
-              className='text-lg font-medium text-gray-900'
+            <form
+              noValidate
+              onSubmit={handleSubmit}
+              className='lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16'
             >
-              Order summary
-            </h2>
-
-            <ul
-              role='list'
-              className='divide-y divide-gray-200 text-sm font-medium text-gray-900'
-            >
-              {products.map((product) => (
-                <li
-                  key={product.id}
-                  className='flex items-start space-x-4 py-6'
-                >
-                  <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
-                    className='h-20 w-20 flex-none rounded-md object-cover object-center'
-                  />
-                  <div className='flex-auto space-y-1'>
-                    <h3>{product.name}</h3>
-                    <p className='text-gray-500'>{product.color}</p>
-                    <p className='text-gray-500'>{product.size}</p>
-                  </div>
-                  <p className='flex-none text-base font-medium'>
-                    {product.price}
-                  </p>
-                </li>
-              ))}
-            </ul>
-
-            <dl className='hidden space-y-6 border-t border-gray-200 pt-6 text-sm font-medium text-gray-900 lg:block'>
-              <div className='flex items-center justify-between'>
-                <dt className='text-gray-600'>Subtotal</dt>
-                <dd>$320.00</dd>
-              </div>
-
-              <div className='flex items-center justify-between'>
-                <dt className='text-gray-600'>Shipping</dt>
-                <dd>$15.00</dd>
-              </div>
-
-              <div className='flex items-center justify-between'>
-                <dt className='text-gray-600'>Taxes</dt>
-                <dd>$26.80</dd>
-              </div>
-
-              <div className='flex items-center justify-between border-t border-gray-200 pt-6'>
-                <dt className='text-base'>Total</dt>
-                <dd className='text-base'>$361.80</dd>
-              </div>
-            </dl>
-
-            <Popover className='fixed inset-x-0 bottom-0 flex flex-col-reverse text-sm font-medium text-gray-900 lg:hidden'>
-              <div className='relative z-10 border-t border-gray-200 bg-white px-4 sm:px-6'>
-                <div className='mx-auto max-w-lg'>
-                  <Popover.Button className='flex w-full items-center py-6 font-medium'>
-                    <span className='mr-auto text-base'>Total</span>
-                    <span className='mr-2 text-base'>$361.80</span>
-                    <ChevronUpIcon
-                      className='h-5 w-5 text-gray-500'
-                      aria-hidden='true'
-                    />
-                  </Popover.Button>
-                </div>
-              </div>
-
-              <Transition.Root as={Fragment}>
+              <div>
                 <div>
-                  <Transition.Child
-                    as={Fragment}
-                    enter='transition-opacity ease-linear duration-300'
-                    enterFrom='opacity-0'
-                    enterTo='opacity-100'
-                    leave='transition-opacity ease-linear duration-300'
-                    leaveFrom='opacity-100'
-                    leaveTo='opacity-0'
-                  >
-                    <Popover.Overlay className='fixed inset-0 bg-black bg-opacity-25' />
-                  </Transition.Child>
+                  <h2 className='text-lg font-medium text-gray-900'>
+                    Contact Information
+                  </h2>
 
-                  <Transition.Child
-                    as={Fragment}
-                    enter='transition ease-in-out duration-300 transform'
-                    enterFrom='translate-y-full'
-                    enterTo='translate-y-0'
-                    leave='transition ease-in-out duration-300 transform'
-                    leaveFrom='translate-y-0'
-                    leaveTo='translate-y-full'
-                  >
-                    <Popover.Panel className='relative bg-white px-4 py-6 sm:px-6'>
-                      <dl className='mx-auto max-w-lg space-y-6'>
-                        <div className='flex items-center justify-between'>
-                          <dt className='text-gray-600'>Subtotal</dt>
-                          <dd>$320.00</dd>
-                        </div>
+                  <div className='mt-4'>
+                    <label
+                      htmlFor='email'
+                      className={`${
+                        touched.email && errors.email
+                          ? 'text-red-500'
+                          : 'text-gray-900'
+                      }  block text-sm font-medium leading-6 `}
+                    >
+                      Email Address
+                    </label>
+                    <div className='mt-1'>
+                      <input
+                        type='email'
+                        id='email'
+                        name='email'
+                        autoComplete='email'
+                        value={values.email}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        disabled
+                        className={`${
+                          touched.email && errors.email
+                            ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                            : ' ring-gray-300 focus:ring-indigo-600'
+                        } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                      />
 
-                        <div className='flex items-center justify-between'>
-                          <dt className='text-gray-600'>Shipping</dt>
-                          <dd>$15.00</dd>
-                        </div>
-
-                        <div className='flex items-center justify-between'>
-                          <dt className='text-gray-600'>Taxes</dt>
-                          <dd>$26.80</dd>
-                        </div>
-                      </dl>
-                    </Popover.Panel>
-                  </Transition.Child>
+                      {touched.email && errors.email && (
+                        <p className='text-red-500 text-sm mt-2'>
+                          {errors.email}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </Transition.Root>
-            </Popover>
+
+                <div className='mt-10 border-t border-gray-200 pt-10'>
+                  <h2 className='text-lg font-medium text-gray-900'>
+                    Shipping information
+                  </h2>
+
+                  <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
+                    <div>
+                      <label
+                        htmlFor='first_name'
+                        className={`${
+                          touched.first_name && errors.first_name
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        First Name
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='first_name'
+                          name='first_name'
+                          autoComplete='first_name'
+                          value={values.first_name}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.first_name && errors.first_name
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='last_name'
+                        className={`${
+                          touched.last_name && errors.last_name
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Last Name
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='last_name'
+                          name='last_name'
+                          autoComplete='last_name'
+                          value={values.last_name}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.last_name && errors.last_name
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='region'
+                        className={`${
+                          touched.region && errors.region
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Region
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='region'
+                          name='region'
+                          autoComplete='region'
+                          value={values.region}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.region && errors.region
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='province'
+                        className={`${
+                          touched.province && errors.province
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Province
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='province'
+                          name='province'
+                          autoComplete='province'
+                          value={values.province}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.province && errors.province
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='city'
+                        className={`${
+                          touched.city && errors.city
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        City
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='city'
+                          name='city'
+                          autoComplete='city'
+                          value={values.city}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.city && errors.city
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='barangay'
+                        className={`${
+                          touched.barangay && errors.barangay
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Barangay
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='barangay'
+                          name='barangay'
+                          autoComplete='barangay'
+                          value={values.barangay}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.barangay && errors.barangay
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div className='sm:col-span-2'>
+                      <label
+                        htmlFor='street_address'
+                        className={`${
+                          touched.street_address && errors.street_address
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Street Address
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='street_address'
+                          name='street_address'
+                          autoComplete='street_address'
+                          value={values.street_address}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.street_address && errors.street_address
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='zip_code'
+                        className={`${
+                          touched.zip_code && errors.zip_code
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Zip Code
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='zip_code'
+                          name='zip_code'
+                          autoComplete='zip_code'
+                          value={values.zip_code}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.zip_code && errors.zip_code
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor='contact_number'
+                        className={`${
+                          touched.contact_number && errors.contact_number
+                            ? 'text-red-500'
+                            : 'text-gray-900'
+                        }  block text-sm font-medium leading-6 `}
+                      >
+                        Contact Number
+                      </label>
+                      <div className='mt-1'>
+                        <input
+                          type='text'
+                          id='contact_number'
+                          name='contact_number'
+                          autoComplete='contact_number'
+                          value={values.contact_number}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          disabled
+                          className={`${
+                            touched.contact_number && errors.contact_number
+                              ? ' border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 '
+                              : ' ring-gray-300 focus:ring-indigo-600'
+                          } block disabled:bg-gray-200 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className='mt-10 border-t border-gray-200 pt-10'>
+                  <RadioGroup
+                    value={selectedDeliveryMethod}
+                    onChange={setSelectedDeliveryMethod}
+                  >
+                    <RadioGroup.Label className='text-lg font-medium text-gray-900'>
+                      Payment Method
+                    </RadioGroup.Label>
+
+                    <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
+                      {deliveryMethods.map((deliveryMethod) => (
+                        <RadioGroup.Option
+                          key={deliveryMethod.id}
+                          value={deliveryMethod}
+                          className={({ checked, active }) =>
+                            classNames(
+                              checked
+                                ? 'border-transparent'
+                                : 'border-gray-300',
+                              active ? 'ring-2 ring-indigo-500' : '',
+                              'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
+                            )
+                          }
+                        >
+                          {({ checked, active }) => (
+                            <>
+                              <span className='flex flex-1'>
+                                <span className='flex flex-col'>
+                                  <RadioGroup.Label
+                                    as='span'
+                                    className='block text-sm font-medium text-gray-900'
+                                  >
+                                    {deliveryMethod.title}
+                                  </RadioGroup.Label>
+                                  <RadioGroup.Description
+                                    as='span'
+                                    className='mt-1 flex items-center text-sm text-gray-500'
+                                  >
+                                    {deliveryMethod.turnaround}
+                                  </RadioGroup.Description>
+                                </span>
+                              </span>
+                              {checked ? (
+                                <CheckCircleIcon
+                                  className='h-5 w-5 text-indigo-600'
+                                  aria-hidden='true'
+                                />
+                              ) : null}
+                              <span
+                                className={classNames(
+                                  active ? 'border' : 'border-2',
+                                  checked
+                                    ? 'border-indigo-500'
+                                    : 'border-transparent',
+                                  'pointer-events-none absolute -inset-px rounded-lg'
+                                )}
+                                aria-hidden='true'
+                              />
+                            </>
+                          )}
+                        </RadioGroup.Option>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </div>
+
+                {selectedDeliveryMethod.title === deliveryMethods[1].title && (
+                  <div className='mt-10 border-t border-gray-200 pt-10'>
+                    <RadioGroup
+                      value={selectedPaymentMethod}
+                      onChange={setSelectedPaymentMethod}
+                    >
+                      <RadioGroup.Label className='text-lg font-medium text-gray-900'>
+                        E-Wallet Method
+                      </RadioGroup.Label>
+
+                      <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
+                        {paymentMethods.map((paymentMethod) => (
+                          <RadioGroup.Option
+                            key={paymentMethod.id}
+                            value={paymentMethod}
+                            className={({ checked, active }) =>
+                              classNames(
+                                checked
+                                  ? 'border-transparent'
+                                  : 'border-gray-300',
+                                active ? 'ring-2 ring-indigo-500' : '',
+                                'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
+                              )
+                            }
+                          >
+                            {({ checked, active }) => (
+                              <>
+                                <span className='flex w-full'>
+                                  <span className='flex flex-1 flex-row items-center'>
+                                    <RadioGroup.Label
+                                      as='p'
+                                      className='block text-sm font-medium text-gray-900 mr-1'
+                                    >
+                                      {paymentMethod.title}
+                                    </RadioGroup.Label>
+                                    {checked ? (
+                                      <CheckCircleIcon
+                                        className='h-5 w-5 text-indigo-600'
+                                        aria-hidden='true'
+                                      />
+                                    ) : null}
+                                    <img
+                                      src={paymentMethod.url}
+                                      alt={paymentMethod.title}
+                                      className='ml-auto h-8 w-8 rounded-md object-cover object-center'
+                                    />
+                                  </span>
+                                </span>
+
+                                <span
+                                  className={classNames(
+                                    active ? 'border' : 'border-2',
+                                    checked
+                                      ? 'border-indigo-500'
+                                      : 'border-transparent',
+                                    'pointer-events-none absolute -inset-px rounded-lg'
+                                  )}
+                                  aria-hidden='true'
+                                />
+                              </>
+                            )}
+                          </RadioGroup.Option>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </div>
+                )}
+              </div>
+
+              {/* Order summary */}
+              <div className='mt-10 lg:mt-0'>
+                <h2 className='text-lg font-medium text-gray-900'>
+                  Order summary
+                </h2>
+
+                <div className='mt-4 rounded-lg border border-gray-200 bg-white shadow-sm'>
+                  <h3 className='sr-only'>Items in your cart</h3>
+                  <ul
+                    role='list'
+                    className='divide-y divide-gray-200 text-sm font-medium text-gray-900'
+                  >
+                    {products.map((product) => (
+                      <li
+                        key={product.id}
+                        className='flex items-start space-x-4 px-4 py-6 sm:px-6'
+                      >
+                        <img
+                          src={product.image_file}
+                          alt={product.description}
+                          className='h-20 w-20 flex-none rounded-md object-cover object-center'
+                        />
+                        <div className='flex-auto space-y-1'>
+                          <h3>{product.name}</h3>
+                          <p className='text-gray-500'>
+                            {product.category.title}
+                          </p>
+                          <p className='text-gray-500'>x {product.quantity}</p>
+                        </div>
+                        <p className='flex-none text-base font-medium'>
+                          ₱
+                          {product.price.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                          })}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                  <dl className='text-gray-900 space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6'>
+                    <div className='flex items-center justify-between'>
+                      <dt className='text-sm'>Subtotal</dt>
+                      <dd className='text-sm font-medium text-gray-900'>
+                        ₱
+                        {totalPrice.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </dd>
+                    </div>
+                    <div className='flex items-center justify-between'>
+                      <dt className='text-sm'>Shipping</dt>
+                      <dd className='text-sm font-medium text-gray-900'>
+                        ₱
+                        {shippingFee.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </dd>
+                    </div>
+                    <div className='flex items-center justify-between border-t border-gray-200 pt-6'>
+                      <dt className='text-base font-medium'>Total</dt>
+                      <dd className='text-base font-medium text-gray-900'>
+                        ₱
+                        {subtotalPrice.toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <div className='border-t border-gray-200 px-4 py-6 sm:px-6'>
+                    <button
+                      type='submit'
+                      className='w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-indigo-200'
+                      disabled={
+                        isSubmitting ||
+                        !isValid ||
+                        isLoading ||
+                        (selectedDeliveryMethod.title === 'E-Wallet' &&
+                          !selectedPaymentMethod)
+                      }
+                    >
+                      {isSubmitting || isLoading
+                        ? 'Loading...'
+                        : 'Confirm Order'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
-        </section>
-
-        <form className='px-4 pb-36 pt-16 sm:px-6 lg:col-start-1 lg:row-start-1 lg:px-0 lg:pb-16'>
-          <div className='mx-auto max-w-lg lg:max-w-none'>
-            <section aria-labelledby='contact-info-heading'>
-              <h2
-                id='contact-info-heading'
-                className='text-lg font-medium text-gray-900'
-              >
-                Contact information
-              </h2>
-
-              <div className='mt-6'>
-                <label
-                  htmlFor='email-address'
-                  className='block text-sm font-medium text-gray-700'
-                >
-                  Email address
-                </label>
-                <div className='mt-1'>
-                  <input
-                    type='email'
-                    id='email-address'
-                    name='email-address'
-                    autoComplete='email'
-                    className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                  />
-                </div>
-              </div>
-            </section>
-
-            <section aria-labelledby='payment-heading' className='mt-10'>
-              <h2
-                id='payment-heading'
-                className='text-lg font-medium text-gray-900'
-              >
-                Payment details
-              </h2>
-
-              <div className='mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4'>
-                <div className='col-span-3 sm:col-span-4'>
-                  <label
-                    htmlFor='name-on-card'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Name on card
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='name-on-card'
-                      name='name-on-card'
-                      autoComplete='cc-name'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div className='col-span-3 sm:col-span-4'>
-                  <label
-                    htmlFor='card-number'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Card number
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='card-number'
-                      name='card-number'
-                      autoComplete='cc-number'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div className='col-span-2 sm:col-span-3'>
-                  <label
-                    htmlFor='expiration-date'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Expiration date (MM/YY)
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      name='expiration-date'
-                      id='expiration-date'
-                      autoComplete='cc-exp'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor='cvc'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    CVC
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      name='cvc'
-                      id='cvc'
-                      autoComplete='csc'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section aria-labelledby='shipping-heading' className='mt-10'>
-              <h2
-                id='shipping-heading'
-                className='text-lg font-medium text-gray-900'
-              >
-                Shipping address
-              </h2>
-
-              <div className='mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3'>
-                <div className='sm:col-span-3'>
-                  <label
-                    htmlFor='company'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Company
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='company'
-                      name='company'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div className='sm:col-span-3'>
-                  <label
-                    htmlFor='address'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Address
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='address'
-                      name='address'
-                      autoComplete='street-address'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div className='sm:col-span-3'>
-                  <label
-                    htmlFor='apartment'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Apartment, suite, etc.
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='apartment'
-                      name='apartment'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor='city'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    City
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='city'
-                      name='city'
-                      autoComplete='address-level2'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor='region'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    State / Province
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='region'
-                      name='region'
-                      autoComplete='address-level1'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor='postal-code'
-                    className='block text-sm font-medium text-gray-700'
-                  >
-                    Postal code
-                  </label>
-                  <div className='mt-1'>
-                    <input
-                      type='text'
-                      id='postal-code'
-                      name='postal-code'
-                      autoComplete='postal-code'
-                      className='block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm'
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section aria-labelledby='billing-heading' className='mt-10'>
-              <h2
-                id='billing-heading'
-                className='text-lg font-medium text-gray-900'
-              >
-                Billing information
-              </h2>
-
-              <div className='mt-6 flex items-center'>
-                <input
-                  id='same-as-shipping'
-                  name='same-as-shipping'
-                  type='checkbox'
-                  defaultChecked
-                  className='h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500'
-                />
-                <div className='ml-2'>
-                  <label
-                    htmlFor='same-as-shipping'
-                    className='text-sm font-medium text-gray-900'
-                  >
-                    Same as shipping information
-                  </label>
-                </div>
-              </div>
-            </section>
-
-            <div className='mt-10 border-t border-gray-200 pt-6 sm:flex sm:items-center sm:justify-between'>
-              <button
-                type='submit'
-                className='w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:order-last sm:ml-6 sm:w-auto'
-              >
-                Continue
-              </button>
-              <p className='mt-4 text-center text-sm text-gray-500 sm:mt-0 sm:text-left'>
-                You won't be charged until the next step.
-              </p>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      )}
+    </Formik>
   );
 };
 
