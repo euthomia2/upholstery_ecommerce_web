@@ -66,6 +66,15 @@ export const crudOrder = createApi({
       }),
       invalidatesTags: ['Orders'],
     }),
+    customerOrder: builder.mutation({
+      query: (details) => ({
+        url: `order/customer-order`,
+        method: 'POST',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Orders'],
+    }),
     updateOrder: builder.mutation({
       query: (details) => ({
         url: `order/update/${details?.id}`,
@@ -99,6 +108,7 @@ export const {
   useGetOrderQuery,
   useShowPaymentPageMutation,
   useCreateOrderMutation,
+  useCustomerOrderMutation,
   useUpdateOrderMutation,
   useActivateOrderMutation,
   useDeactivateOrderMutation,

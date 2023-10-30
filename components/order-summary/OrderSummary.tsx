@@ -7,7 +7,10 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon, TrashIcon } from '@heroicons/react/20/solid';
-import { useCreateOrderMutation } from '@/services/crud-order';
+import {
+  useCreateOrderMutation,
+  useCustomerOrderMutation,
+} from '@/services/crud-order';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import PaymentModal from '../PaymentModal';
@@ -64,8 +67,8 @@ const createSource = async (details, type) => {
         attributes: {
           amount: details.subtotal_price * 100,
           redirect: {
-            success: 'http://localhost:3000/payment',
-            failed: 'http://localhost:3000/payment',
+            success: 'http://localhost:3000/',
+            failed: 'http://localhost:3000/',
           },
           billing: {
             name: `${details.first_name} ${details.last_name}`,
@@ -95,7 +98,7 @@ const createSource = async (details, type) => {
 };
 
 // Function to Listen to the Source in the Front End
-const listenToPayment = async (sourceId, setStatus) => {
+const listenToPayment = async (sourceId, setStatus, customerOrder, values) => {
   let i = 5;
   for (let i = 5; i > 0; i--) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -120,8 +123,6 @@ const listenToPayment = async (sourceId, setStatus) => {
           return response.data;
         });
 
-      console.log(sourceData.attributes.status);
-
       if (
         sourceData.attributes.status === 'expired' ||
         sourceData.attributes.status === 'cancelled'
@@ -130,6 +131,12 @@ const listenToPayment = async (sourceId, setStatus) => {
         i = 0;
       } else if (sourceData.attributes.status === 'chargeable') {
         setStatus('success');
+        customerOrder(values)
+          .unwrap()
+          .then((payload) => {
+            localStorage.removeItem('cart');
+          })
+          .catch((error) => console.log(error));
         i = 0;
       } else {
         i = 5;
@@ -146,7 +153,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   totalQuantity,
 }) => {
   const router = useRouter();
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [customerOrder, { isLoading }] = useCustomerOrderMutation();
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
@@ -157,6 +164,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const subtotalPrice = totalPrice + shippingFee;
 
   const initialValues = {
+    customer_id: customer.id,
     first_name: customer.first_name,
     last_name: customer.last_name,
     email: customer.user.email,
@@ -200,6 +208,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             selectedDeliveryMethod.title === 'E-Wallet'
           ) {
             setPaymentLoading(true);
+
             if (selectedPaymentMethod.title === 'GCash') {
               const source = await createSource(
                 values,
@@ -210,7 +219,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
               );
-              listenToPayment(source.data.id, setPaymentStatus);
+              listenToPayment(
+                source.data.id,
+                setPaymentStatus,
+                customerOrder,
+                values
+              );
             }
 
             if (selectedPaymentMethod.title === 'Grab Pay') {
@@ -223,17 +237,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
               );
-              listenToPayment(source.data.id, setPaymentStatus);
+              listenToPayment(
+                source.data.id,
+                setPaymentStatus,
+                customerOrder,
+                values
+              );
             }
           }
-          // createOrder(values)
-          //   .unwrap()
-          //   .then((payload) => {
-          //     router.push('/');
-
-          //     toast.success('Ordered Successfully!');
-          //   })
-          //   .catch((error) => setErrors({ email: error.data?.message }));
         }}
       >
         {({
