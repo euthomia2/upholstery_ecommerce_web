@@ -95,7 +95,7 @@ const createSource = async (details, type) => {
 };
 
 // Function to Listen to the Source in the Front End
-const listenToPayment = async (sourceId) => {
+const listenToPayment = async (sourceId, setStatus) => {
   let i = 5;
   for (let i = 5; i > 0; i--) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -120,14 +120,20 @@ const listenToPayment = async (sourceId) => {
           return response.data;
         });
 
-      //   if (sourceData.attributes.status === 'failed') {
-      //     setPaymentStatus('Payment Failed');
-      //   } else if (sourceData.attributes.status === 'paid') {
-      //     setPaymentStatus('Payment Success');
-      //   } else {
-      //     i = 5;
-      //     setPayProcess(sourceData.attributes.status);
-      //   }
+      console.log(sourceData.attributes.status);
+
+      if (
+        sourceData.attributes.status === 'expired' ||
+        sourceData.attributes.status === 'cancelled'
+      ) {
+        setStatus('failed');
+        i = 0;
+      } else if (sourceData.attributes.status === 'chargeable') {
+        setStatus('success');
+        i = 0;
+      } else {
+        i = 5;
+      }
     }
   }
 };
@@ -146,6 +152,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   );
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null);
 
   const subtotalPrice = totalPrice + shippingFee;
 
@@ -174,9 +181,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   return (
     <>
       <PaymentModal
-        title={`Processing Payment...`}
-        description={`Please wait until the payment is completed.`}
         open={paymentLoading}
+        selectedPaymentMethod={selectedPaymentMethod?.title}
+        paymentStatus={paymentStatus}
       />
 
       <Formik
@@ -203,7 +210,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
               );
-              listenToPayment(source.data.id);
+              listenToPayment(source.data.id, setPaymentStatus);
             }
 
             if (selectedPaymentMethod.title === 'Grab Pay') {
@@ -216,7 +223,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
               );
-              listenToPayment(source.data.id);
+              listenToPayment(source.data.id, setPaymentStatus);
             }
           }
           // createOrder(values)
@@ -790,12 +797,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                             !selectedPaymentMethod)
                         }
                       >
-                        {isSubmitting ||
-                        !isValid ||
-                        isLoading ||
-                        paymentLoading ||
-                        (selectedDeliveryMethod.title === 'E-Wallet' &&
-                          !selectedPaymentMethod)
+                        {isSubmitting || !isValid || isLoading || paymentLoading
                           ? 'Loading...'
                           : 'Confirm Order'}
                       </button>
