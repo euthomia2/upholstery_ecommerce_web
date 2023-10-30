@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import { ChevronUpIcon } from '@heroicons/react/20/solid';
 import { Product } from '@/models/Product';
@@ -7,7 +7,10 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon, TrashIcon } from '@heroicons/react/20/solid';
-import { useCreateOrderMutation } from '@/services/crud-order';
+import {
+  useCreateOrderMutation,
+  useShowPaymentPageMutation,
+} from '@/services/crud-order';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 
@@ -16,6 +19,7 @@ type OrderSummaryProps = {
   products: Product[];
   totalPrice: number;
   shippingFee: number;
+  totalQuantity: number;
 };
 
 const deliveryMethods = [
@@ -30,12 +34,6 @@ const deliveryMethods = [
     turnaround: 'Pay after confirming the order',
   },
 ];
-const paymentMethods = [
-  { id: 'gcash', title: 'GCash', url: '/assets/gcash.png' },
-  { id: 'maya', title: 'Maya', url: '/assets/maya.png' },
-  { id: 'coins-ph', title: 'Coins PH', url: '/assets/coins-ph.png' },
-  { id: 'grab-pay', title: 'Grab Pay', url: '/assets/grab-pay.png' },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -46,13 +44,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   products,
   totalPrice,
   shippingFee,
+  totalQuantity,
 }) => {
   const router = useRouter();
-  const [createOrder, { isLoading }] = useCreateOrderMutation();
+  const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
+  const [showPaymentPage, { isLoading: paymentPageLoading }] =
+    useShowPaymentPageMutation();
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
   );
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   const subtotalPrice = totalPrice + shippingFee;
 
@@ -67,13 +68,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     barangay: customer.barangay,
     zip_code: customer.zip_code,
     street_address: customer.street_address,
+    subtotal_price: subtotalPrice,
+    product_list: products,
+    total_quantity: totalQuantity,
   };
-
-  useEffect(() => {
-    if (selectedDeliveryMethod.title === deliveryMethods[0].title) {
-      setSelectedPaymentMethod(null);
-    }
-  }, [selectedDeliveryMethod]);
 
   return (
     <Formik
@@ -85,14 +83,33 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           .required('Email Address is required'),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        createOrder(values)
-          .unwrap()
-          .then((payload) => {
-            router.push('/');
+        if (selectedDeliveryMethod.title === 'E-Wallet') {
+          showPaymentPage(values)
+            .unwrap()
+            .then((payload) => {
+              const data = payload.data;
+              const pageLink = data.attributes.checkout_url;
 
-            toast.success('Ordered Successfully!');
-          })
-          .catch((error) => setErrors({ email: error.data?.message }));
+              if (pageLink) {
+                // Open the page link in a new tab
+                const newTab = window.open(pageLink, '_blank');
+                if (newTab) {
+                  // The new tab was successfully opened
+                  newTab.focus();
+                  setPaymentLoading(true);
+                } else {
+                  // Handle popup blocker
+                  alert(
+                    'The popup blocker prevented the new tab from opening.'
+                  );
+                }
+              } else {
+                // Handle the case where the API response does not contain a valid page link
+                alert('No page link found in the API response.');
+              }
+            })
+            .catch((error) => setErrors({ email: error.data?.message }));
+        }
       }}
     >
       {({
@@ -502,74 +519,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                     </div>
                   </RadioGroup>
                 </div>
-
-                {selectedDeliveryMethod.title === deliveryMethods[1].title && (
-                  <div className='mt-10 border-t border-gray-200 pt-10'>
-                    <RadioGroup
-                      value={selectedPaymentMethod}
-                      onChange={setSelectedPaymentMethod}
-                    >
-                      <RadioGroup.Label className='text-lg font-medium text-gray-900'>
-                        E-Wallet Method
-                      </RadioGroup.Label>
-
-                      <div className='mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4'>
-                        {paymentMethods.map((paymentMethod) => (
-                          <RadioGroup.Option
-                            key={paymentMethod.id}
-                            value={paymentMethod}
-                            className={({ checked, active }) =>
-                              classNames(
-                                checked
-                                  ? 'border-transparent'
-                                  : 'border-gray-300',
-                                active ? 'ring-2 ring-indigo-500' : '',
-                                'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none'
-                              )
-                            }
-                          >
-                            {({ checked, active }) => (
-                              <>
-                                <span className='flex w-full'>
-                                  <span className='flex flex-1 flex-row items-center'>
-                                    <RadioGroup.Label
-                                      as='p'
-                                      className='block text-sm font-medium text-gray-900 mr-1'
-                                    >
-                                      {paymentMethod.title}
-                                    </RadioGroup.Label>
-                                    {checked ? (
-                                      <CheckCircleIcon
-                                        className='h-5 w-5 text-indigo-600'
-                                        aria-hidden='true'
-                                      />
-                                    ) : null}
-                                    <img
-                                      src={paymentMethod.url}
-                                      alt={paymentMethod.title}
-                                      className='ml-auto h-8 w-8 rounded-md object-cover object-center'
-                                    />
-                                  </span>
-                                </span>
-
-                                <span
-                                  className={classNames(
-                                    active ? 'border' : 'border-2',
-                                    checked
-                                      ? 'border-indigo-500'
-                                      : 'border-transparent',
-                                    'pointer-events-none absolute -inset-px rounded-lg'
-                                  )}
-                                  aria-hidden='true'
-                                />
-                              </>
-                            )}
-                          </RadioGroup.Option>
-                        ))}
-                      </div>
-                    </RadioGroup>
-                  </div>
-                )}
               </div>
 
               {/* Order summary */}
@@ -647,12 +596,15 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                       disabled={
                         isSubmitting ||
                         !isValid ||
-                        isLoading ||
-                        (selectedDeliveryMethod.title === 'E-Wallet' &&
-                          !selectedPaymentMethod)
+                        orderLoading ||
+                        paymentPageLoading ||
+                        paymentLoading
                       }
                     >
-                      {isSubmitting || isLoading
+                      {isSubmitting ||
+                      orderLoading ||
+                      paymentPageLoading ||
+                      paymentLoading
                         ? 'Loading...'
                         : 'Confirm Order'}
                     </button>
