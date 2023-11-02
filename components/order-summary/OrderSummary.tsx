@@ -97,6 +97,40 @@ const createSource = async (details, type) => {
     .catch((err) => console.error(err));
 };
 
+// Function to Create A Payment
+const createPayment = async (source, value, productDescription) => {
+  //   setPaymentStatus('Creating Source');
+  const options = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${Buffer.from(
+        'sk_test_tmrubUC8AfpmLWeGn9k2EYUR'
+      ).toString('base64')}`,
+    },
+    body: JSON.stringify({
+      data: {
+        attributes: {
+          amount: value.subtotal_price * 100,
+          currency: 'PHP',
+          description: productDescription,
+          source: {
+            id: source.id,
+            type: 'source',
+          },
+        },
+      },
+    }),
+  };
+  return fetch('https://api.paymongo.com/v1/payments', options)
+    .then((response) => response.json())
+    .then((response) => {
+      return response;
+    })
+    .catch((err) => console.error(err));
+};
+
 // Function to Listen to the Source in the Front End
 const listenToPayment = async (sourceId, setStatus, customerOrder, values) => {
   let i = 5;
@@ -133,10 +167,26 @@ const listenToPayment = async (sourceId, setStatus, customerOrder, values) => {
         setStatus('success');
         customerOrder(values)
           .unwrap()
-          .then((payload) => {
-            localStorage.removeItem('cart');
+          .then(async (payload) => {
+            await localStorage.removeItem('cart');
           })
           .catch((error) => console.log(error));
+        let productDescription = 'Payment for ';
+
+        // Loop through the array and build the description
+        values.product_list.forEach((product, index) => {
+          productDescription += `${product.quantity} pc${
+            product.quantity > 1 ? 's' : ''
+          } of ${product.name}`;
+          if (index < values.product_list.length - 1) {
+            productDescription += ', ';
+          }
+        });
+        const payment = await createPayment(
+          sourceData,
+          values,
+          productDescription
+        );
         i = 0;
       } else {
         i = 5;
@@ -203,6 +253,34 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             .required('Email Address is required'),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          if (selectedDeliveryMethod.title === 'Cash on Delivery') {
+            customerOrder(values)
+              .unwrap()
+              .then(async (payload) => {
+                let productDescription = 'Payment for ';
+
+                // Loop through the array and build the description
+                values.product_list.forEach((product, index) => {
+                  productDescription += `${product.quantity} pc${
+                    product.quantity > 1 ? 's' : ''
+                  } of ${product.name}`;
+                  if (index < values.product_list.length - 1) {
+                    productDescription += ', ';
+                  }
+                });
+                const payment = await createPayment(
+                  sourceData,
+                  values,
+                  productDescription
+                );
+
+                await localStorage.removeItem('cart');
+                router.push('/');
+                toast.success('Ordered Successfully!');
+              })
+              .catch((error) => console.log(error));
+          }
+
           if (
             selectedPaymentMethod &&
             selectedDeliveryMethod.title === 'E-Wallet'
@@ -214,7 +292,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 values,
                 selectedPaymentMethod.type
               );
-              console.log(source);
               window.open(
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
@@ -232,7 +309,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 values,
                 selectedPaymentMethod.type
               );
-              console.log(source);
               window.open(
                 source.data.attributes.redirect.checkout_url,
                 '_blank'
