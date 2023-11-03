@@ -254,7 +254,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   };
 
   const checkVoucherCode = async () => {
-    console.log(voucherCode);
     findVoucher(voucherCode)
       .unwrap()
       .then((payload) => {
@@ -262,79 +261,77 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           if (payload.mode === 'Price') {
             if (payload.type === 'Price Discount') {
               setInitialTotalPrice((val) => {
-                if (val - payload.amount < 0) {
+                if (totalPrice - payload.amount < 0) {
                   return 0;
                 } else {
-                  return val - payload.amount;
+                  return totalPrice - payload.amount;
                 }
               });
 
               setSubtotalPrice((val) => {
-                if (initialTotalPrice - payload.amount < 0) {
-                  return initialShippingFee;
+                if (totalPrice - payload.amount < 0) {
+                  return shippingFee;
                 } else {
-                  return (
-                    initialTotalPrice - payload.amount + initialShippingFee
-                  );
+                  return totalPrice - payload.amount + shippingFee;
                 }
               });
+
+              setInitialShippingFee(shippingFee);
             } else {
               setInitialShippingFee((val) => {
-                if (val - payload.amount < 0) {
+                if (shippingFee - payload.amount < 0) {
                   return 0;
                 } else {
-                  return val - payload.amount;
+                  return shippingFee - payload.amount;
                 }
               });
 
               setSubtotalPrice((val) => {
-                if (initialShippingFee - payload.amount < 0) {
-                  return initialTotalPrice;
+                if (shippingFee - payload.amount < 0) {
+                  return totalPrice;
                 } else {
-                  return (
-                    initialTotalPrice - (initialShippingFee - payload.amount)
-                  );
+                  return totalPrice - (shippingFee - payload.amount);
                 }
               });
+
+              setInitialTotalPrice(totalPrice);
             }
           } else {
             const percentage = payload.amount > 100 ? 100 : payload.amount;
             if (payload.type === 'Price Discount') {
               setInitialTotalPrice((val) => {
-                if (val - (percentage / 100) * val < 0) {
+                if (totalPrice - (percentage / 100) * totalPrice < 0) {
                   return 0;
                 } else {
-                  return val - (percentage / 100) * val;
+                  return totalPrice - (percentage / 100) * totalPrice;
                 }
               });
 
               setSubtotalPrice((val) => {
-                if (initialTotalPrice - (percentage / 100) * val < 0) {
-                  return initialShippingFee;
+                if (totalPrice - (percentage / 100) * totalPrice < 0) {
+                  return shippingFee;
                 } else {
                   return (
-                    initialTotalPrice -
-                    (percentage / 100) * val +
-                    initialShippingFee
+                    totalPrice - (percentage / 100) * totalPrice + shippingFee
                   );
                 }
               });
             } else {
               setInitialShippingFee((val) => {
-                if (val - (percentage / 100) * val < 0) {
+                if (shippingFee - (percentage / 100) * shippingFee < 0) {
                   return 0;
                 } else {
-                  return val - (percentage / 100) * val;
+                  return shippingFee - (percentage / 100) * shippingFee;
                 }
               });
 
               setSubtotalPrice((val) => {
-                if (initialShippingFee - (percentage / 100) * val < 0) {
-                  return initialTotalPrice;
+                if (shippingFee - (percentage / 100) * shippingFee < 0) {
+                  return totalPrice;
                 } else {
                   return (
-                    initialTotalPrice -
-                    (initialShippingFee - (percentage / 100) * val)
+                    totalPrice -
+                    (shippingFee - (percentage / 100) * shippingFee)
                   );
                 }
               });
@@ -981,7 +978,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                           <button
                             type='button'
                             onClick={checkVoucherCode}
-                            className='rounded-md bg-gray-200 px-4 text-sm font-medium text-gray-600 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50'
+                            className='rounded-md bg-gray-200 px-4 text-sm font-medium text-gray-600 hover:bg-gray-300'
                           >
                             Apply
                           </button>
