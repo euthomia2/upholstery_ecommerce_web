@@ -14,6 +14,12 @@ import {
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import PaymentModal from '../PaymentModal';
+import { useGetVoucherMutation } from '@/services/crud-voucher';
+import {
+  priceDiscountApplied,
+  shippingDiscountApplied,
+} from '@/slices/cartSlice';
+import { useDispatch } from 'react-redux';
 
 type OrderSummaryProps = {
   customer: Customer;
@@ -132,7 +138,13 @@ const createPayment = async (source, value, productDescription) => {
 };
 
 // Function to Listen to the Source in the Front End
-const listenToPayment = async (sourceId, setStatus, customerOrder, values) => {
+const listenToPayment = async (
+  sourceId,
+  setStatus,
+  customerOrder,
+  values,
+  paymentMethod
+) => {
   let i = 5;
   for (let i = 5; i > 0; i--) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -165,10 +177,15 @@ const listenToPayment = async (sourceId, setStatus, customerOrder, values) => {
         i = 0;
       } else if (sourceData.attributes.status === 'chargeable') {
         setStatus('success');
-        customerOrder(values)
+        localStorage.removeItem('cart');
+        customerOrder({
+          ...values,
+          source_id: sourceData.id,
+          payment_method: paymentMethod,
+        })
           .unwrap()
-          .then(async (payload) => {
-            await localStorage.removeItem('cart');
+          .then((payload) => {
+            console.log(payload);
           })
           .catch((error) => console.log(error));
         let productDescription = 'Payment for ';
@@ -203,6 +220,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   totalQuantity,
 }) => {
   const router = useRouter();
+  const [voucherCode, setVoucherCode] = useState('');
+  const [voucherCodeError, setVoucherCodeError] = useState(false);
+  const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [findVoucher, { isError }] = useGetVoucherMutation();
   const [customerOrder, { isLoading }] = useCustomerOrderMutation();
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(
     deliveryMethods[0]
@@ -210,8 +231,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
-
-  const subtotalPrice = totalPrice + shippingFee;
+  const dispatch = useDispatch();
+  const [initialTotalPrice, setInitialTotalPrice] = useState(totalPrice);
+  const [initialShippingFee, setInitialShippingFee] = useState(shippingFee);
+  const [subtotalPrice, setSubtotalPrice] = useState(totalPrice + shippingFee);
 
   const initialValues = {
     customer_id: customer.id,
@@ -228,6 +251,107 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     subtotal_price: subtotalPrice,
     product_list: products,
     total_quantity: totalQuantity,
+  };
+
+  const checkVoucherCode = async () => {
+    console.log(voucherCode);
+    findVoucher(voucherCode)
+      .unwrap()
+      .then((payload) => {
+        if (payload) {
+          if (payload.mode === 'Price') {
+            if (payload.type === 'Price Discount') {
+              setInitialTotalPrice((val) => {
+                if (val - payload.amount < 0) {
+                  return 0;
+                } else {
+                  return val - payload.amount;
+                }
+              });
+
+              setSubtotalPrice((val) => {
+                if (initialTotalPrice - payload.amount < 0) {
+                  return initialShippingFee;
+                } else {
+                  return (
+                    initialTotalPrice - payload.amount + initialShippingFee
+                  );
+                }
+              });
+            } else {
+              setInitialShippingFee((val) => {
+                if (val - payload.amount < 0) {
+                  return 0;
+                } else {
+                  return val - payload.amount;
+                }
+              });
+
+              setSubtotalPrice((val) => {
+                if (initialShippingFee - payload.amount < 0) {
+                  return initialTotalPrice;
+                } else {
+                  return (
+                    initialTotalPrice - (initialShippingFee - payload.amount)
+                  );
+                }
+              });
+            }
+          } else {
+            const percentage = payload.amount > 100 ? 100 : payload.amount;
+            if (payload.type === 'Price Discount') {
+              setInitialTotalPrice((val) => {
+                if (val - (percentage / 100) * val < 0) {
+                  return 0;
+                } else {
+                  return val - (percentage / 100) * val;
+                }
+              });
+
+              setSubtotalPrice((val) => {
+                if (initialTotalPrice - (percentage / 100) * val < 0) {
+                  return initialShippingFee;
+                } else {
+                  return (
+                    initialTotalPrice -
+                    (percentage / 100) * val +
+                    initialShippingFee
+                  );
+                }
+              });
+            } else {
+              setInitialShippingFee((val) => {
+                if (val - (percentage / 100) * val < 0) {
+                  return 0;
+                } else {
+                  return val - (percentage / 100) * val;
+                }
+              });
+
+              setSubtotalPrice((val) => {
+                if (initialShippingFee - (percentage / 100) * val < 0) {
+                  return initialTotalPrice;
+                } else {
+                  return (
+                    initialTotalPrice -
+                    (initialShippingFee - (percentage / 100) * val)
+                  );
+                }
+              });
+            }
+          }
+
+          setAppliedVoucher(payload);
+          setVoucherCodeError(false);
+        } else {
+          setAppliedVoucher(null);
+          setVoucherCodeError(true);
+          setInitialTotalPrice(totalPrice);
+          setInitialShippingFee(shippingFee);
+          setSubtotalPrice(totalPrice + shippingFee);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -254,27 +378,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           if (selectedDeliveryMethod.title === 'Cash on Delivery') {
-            customerOrder(values)
+            localStorage.removeItem('cart');
+            customerOrder({
+              ...values,
+              payment_method: selectedDeliveryMethod.title,
+            })
               .unwrap()
-              .then(async (payload) => {
-                let productDescription = 'Payment for ';
-
-                // Loop through the array and build the description
-                values.product_list.forEach((product, index) => {
-                  productDescription += `${product.quantity} pc${
-                    product.quantity > 1 ? 's' : ''
-                  } of ${product.name}`;
-                  if (index < values.product_list.length - 1) {
-                    productDescription += ', ';
-                  }
-                });
-                const payment = await createPayment(
-                  sourceData,
-                  values,
-                  productDescription
-                );
-
-                await localStorage.removeItem('cart');
+              .then((payload) => {
                 router.push('/');
                 toast.success('Ordered Successfully!');
               })
@@ -300,7 +410,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.id,
                 setPaymentStatus,
                 customerOrder,
-                values
+                values,
+                selectedPaymentMethod.title
               );
             }
 
@@ -317,7 +428,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.id,
                 setPaymentStatus,
                 customerOrder,
-                values
+                values,
+                selectedPaymentMethod.title
               );
             }
           }
@@ -842,6 +954,62 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                       ))}
                     </ul>
                     <dl className='text-gray-900 space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6'>
+                      <div className='flex flex-col justify-between'>
+                        <label
+                          htmlFor='discount-code-mobile'
+                          className={`${
+                            voucherCodeError && 'text-red-500'
+                          } block text-sm font-medium text-gray-700`}
+                        >
+                          Discount code
+                        </label>
+                        <div className='mt-1 flex space-x-4'>
+                          <input
+                            type='text'
+                            id='discount-code-mobile'
+                            name='discount-code-mobile'
+                            value={voucherCode}
+                            onChange={(e) =>
+                              setVoucherCode(e.target.value.trim())
+                            }
+                            className={`${
+                              voucherCodeError &&
+                              'border-red-500 border-2 focus:border-red-500 focus:ring-red-500'
+                            } block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm`}
+                          />
+
+                          <button
+                            type='button'
+                            onClick={checkVoucherCode}
+                            className='rounded-md bg-gray-200 px-4 text-sm font-medium text-gray-600 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50'
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        {appliedVoucher && appliedVoucher?.mode === 'Price' && (
+                          <p className='mt-1 text-green-500 text-sm font-medium'>
+                            {appliedVoucher.voucher_code} applied. You have ₱
+                            {appliedVoucher.amount} off{' '}
+                            {appliedVoucher.type.toLowerCase()}.
+                          </p>
+                        )}
+
+                        {appliedVoucher &&
+                          appliedVoucher?.mode === 'Percentage' && (
+                            <p className='mt-1 text-green-500 text-sm font-medium'>
+                              {appliedVoucher.voucher_code} applied. You have{' '}
+                              {appliedVoucher.amount}% off{' '}
+                              {appliedVoucher.type.toLowerCase()}.
+                            </p>
+                          )}
+
+                        {voucherCodeError && (
+                          <p className='mt-1 text-red-500 text-sm font-medium'>
+                            Sorry, this voucher is not valid. Please check for
+                            any typing errors.
+                          </p>
+                        )}
+                      </div>
                       <div className='flex items-center justify-between'>
                         <dt className='text-sm'>Subtotal</dt>
                         <dd className='text-sm font-medium text-gray-900'>
@@ -851,6 +1019,34 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                           })}
                         </dd>
                       </div>
+                      {appliedVoucher?.type === 'Price Discount' &&
+                        appliedVoucher?.mode === 'Price' && (
+                          <div className='flex items-center justify-between'>
+                            <dt className='text-sm'>Price Discount</dt>
+                            <dd className='text-sm font-medium text-red-600'>
+                              -₱
+                              {appliedVoucher.amount.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                              })}
+                            </dd>
+                          </div>
+                        )}
+
+                      {appliedVoucher?.type === 'Price Discount' &&
+                        appliedVoucher?.mode === 'Percentage' && (
+                          <div className='flex items-center justify-between'>
+                            <dt className='text-sm'>Price Discount</dt>
+                            <dd className='text-sm font-medium text-red-600'>
+                              -₱
+                              {(
+                                (appliedVoucher.amount / 100) *
+                                totalPrice
+                              ).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                              })}
+                            </dd>
+                          </div>
+                        )}
                       <div className='flex items-center justify-between'>
                         <dt className='text-sm'>Shipping</dt>
                         <dd className='text-sm font-medium text-gray-900'>
@@ -860,6 +1056,34 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                           })}
                         </dd>
                       </div>
+                      {appliedVoucher?.type === 'Shipping Discount' &&
+                        appliedVoucher?.mode === 'Price' && (
+                          <div className='flex items-center justify-between'>
+                            <dt className='text-sm'>Shipping Discount</dt>
+                            <dd className='text-sm font-medium text-red-600'>
+                              -₱
+                              {appliedVoucher.amount.toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                              })}
+                            </dd>
+                          </div>
+                        )}
+
+                      {appliedVoucher?.type === 'Shipping Discount' &&
+                        appliedVoucher?.mode === 'Percentage' && (
+                          <div className='flex items-center justify-between'>
+                            <dt className='text-sm'>Shipping Discount</dt>
+                            <dd className='text-sm font-medium text-red-600'>
+                              -₱
+                              {(
+                                (appliedVoucher.amount / 100) *
+                                shippingFee
+                              ).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                              })}
+                            </dd>
+                          </div>
+                        )}
                       <div className='flex items-center justify-between border-t border-gray-200 pt-6'>
                         <dt className='text-base font-medium'>Total</dt>
                         <dd className='text-base font-medium text-gray-900'>

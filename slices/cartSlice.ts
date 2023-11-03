@@ -50,6 +50,20 @@ const cartSlice = createSlice({
     checkAuth(state: InitialState, action) {
       state.isLoggedIn = action.payload;
     },
+    priceDiscountApplied(state: InitialState, action) {
+      if (state.totalPrice - action.payload < 0) {
+        state.totalPrice = 0;
+      } else {
+        state.totalPrice = state.totalPrice - action.payload;
+      }
+    },
+    shippingDiscountApplied(state: InitialState, action) {
+      if (state.shippingFee - action.payload < 0) {
+        state.shippingFee = 0;
+      } else {
+        state.shippingFee = state.shippingFee - action.payload;
+      }
+    },
     fetchingProducts(state: InitialState, action) {
       state.isLoading = true;
     },
@@ -69,6 +83,11 @@ const cartSlice = createSlice({
 
         state.totalQuantity = newTotalQuantity;
         state.totalPrice = newTotalPrice;
+      }
+
+      if (state.products.length === 0) {
+        state.totalQuantity = 0;
+        state.totalPrice = 0;
       }
 
       state.isLoading = false;
@@ -168,6 +187,8 @@ export const {
   fetchingProducts,
   fetchProducts,
   fetchProductsError,
+  priceDiscountApplied,
+  shippingDiscountApplied,
   closeModal,
   checkAuth,
   openCart,
