@@ -23,13 +23,13 @@ const ProductCard = ({ product }) => {
             } h-full w-full object-cover object-center group-hover:opacity-75`}
           />
 
-          {product.quantity === 0 && (
+          {product.quantity <= 0 && (
             <p className='text-white bg-gray-900/50 h-max my-auto py-3 font-normal'>
               Out of Stock
             </p>
           )}
 
-          {product.quantity <= 10 && product.quantity !== 0 && (
+          {product.quantity <= 10 && product.quantity > 0 && (
             <p className='text-white bg-gray-900/50 h-max mt-auto py-3 font-normal'>
               {product.quantity} item(s) left
             </p>
