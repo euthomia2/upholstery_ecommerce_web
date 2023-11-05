@@ -35,7 +35,13 @@ const SellerDashboardPage = () => {
 
   const sellerOrdersCount = useMemo(() => {
     if (orders && seller) {
-      return orders?.filter((el) => el.shop.seller.id === seller.id).length;
+      return orders?.filter((el) => {
+        const parseProducts = JSON.parse(el.products);
+
+        return parseProducts.forEach((el, i) => {
+          return el.shop.seller.id === seller.id;
+        });
+      }).length;
     }
 
     return 0;

@@ -17,8 +17,8 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
             My Orders
           </h1>
           <p className='mt-2 text-sm text-gray-500'>
-            Check the status of recent orders, manage returns, and view
-            invoices.
+            Verify the current status of recent orders, handle returns, and
+            access invoices.
           </p>
         </div>
 
@@ -125,6 +125,18 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                         </th>
                         <th
                           scope='col'
+                          className='hidden w-1/5 py-3 pr-8 font-normal sm:table-cell'
+                        >
+                          Category
+                        </th>
+                        <th
+                          scope='col'
+                          className='hidden w-1/5 py-3 pr-8 font-normal sm:table-cell'
+                        >
+                          Shop's Name
+                        </th>
+                        <th
+                          scope='col'
                           className='hidden py-3 pr-8 font-normal sm:table-cell'
                         >
                           Status
@@ -166,8 +178,15 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                               minimumFractionDigits: 2,
                             })}
                           </td>
+
                           <td className='hidden py-6 pr-8 sm:table-cell'>
                             {product.quantity} item(s)
+                          </td>
+                          <td className='hidden py-6 pr-8 sm:table-cell'>
+                            {product.category.title}
+                          </td>
+                          <td className='hidden py-6 pr-8 sm:table-cell'>
+                            {product.shop.name}
                           </td>
                           <td className='hidden py-6 pr-8 sm:table-cell'>
                             {product.status === 'Processing' && (
@@ -237,7 +256,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                           </td>
                           <td className='whitespace-nowrap py-6 text-right font-medium'>
                             <a href='#' className='text-indigo-600'>
-                              View Product
+                              View
                             </a>
                           </td>
                         </tr>
