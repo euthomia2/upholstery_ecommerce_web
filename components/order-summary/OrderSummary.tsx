@@ -73,8 +73,8 @@ const createSource = async (details, type) => {
         attributes: {
           amount: details.subtotal_price * 100,
           redirect: {
-            success: 'http://localhost:3000/',
-            failed: 'http://localhost:3000/',
+            success: 'http://localhost:3000/my-orders',
+            failed: 'http://localhost:3000/order-summary',
           },
           billing: {
             name: `${details.first_name} ${details.last_name}`,
