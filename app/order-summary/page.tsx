@@ -27,6 +27,10 @@ export default function OrderSummaryPage() {
   } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
+  console.log(products);
+
+  const totalShippingFee = shippingFee * products.length;
+
   useEffect(() => {
     if (!Cookies.get('is_authenticated')) {
       router.push('/');
@@ -60,7 +64,7 @@ export default function OrderSummaryPage() {
           customer={user}
           products={products}
           totalPrice={totalPrice}
-          shippingFee={shippingFee}
+          shippingFee={totalShippingFee}
           totalQuantity={totalQuantity}
         />
       </Header>

@@ -1,7 +1,13 @@
+import React from 'react';
 import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import { format } from 'date-fns';
+import { Order } from '@/models/Order';
 
-const SellerOrdersMain = ({ orders }) => {
+type SellerOrdersMainProps = {
+  orders: Order[];
+};
+
+const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
   return (
     <>
       <div className='xl:pl-72'>
@@ -74,38 +80,52 @@ const SellerOrdersMain = ({ orders }) => {
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Product's Name
+                        Subtotal Price
+                      </th>
+
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Shipping Fee
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Price
+                        Total Price
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Quantity
+                        Total Quantity
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Shop's Name
+                        Voucher Code
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Delivery Status
+                        Price Discount
                       </th>
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
-                        Active Status
+                        Shipping Discount
                       </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Payment Method
+                      </th>
+
                       <th
                         scope='col'
                         className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
@@ -144,115 +164,60 @@ const SellerOrdersMain = ({ orders }) => {
                             {order.customer.first_name}{' '}
                             {order.customer.last_name}
                           </td>
-                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                            {order.product.name}
-                          </td>
+
                           <td className='px-3 py-4 text-sm text-gray-500'>
                             ₱
-                            {order.product.price.toLocaleString('en-US', {
+                            {order.subtotal_price.toLocaleString('en-US', {
                               minimumFractionDigits: 2,
                             })}
                           </td>
+
                           <td className='px-3 py-4 text-sm text-gray-500'>
-                            {order.quantity ?? 0}{' '}
-                            {order.quantity ? 'pcs' : 'pc'}
+                            ₱
+                            {order.shipping_fee.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                            })}
                           </td>
+
                           <td className='px-3 py-4 text-sm text-gray-500'>
-                            {order.shop.name}
+                            ₱
+                            {order.total_price.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                            })}
                           </td>
-                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                            {order.status === 'Processing' && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-gray-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Processing
-                              </span>
-                            )}
 
-                            {order.status === 'Packed' && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-gray-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Packed
-                              </span>
-                            )}
-
-                            {order.status === 'Shipped' && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-blue-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Shipped
-                              </span>
-                            )}
-
-                            {order.status === 'Out For Delivery' && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-blue-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Out For Delivery
-                              </span>
-                            )}
-
-                            {order.status === 'Delivered' && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-green-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Delivered
-                              </span>
-                            )}
+                          <td className='px-3 py-4 text-sm text-gray-500'>
+                            {order.total_quantity ?? 0} item(s)
                           </td>
-                          <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                            {order.is_active === 1 && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-green-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Activated
-                              </span>
-                            )}
 
-                            {order.is_active === 0 && (
-                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
-                                <svg
-                                  className='h-1.5 w-1.5 fill-red-500'
-                                  viewBox='0 0 6 6'
-                                  aria-hidden='true'
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Deactivated
-                              </span>
-                            )}
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.voucher_code ?? 'N/A'}
                           </td>
+
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.discount_mode === 'Price' &&
+                              order.price_discount &&
+                              '₱'}
+                            {order.price_discount ?? 0}
+                            {order.discount_mode === 'Percentage' &&
+                              order.price_discount &&
+                              '%'}
+                          </td>
+
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.discount_mode === 'Price' &&
+                              order.shipping_discount &&
+                              '₱'}
+                            {order.shipping_discount ?? 0}
+                            {order.discount_mode === 'Percentage' &&
+                              order.shipping_discount &&
+                              '%'}
+                          </td>
+
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.payment_method}
+                          </td>
+
                           <td className='px-3 py-4 text-sm text-gray-500 whitespace-nowrap'>
                             {createdAt}
                           </td>

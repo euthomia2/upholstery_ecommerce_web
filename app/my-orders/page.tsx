@@ -23,7 +23,9 @@ export default function MyOrdersPage() {
 
   const customerOrders = useMemo(() => {
     if (orders && user) {
-      return orders?.filter((el) => el.customer.id === user.id);
+      return orders
+        ?.filter((el) => el.customer.id === user.id)
+        .sort((a, b) => b.id - a.id);
     }
 
     return 0;

@@ -16,7 +16,7 @@ const AfterOrderScreen: React.FC<AfterOrderScreenProps> = ({
       <main className='relative lg:min-h-full'>
         <div className='h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12'>
           <img
-            src='https://tailwindui.com/img/ecommerce-images/confirmation-page-06-hero.jpg'
+            src='/assets/delivery-1.jpg'
             alt='TODO'
             className='h-full w-full object-cover object-center'
           />
@@ -38,7 +38,7 @@ const AfterOrderScreen: React.FC<AfterOrderScreenProps> = ({
 
               <dl className='mt-16 text-sm font-medium'>
                 <dt className='text-gray-900'>Order ID</dt>
-                <dd className='mt-2 text-indigo-600'>51547878755545848512</dd>
+                <dd className='mt-2 text-indigo-600'>{order.order_id}</dd>
               </dl>
 
               <ul
@@ -80,16 +80,75 @@ const AfterOrderScreen: React.FC<AfterOrderScreenProps> = ({
                   </dd>
                 </div>
 
+                {order.price_discount && order.discount_mode === 'Price' && (
+                  <div className='flex justify-between'>
+                    <dt>Price Discount</dt>
+                    <dd className='text-red-500'>
+                      -₱
+                      {order.price_discount.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                      })}
+                    </dd>
+                  </div>
+                )}
+
+                {order.price_discount &&
+                  order.discount_mode === 'Percentage' && (
+                    <div className='flex justify-between'>
+                      <dt>Price Discount</dt>
+                      <dd className='text-red-500'>
+                        -₱
+                        {Math.round(
+                          (order.price_discount / 100) * order.subtotal_price
+                        ).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </dd>
+                    </div>
+                  )}
+
                 <div className='flex justify-between'>
                   <dt>Shipping</dt>
-                  <dd className='text-gray-900'>₱39.00</dd>
+                  <dd className='text-gray-900'>
+                    ₱
+                    {order.shipping_fee.toLocaleString('en-US', {
+                      minimumFractionDigits: 2,
+                    })}
+                  </dd>
                 </div>
+
+                {order.shipping_discount && order.discount_mode === 'Price' && (
+                  <div className='flex justify-between'>
+                    <dt>Shipping Discount</dt>
+                    <dd className='text-red-500'>
+                      -₱
+                      {order.shipping_discount.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                      })}
+                    </dd>
+                  </div>
+                )}
+
+                {order.shipping_discount &&
+                  order.discount_mode === 'Percentage' && (
+                    <div className='flex justify-between'>
+                      <dt>Shipping Discount</dt>
+                      <dd className='text-red-500'>
+                        -₱
+                        {Math.round(
+                          (order.shipping_discount / 100) * order.shipping_fee
+                        ).toLocaleString('en-US', {
+                          minimumFractionDigits: 2,
+                        })}
+                      </dd>
+                    </div>
+                  )}
 
                 <div className='flex items-center justify-between border-t border-gray-200 pt-6 text-gray-900'>
                   <dt className='text-base'>Total</dt>
                   <dd className='text-base'>
                     ₱
-                    {order.subtotal_price.toLocaleString('en-US', {
+                    {order.total_price.toLocaleString('en-US', {
                       minimumFractionDigits: 2,
                     })}
                   </dd>

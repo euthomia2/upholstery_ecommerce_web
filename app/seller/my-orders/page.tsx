@@ -23,12 +23,20 @@ const SellerMyOrdersPage = () => {
   const sellerOrders = useMemo(() => {
     if (orders && seller) {
       return orders
-        .filter((el) => el.shop.seller.id === seller.id)
+        .filter((el) => {
+          const parseProducts = JSON.parse(el.products);
+
+          return parseProducts.map((el, i) => {
+            return el.shop.seller.id === seller.id;
+          });
+        })
         .sort((a, b) => b.id - a.id);
     }
 
     return [];
   }, [seller, orders]);
+
+  console.log(sellerOrders);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -50,7 +58,7 @@ const SellerMyOrdersPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller]);
 
   if (isLoading || sellerFetching || ordersFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;

@@ -118,7 +118,7 @@ const createPayment = async (source, value, productDescription) => {
     body: JSON.stringify({
       data: {
         attributes: {
-          amount: value.subtotal_price * 100,
+          amount: value.total_price * 100,
           currency: 'PHP',
           description: productDescription,
           source: {
@@ -248,9 +248,18 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     barangay: customer.barangay,
     zip_code: customer.zip_code,
     street_address: customer.street_address,
-    subtotal_price: subtotalPrice,
+    subtotal_price: initialTotalPrice,
     product_list: products,
     total_quantity: totalQuantity,
+    shipping_fee: initialShippingFee,
+    total_price: subtotalPrice,
+    voucher_code: Boolean(appliedVoucher) ? voucherCode : '',
+    price_discount:
+      appliedVoucher?.type === 'Price Discount' ? appliedVoucher?.amount : 0,
+    shipping_discount:
+      appliedVoucher?.type === 'Shipping Discount' ? appliedVoucher?.amount : 0,
+    discount_mode:
+      appliedVoucher?.mode === 'Percentage' ? 'Percentage' : 'Price',
   };
 
   const checkVoucherCode = async () => {
@@ -290,7 +299,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 if (shippingFee - payload.amount < 0) {
                   return totalPrice;
                 } else {
-                  return totalPrice - (shippingFee - payload.amount);
+                  return totalPrice + (shippingFee - payload.amount);
                 }
               });
 
@@ -374,15 +383,31 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             .required('Email Address is required'),
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          const modifiedValues = {
+            ...values,
+            total_price: Math.round(subtotalPrice),
+            voucher_code: Boolean(appliedVoucher) ? voucherCode : '',
+            price_discount:
+              appliedVoucher?.type === 'Price Discount'
+                ? appliedVoucher?.amount
+                : 0,
+            shipping_discount:
+              appliedVoucher?.type === 'Shipping Discount'
+                ? appliedVoucher?.amount
+                : 0,
+            discount_mode:
+              appliedVoucher?.mode === 'Percentage' ? 'Percentage' : 'Price',
+          };
+
           if (selectedDeliveryMethod.title === 'Cash on Delivery') {
             localStorage.removeItem('cart');
             customerOrder({
-              ...values,
+              ...modifiedValues,
               payment_method: selectedDeliveryMethod.title,
             })
               .unwrap()
               .then((payload) => {
-                router.push('/');
+                router.push(`/my-orders/${payload.order_id}`);
                 toast.success('Ordered Successfully!');
               })
               .catch((error) => console.log(error));
@@ -396,7 +421,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
             if (selectedPaymentMethod.title === 'GCash') {
               const source = await createSource(
-                values,
+                modifiedValues,
                 selectedPaymentMethod.type
               );
               window.open(
@@ -407,14 +432,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.id,
                 setPaymentStatus,
                 customerOrder,
-                values,
+                modifiedValues,
                 selectedPaymentMethod.title
               );
             }
 
             if (selectedPaymentMethod.title === 'Grab Pay') {
               const source = await createSource(
-                values,
+                modifiedValues,
                 selectedPaymentMethod.type
               );
               window.open(
@@ -425,7 +450,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 source.data.id,
                 setPaymentStatus,
                 customerOrder,
-                values,
+                modifiedValues,
                 selectedPaymentMethod.title
               );
             }
@@ -961,24 +986,40 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                           Discount code
                         </label>
                         <div className='mt-1 flex space-x-4'>
-                          <input
-                            type='text'
-                            id='discount-code-mobile'
-                            name='discount-code-mobile'
-                            value={voucherCode}
-                            onChange={(e) =>
-                              setVoucherCode(e.target.value.trim())
-                            }
-                            className={`${
-                              voucherCodeError &&
-                              'border-red-500 border-2 focus:border-red-500 focus:ring-red-500'
-                            } block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm`}
-                          />
+                          <div className='relative flex w-full'>
+                            <input
+                              type='text'
+                              id='discount-code-mobile'
+                              name='discount-code-mobile'
+                              value={voucherCode}
+                              onChange={(e) =>
+                                setVoucherCode(e.target.value.trim())
+                              }
+                              className={`${
+                                voucherCodeError &&
+                                'border-red-500 border-2 focus:border-red-500 focus:ring-red-500'
+                              } block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm`}
+                            />
+
+                            <button
+                              type='button'
+                              onClick={() => {
+                                setVoucherCode('');
+                                setVoucherCodeError(false);
+                                setAppliedVoucher(null);
+                                setSubtotalPrice(totalPrice + shippingFee);
+                              }}
+                              className='absolute right-0 m-2 rounded-md bg-gray-200 p-1 text-xs font-medium text-gray-700 hover:bg-gray-300'
+                            >
+                              Clear
+                            </button>
+                          </div>
 
                           <button
                             type='button'
                             onClick={checkVoucherCode}
-                            className='rounded-md bg-gray-200 px-4 text-sm font-medium text-gray-600 hover:bg-gray-300'
+                            className='rounded-md bg-indigo-600 px-4 text-sm font-medium text-gray-100 hover:bg-indigo-700 disabled:bg-indigo-100 disabled:hover:bg-indigo-100'
+                            disabled={Boolean(appliedVoucher)}
                           >
                             Apply
                           </button>

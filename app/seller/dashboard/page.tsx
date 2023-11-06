@@ -38,7 +38,7 @@ const SellerDashboardPage = () => {
       return orders?.filter((el) => {
         const parseProducts = JSON.parse(el.products);
 
-        return parseProducts.forEach((el, i) => {
+        return parseProducts.map((el, i) => {
           return el.shop.seller.id === seller.id;
         });
       }).length;

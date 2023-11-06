@@ -1,5 +1,6 @@
 import { Customer } from '@/models/Customer';
 import { Order } from '@/models/Order';
+import Link from 'next/link';
 import { format } from 'date-fns';
 import React from 'react';
 
@@ -84,21 +85,21 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                         <dt>Subtotal</dt>
                         <dd className='sm:mt-1'>
                           ₱
-                          {order.subtotal_price.toLocaleString('en-US', {
+                          {order.total_price.toLocaleString('en-US', {
                             minimumFractionDigits: 2,
                           })}
                         </dd>
                       </div>
                     </dl>
-                    <a
-                      href='#'
+                    <Link
+                      href={`/my-orders/${order.order_id}`}
                       className='mt-6 flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto'
                     >
                       View Summary
                       <span className='sr-only'>
                         for order {order.order_id}
                       </span>
-                    </a>
+                    </Link>
                   </div>
 
                   <table className='mt-4 w-full text-gray-500 sm:mt-6'>
