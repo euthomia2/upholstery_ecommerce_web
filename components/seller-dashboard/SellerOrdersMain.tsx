@@ -8,6 +8,8 @@ type SellerOrdersMainProps = {
 };
 
 const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
+  console.log(orders);
+
   return (
     <>
       <div className='xl:pl-72'>
@@ -78,6 +80,12 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                       </th>
                       <th
                         scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell'
+                      >
+                        Products's Name
+                      </th>
+                      <th
+                        scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
                       >
                         Subtotal Price
@@ -101,24 +109,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                       >
                         Total Quantity
                       </th>
-                      <th
-                        scope='col'
-                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
-                      >
-                        Voucher Code
-                      </th>
-                      <th
-                        scope='col'
-                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
-                      >
-                        Price Discount
-                      </th>
-                      <th
-                        scope='col'
-                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
-                      >
-                        Shipping Discount
-                      </th>
+
                       <th
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
@@ -152,6 +143,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                     {orders?.map((order) => {
                       const createdDate = new Date(order.created_at);
                       const createdAt = format(createdDate, 'yyyy-MM-dd');
+                      const totalPrice = order.price + order.shipping_fee;
 
                       return (
                         <tr key={order.order_id}>
@@ -164,10 +156,12 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                             {order.customer.first_name}{' '}
                             {order.customer.last_name}
                           </td>
-
+                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                            {order.name}
+                          </td>
                           <td className='px-3 py-4 text-sm text-gray-500'>
                             ₱
-                            {order.subtotal_price.toLocaleString('en-US', {
+                            {order.price.toLocaleString('en-US', {
                               minimumFractionDigits: 2,
                             })}
                           </td>
@@ -181,16 +175,16 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
 
                           <td className='px-3 py-4 text-sm text-gray-500'>
                             ₱
-                            {order.total_price.toLocaleString('en-US', {
+                            {totalPrice.toLocaleString('en-US', {
                               minimumFractionDigits: 2,
                             })}
                           </td>
 
                           <td className='px-3 py-4 text-sm text-gray-500'>
-                            {order.total_quantity ?? 0} item(s)
+                            {order.quantity ?? 0} item(s)
                           </td>
 
-                          <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                          {/* <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
                             {order.voucher_code ?? 'N/A'}
                           </td>
 
@@ -212,7 +206,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                             {order.discount_mode === 'Percentage' &&
                               order.shipping_discount &&
                               '%'}
-                          </td>
+                          </td> */}
 
                           <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
                             {order.payment_method}

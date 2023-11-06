@@ -19,24 +19,32 @@ const SellerMyOrdersPage = () => {
   const { data: orders, isFetching: ordersFetching } = useGetOrdersQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [allOrders, setAllOrders] = useState(null);
 
   const sellerOrders = useMemo(() => {
     if (orders && seller) {
       return orders
-        .filter((el) => {
-          const parseProducts = JSON.parse(el.products);
+        .filter((orderEl) => {
+          const parseProducts = JSON.parse(orderEl.products);
 
-          return parseProducts.map((el, i) => {
+          const sellerProducts = parseProducts.filter((el, i) => {
             return el.shop.seller.id === seller.id;
           });
+
+          if (sellerProducts.length !== 0) {
+            const totalOrders = sellerProducts.map((el) => {
+              return { ...el, ...orderEl, products: undefined };
+            });
+
+            return setAllOrders(totalOrders);
+          }
+          return [];
         })
         .sort((a, b) => b.id - a.id);
     }
 
     return [];
   }, [seller, orders]);
-
-  console.log(sellerOrders);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -66,7 +74,7 @@ const SellerMyOrdersPage = () => {
 
   return (
     <SellerDashboard>
-      <SellerOrdersMain orders={sellerOrders} />
+      <SellerOrdersMain orders={allOrders} />
     </SellerDashboard>
   );
 };
