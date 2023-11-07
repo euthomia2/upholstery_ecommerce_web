@@ -11,17 +11,17 @@ import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
-import { Seller } from '@/models/Seller';
-import { useSellerUpdateUserMutation } from '@/services/authentication';
+import { Customer } from '@/models/Customer';
+import { useCustomerUpdateUserMutation } from '@/services/authentication';
 
-type SellerAccountSettingsProps = {
-  seller: Seller;
+type CustomerAccountSettingsProps = {
+  customer: Customer;
 };
 
-const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
-  seller,
+const CustomerAccountSettings: React.FC<CustomerAccountSettingsProps> = ({
+  customer,
 }) => {
-  const [updateSeller, { isLoading }] = useSellerUpdateUserMutation();
+  const [updateCustomer, { isLoading }] = useCustomerUpdateUserMutation();
   const [regionData, setRegionData] = useState();
   const [provinceData, setProvinceData] = useState();
   const [cityData, setCityData] = useState();
@@ -39,19 +39,19 @@ const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
   }, []);
 
   const initialValues = {
-    first_name: seller.first_name,
-    middle_name: seller.middle_name,
-    last_name: seller.last_name,
-    email: seller.user.email,
-    contact_number: seller.contact_number,
-    gender: seller.gender,
-    birth_date: seller.birth_date,
-    region: seller.region,
-    province: seller.province,
-    city: seller.city,
-    barangay: seller.barangay,
-    zip_code: seller.zip_code,
-    street_address: seller.street_address,
+    first_name: customer.first_name,
+    middle_name: customer.middle_name,
+    last_name: customer.last_name,
+    email: customer.user.email,
+    contact_number: customer.contact_number,
+    gender: customer.gender,
+    birth_date: customer.birth_date,
+    region: customer.region,
+    province: customer.province,
+    city: customer.city,
+    barangay: customer.barangay,
+    zip_code: customer.zip_code,
+    street_address: customer.street_address,
   };
   let today = new Date().toISOString().split('T')[0];
 
@@ -104,14 +104,14 @@ const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
         const updatedValues = findChangedProperties(
           initialValues,
           values,
-          seller?.id,
-          seller?.user.id
+          customer?.id,
+          customer?.user.id
         );
 
-        updateSeller(updatedValues)
+        updateCustomer(updatedValues)
           .unwrap()
           .then((payload) => {
-            router.push('/seller/dashboard');
+            router.push('/');
 
             toast.success('Edited Information Successfully!');
           })
@@ -130,47 +130,16 @@ const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
         dirty,
         isValid,
       }) => (
-        <div className='xl:pl-72 bg-white h-full'>
+        <div className=' bg-white mx-auto max-w-7xl  lg:pb-24'>
           <main>
-            <header className='flex bg-gray-100 items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8'>
-              <div className='flex items-center text-base  leading-7 text-gray-900'>
-                <span>
-                  <HomeIcon
-                    className='h-5 w-5 shrink-0 text-gray-900'
-                    aria-hidden='true'
-                  />
-                </span>
-
-                <span className='ml-2 text-gray-400'>Home</span>
-
-                <span>
-                  <ChevronRightIcon
-                    className='h-5 w-5 shrink-0 text-gray-900'
-                    aria-hidden='true'
-                  />
-                </span>
-
-                <span className='text-gray-400'>Settings</span>
-
-                <span>
-                  <ChevronRightIcon
-                    className='h-5 w-5 shrink-0 text-gray-900'
-                    aria-hidden='true'
-                  />
-                </span>
-
-                <span className='font-semibold'>Account Settings</span>
-              </div>
-            </header>
             <form noValidate onSubmit={handleSubmit}>
               <div className='space-y-12 sm:space-y-16 p-8 '>
                 <div>
-                  <h2 className='text-base font-semibold leading-7 text-gray-900'>
+                  <h1 className='text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl'>
                     Account Settings
-                  </h2>
-                  <p className='mt-1 max-w-2xl text-sm leading-6 text-gray-600'>
-                    You can change the information of your account in this
-                    section.
+                  </h1>
+                  <p className='mt-2 text-sm text-gray-500'>
+                    You can change the information of your account in this page.
                   </p>
 
                   <div className='mt-10 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0'>
@@ -620,7 +589,7 @@ const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
 
               <div className='p-10 flex items-center justify-end gap-x-6'>
                 <Link
-                  href='/seller/dashboard'
+                  href='/'
                   className='text-sm font-semibold leading-6 text-gray-900'
                 >
                   Cancel
@@ -641,4 +610,4 @@ const SellerAccountSettings: React.FC<SellerAccountSettingsProps> = ({
   );
 };
 
-export default SellerAccountSettings;
+export default CustomerAccountSettings;
