@@ -1,8 +1,10 @@
+import Link from 'next/link';
+
 const OverviewFooter = () => {
   const footerNavigation = {
     shop: [
       { name: 'Products', href: '/products' },
-      { name: 'Discount Vouchers', href: '#' },
+      { name: 'Discount Vouchers', href: '/discount-vouchers' },
     ],
 
     account: [
@@ -30,12 +32,12 @@ const OverviewFooter = () => {
                 <ul role='list' className='mt-6 space-y-6'>
                   {footerNavigation.shop.map((item) => (
                     <li key={item.name} className='text-sm'>
-                      <a
+                      <Link
                         href={item.href}
                         className='text-gray-500 hover:text-gray-600'
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -46,12 +48,12 @@ const OverviewFooter = () => {
                 <ul role='list' className='mt-6 space-y-6'>
                   {footerNavigation.account.map((item) => (
                     <li key={item.name} className='text-sm'>
-                      <a
+                      <Link
                         href={item.href}
                         className='text-gray-500 hover:text-gray-600'
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

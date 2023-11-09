@@ -174,7 +174,10 @@ const Navbar = () => {
 
               {isAuthenticated && !isLoading
                 ? navigation.pages
-                    .filter((el) => el.name == 'Products')
+                    .filter(
+                      (el) =>
+                        el.name == 'Products' || el.name == 'Discount Vouchers'
+                    )
                     .map((page) => (
                       <a
                         key={page.name}
