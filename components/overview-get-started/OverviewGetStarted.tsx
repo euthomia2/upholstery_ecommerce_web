@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
 const OverviewGetStarted = () => {
@@ -33,10 +34,10 @@ const OverviewGetStarted = () => {
             <div className='flex items-end p-6 sm:absolute sm:inset-0'>
               <div>
                 <h3 className='font-semibold text-white'>
-                  <a href='#'>
+                  <Link href='/products'>
                     <span className='absolute inset-0' />
                     Products
-                  </a>
+                  </Link>
                 </h3>
                 <p aria-hidden='true' className='mt-1 text-sm text-white'>
                   Visit now
@@ -83,10 +84,10 @@ const OverviewGetStarted = () => {
             <div className='flex items-end p-6 sm:absolute sm:inset-0'>
               <div>
                 <h3 className='font-semibold text-white'>
-                  <a href='#'>
+                  <Link href='/my-orders'>
                     <span className='absolute inset-0' />
                     Orders
-                  </a>
+                  </Link>
                 </h3>
                 <p aria-hidden='true' className='mt-1 text-sm text-white'>
                   Visit now

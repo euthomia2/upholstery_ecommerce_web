@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Image from 'next/image';
 
 const OverviewCTA = () => {
@@ -17,10 +18,10 @@ const OverviewCTA = () => {
                   Up to ₱49 only.
                 </h2>
                 <div className='mt-6 text-base'>
-                  <a href='#' className='font-semibold text-white'>
+                  <Link href='/products' className='font-semibold text-white'>
                     Shop the sale
                     <span aria-hidden='true'> &rarr;</span>
-                  </a>
+                  </Link>
                 </div>
               </div>
 

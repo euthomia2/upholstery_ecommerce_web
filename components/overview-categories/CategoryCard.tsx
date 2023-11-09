@@ -1,4 +1,15 @@
+import Link from 'next/link';
 import Image from 'next/image';
+
+function convertToSlug(inputString: string) {
+  // Convert to lowercase and replace spaces with hyphens
+  let slug = inputString.toLowerCase().replace(/\s+/g, '-');
+
+  // Remove special characters using regular expressions
+  slug = slug.replace(/[^a-z0-9-]/g, '');
+
+  return slug;
+}
 
 const CategoryCard = ({ category }) => {
   return (
@@ -13,10 +24,13 @@ const CategoryCard = ({ category }) => {
         />
       </div>
       <div className='min-w-0 flex-1'>
-        <a href='#' className='focus:outline-none'>
+        <Link
+          href={`/products/${convertToSlug(category.title)}`}
+          className='focus:outline-none'
+        >
           <span className='absolute inset-0' aria-hidden='true' />
           <p className='text-sm font-medium text-gray-900'>{category.title}</p>
-        </a>
+        </Link>
       </div>
     </div>
   );

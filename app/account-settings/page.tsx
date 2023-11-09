@@ -7,7 +7,6 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useCustomerGetUserQuery } from '@/services/authentication';
 import { fetchingProducts } from '@/slices/cartSlice';

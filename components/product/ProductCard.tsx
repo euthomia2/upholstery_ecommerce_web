@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { addProduct } from '@/slices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -7,6 +8,16 @@ const ProductCard = ({ product }) => {
   const { products } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const cartProducts = products.find((el) => el.name === product.name);
+
+  function convertToSlug(inputString: string) {
+    // Convert to lowercase and replace spaces with hyphens
+    let slug = inputString.toLowerCase().replace(/\s+/g, '-');
+
+    // Remove special characters using regular expressions
+    slug = slug.replace(/[^a-z0-9-]/g, '');
+
+    return slug;
+  }
 
   return (
     <li
@@ -38,10 +49,14 @@ const ProductCard = ({ product }) => {
         <div className='mt-6'>
           <p className='text-sm text-gray-500'>{product.category?.title}</p>
           <h3 className='mt-1 font-semibold text-gray-900 truncate whitespace-nowrap'>
-            <a href='/'>
+            <Link
+              href={`/products/${convertToSlug(
+                product.category.title
+              )}/${convertToSlug(product.name)}`}
+            >
               <span className='absolute inset-0' />
               {product.name}
-            </a>
+            </Link>
           </h3>
           <p className='mt-1 text-gray-900'>
             ₱
