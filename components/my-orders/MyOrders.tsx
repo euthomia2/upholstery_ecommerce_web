@@ -2,7 +2,11 @@ import { Customer } from '@/models/Customer';
 import { Order } from '@/models/Order';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import React from 'react';
+import React, { useState } from 'react';
+import Modal from '../Modal';
+import { useRouter } from 'next/navigation';
+import { useOrderReceivedMutation } from '@/services/crud-order';
+import { toast } from 'react-hot-toast';
 
 type MyOrdersProps = {
   user: Customer;
@@ -10,7 +14,55 @@ type MyOrdersProps = {
 };
 
 const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
+  const [orderReceived, { isLoading }] = useOrderReceivedMutation();
+  const router = useRouter();
+
+  const [showOrderReceived, setShowOrderReceived] = useState(false);
+  const [orderId, setOrderId] = useState(null);
+  const [productId, setProductId] = useState(null);
+
+  const runOpenModal = ({order_id, product_id}) => {
+    setShowOrderReceived(true)
+    setOrderId(order_id);
+    setProductId(product_id);
+  };
+
+  const runCloseModal = () => {
+    setShowOrderReceived(false)
+    setOrderId(null);
+    setProductId(null);
+  };
+
+  const runOrderReceived = () => {
+    orderReceived({
+      order_id: orderId,
+      product_id: productId
+    })
+      .unwrap()
+      .then((payload) => {
+        console.log(payload);
+        router.push(`/my-orders`);
+        toast.success('Product Order Received Successfully!');
+      })
+      .catch((error) => console.log(error));
+  };
+
+
+
   return (
+    <>
+    <Modal
+        title={`Are you sure that you've already received the product?`}
+        description={`Once you continue, you can never return or refund the product. Please carefully review your order before proceeding, as we cannot accommodate returns or refunds once the transaction is completed.`}
+        status='failed'
+        open={Boolean(showOrderReceived)}
+        leftBtnTitle='Back'
+        rightBtnTitle='Continue'
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runOrderReceived}
+      />
+
     <div className='bg-white'>
       <div className='mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:pb-24'>
         <div className='max-w-xl'>
@@ -144,9 +196,9 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                         </th>
                         <th
                           scope='col'
-                          className='w-0 py-3 text-right font-normal'
+                          className='hidden py-3 pr-8 font-normal sm:table-cell'
                         >
-                          Info
+                          Action
                         </th>
                       </tr>
                     </thead>
@@ -189,7 +241,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                           <td className='hidden py-6 pr-8 sm:table-cell'>
                             {product.shop.name}
                           </td>
-                          <td className='hidden py-6 pr-8 sm:table-cell'>
+                          <td className='hidden py-6 pr-8 sm:table-cell truncate'>
                             {product.status === 'Processing' && (
                               <span className='inline-flex items-center gap-x-1.5 rounded-md bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600'>
                                 <svg
@@ -256,9 +308,15 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
                             )}
                           </td>
                           <td className='whitespace-nowrap py-6 text-right font-medium'>
-                            <a href='#' className='text-indigo-600'>
-                              View
-                            </a>
+                          <div>
+                          <button
+                            onClick={() => runOpenModal({order_id: order.id, product_id: product.id})}
+                            className='flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200'
+                            disabled={product.status !== 'Delivered' || product.order_received}
+                          >
+                            Order Received
+                          </button>
+                        </div>
                           </td>
                         </tr>
                       ))}
@@ -271,6 +329,7 @@ const MyOrders: React.FC<MyOrdersProps> = ({ user, orders }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

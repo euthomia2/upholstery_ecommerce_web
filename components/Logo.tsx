@@ -3,7 +3,7 @@ import Image from 'next/image';
 const Logo = () => {
   return (
     <Image
-      src='/assets/logo.jpg'
+      src='/assets/transparent_logo.png'
       width={50}
       height={50}
       quality={100}

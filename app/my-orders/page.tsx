@@ -28,7 +28,7 @@ export default function MyOrdersPage() {
         .sort((a, b) => b.id - a.id);
     }
 
-    return 0;
+    return [];
   }, [user, orders]);
 
   useEffect(() => {

@@ -84,6 +84,15 @@ export const crudOrder = createApi({
       }),
       invalidatesTags: ['Orders'],
     }),
+    orderReceived: builder.mutation({
+      query: (details) => ({
+        url: `order/order-received`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Orders'],
+    }),
     deactivateOrder: builder.mutation({
       query: (id) => ({
         url: `order/deactivate/${id}`,
@@ -110,6 +119,7 @@ export const {
   useCreateOrderMutation,
   useCustomerOrderMutation,
   useUpdateOrderMutation,
+  useOrderReceivedMutation,
   useActivateOrderMutation,
   useDeactivateOrderMutation,
 } = crudOrder;
