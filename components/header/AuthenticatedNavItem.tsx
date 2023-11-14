@@ -126,6 +126,21 @@ const AuthenticatedNavItem = () => {
           <div className='py-1'>
             <Menu.Item>
               {({ active }) => (
+                <Link
+                  href='/my-return-refunds'
+                  className={classNames(
+                    active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                    'block px-4 py-2 text-sm'
+                  )}
+                >
+                  Return / Refunds
+                </Link>
+              )}
+            </Menu.Item>
+          </div>
+          <div className='py-1'>
+            <Menu.Item>
+              {({ active }) => (
                 <button
                   onClick={handleLogOut}
                   className={classNames(
