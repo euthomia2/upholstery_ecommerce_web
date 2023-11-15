@@ -51,7 +51,7 @@ const SellerMyProductsPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller]);
 
   if (isLoading || sellerFetching || productsFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;

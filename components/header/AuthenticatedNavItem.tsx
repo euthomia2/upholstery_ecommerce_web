@@ -75,7 +75,7 @@ const AuthenticatedNavItem = () => {
           <div className='px-4 py-3'>
             <p className='text-sm text-gray-900'>Signed in as</p>
             <p className='truncate text-sm font-medium text-gray-900'>
-              {user.user.email}
+              {user?.user.email}
             </p>
           </div>
           <div className='py-1'>

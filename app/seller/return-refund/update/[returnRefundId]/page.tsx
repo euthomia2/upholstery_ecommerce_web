@@ -10,13 +10,19 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from '@/services/authentication';
-import SellerBalanceMain from '@/components/seller-dashboard/SellerBalanceMain';
+import { useParams } from '@/node_modules/next/navigation';
+import NotFound from '@/components/NotFound';
+import { useGetReturnRefundBySlugQuery } from '@/services/crud-return-refund';
+import SellerReturnRefundEdit from '@/components/seller-dashboard/SellerReturnRefundEdit';
 
-const SellerMyBalancePage = () => {
-  const { data: user, isError } = useCustomerGetUserQuery();
+const SellerReturnRefundEditPage = () => {
+  const params = useParams();
+  const { data: user } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
+  const { data: returnRefund, isFetching } = useGetReturnRefundBySlugQuery(params.returnRefundId);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get('is_authenticated');
@@ -33,6 +39,10 @@ const SellerMyBalancePage = () => {
       setIsLoading(false);
     }
 
+    if (returnRefund) {
+      setIsVerified(true);
+    }
+
     NProgress.done();
 
     return () => {
@@ -40,15 +50,19 @@ const SellerMyBalancePage = () => {
     };
   }, [user, seller]);
 
-  if (isLoading || sellerFetching) {
+  if (isFetching || isLoading || sellerFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
+  }
+
+  if (!isFetching && !returnRefund && !isVerified) {
+    return <NotFound />;
   }
 
   return (
     <SellerDashboard>
-      <SellerBalanceMain />
+      <SellerReturnRefundEdit returnRefund={returnRefund} />
     </SellerDashboard>
   );
 };
 
-export default SellerMyBalancePage;
+export default SellerReturnRefundEditPage;

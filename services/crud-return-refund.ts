@@ -25,6 +25,14 @@ export const crudReturnRefund = createApi({
       }),
       providesTags: ['ReturnRefunds'],
     }),
+    getReturnRefundBySlug: builder.query({
+      query: (returnRefundSlug) => ({
+        url: `return-refund/slug/${returnRefundSlug}`,
+        method: 'GET',
+        withCredentials: true,
+      }),
+      providesTags: ['ReturnRefunds'],
+    }),
     createReturnRefund: builder.mutation({
         query: (details) => {
           const formData = new FormData();
@@ -45,11 +53,22 @@ export const crudReturnRefund = createApi({
         },
         invalidatesTags: ['ReturnRefunds'],
       }),
+      updateReturnRefund: builder.mutation({
+        query: (details) => ({
+          url: `return-refund/update-status/${details?.id}`,
+          method: 'PATCH',
+          withCredentials: true,
+          body: { details },
+        }),
+        invalidatesTags: ['ReturnRefunds'],
+      }),
   }),
 });
 
 export const {
   useGetReturnRefundsQuery,
   useGetReturnRefundQuery,
+  useGetReturnRefundBySlugQuery,
   useCreateReturnRefundMutation,
+  useUpdateReturnRefundMutation,
 } = crudReturnRefund;

@@ -143,7 +143,22 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                     {orders?.map((order) => {
                       const createdDate = new Date(order.created_at);
                       const createdAt = format(createdDate, 'yyyy-MM-dd');
-                      const totalPrice = order.price + order.shipping_fee;
+                      let totalPrice = order.price;
+                      let totalShippingFee;
+
+                      if (Boolean(order.shipping_discount)) {
+                        if(Boolean(order.discount_mode === 'Percentage')) {
+                          const shippingDiscount = order.shipping_discount / 100;
+                          const shippingFee= order.shipping_fee - (order.shipping_fee * shippingDiscount);
+
+                          if(shippingFee) {
+                            totalShippingFee += shippingFee / 1;
+                            totalPrice += shippingFee / 1;
+                          } else {
+                            totalShippingFee = 0;
+                          }
+                        }
+                      }
 
                       return (
                         <tr key={order.order_id}>
@@ -168,7 +183,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
 
                           <td className='px-3 py-4 text-sm text-gray-500'>
                             ₱
-                            {order.shipping_fee.toLocaleString('en-US', {
+                            {totalShippingFee.toLocaleString('en-US', {
                               minimumFractionDigits: 2,
                             })}
                           </td>

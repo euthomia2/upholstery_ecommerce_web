@@ -48,7 +48,7 @@ const SellerMyShopsEditPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller, shop]);
 
   if (isFetching || isLoading || sellerFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;

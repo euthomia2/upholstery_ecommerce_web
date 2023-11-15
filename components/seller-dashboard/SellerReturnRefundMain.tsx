@@ -1,15 +1,14 @@
-import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
-const return_refund = [
-  // {
-  //   name: 'shpfrntr123',
-  //   description:
-  //     'This is the item where all of the best quality furnitures will be located',
-  //   status: 'Activated',
-  //   created_at: '10/26/2023',
-  // },
-];
+import React from 'react'
 
-const SellerReturnRefundMain = () => {
+import { HomeIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
+import { ReturnRefund } from '@/models/ReturnRefund';
+import Link from 'next/link';
+
+type SellerReturnRefundMainProps = {
+  returnRefunds: ReturnRefund[]
+}
+
+const SellerReturnRefundMain: React.FC<SellerReturnRefundMainProps> = ({returnRefunds}) => {
   return (
     <>
       <div className='xl:pl-72'>
@@ -69,7 +68,7 @@ const SellerReturnRefundMain = () => {
                         scope='col'
                         className='relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900'
                       >
-                        Shop Name
+                        Product Image
                         <div className='absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200' />
                         <div className='absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200' />
                       </th>
@@ -77,7 +76,25 @@ const SellerReturnRefundMain = () => {
                         scope='col'
                         className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell'
                       >
-                        Description
+                        Return Refund ID
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell'
+                      >
+                        Order ID
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Product Name
+                      </th>
+                      <th
+                        scope='col'
+                        className='hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell'
+                      >
+                        Customer Name
                       </th>
                       <th
                         scope='col'
@@ -91,13 +108,19 @@ const SellerReturnRefundMain = () => {
                       >
                         Created At
                       </th>
+                      <th
+                        scope='col'
+                        className='px-3 py-3.5 text-left text-sm font-semibold text-gray-900'
+                      >
+                        Action<span className='sr-only'>Edit</span>
+                      </th>
                       <th scope='col' className='relative py-3.5 pl-3'>
                         <span className='sr-only'>Edit</span>
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {return_refund.length === 0 && (
+                    {returnRefunds.length === 0 && (
                       <tr>
                         <td
                           colSpan={4}
@@ -108,31 +131,83 @@ const SellerReturnRefundMain = () => {
                       </tr>
                     )}
 
-                    {return_refund?.map((item) => (
+                    {returnRefunds?.map((item) => (
                       <tr key={item.name}>
-                        <td className='relative py-4 pr-3 text-sm font-medium text-gray-900'>
-                          {item.name}
-                          <div className='absolute bottom-0 right-full h-px w-screen bg-gray-100' />
-                          <div className='absolute bottom-0 left-0 h-px w-screen bg-gray-100' />
+                        <td className='whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0'>
+                            <div className='flex items-center'>
+                              <div className='h-24 w-24 flex-shrink-0'>
+                                <img
+                                  className='h-24 w-24 rounded-md'
+                                  src={item.product.image_file}
+                                  alt='Product Image'
+                                />
+                              </div>
+                            </div>
+                          </td>
+                        <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
+                          {item.return_refund_id}
                         </td>
                         <td className='hidden px-3 py-4 text-sm text-gray-500 sm:table-cell'>
-                          {item.description}
+                          {item.order_id}
                         </td>
                         <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
-                          {item.status}
+                          {item.product.name}
                         </td>
+                        <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+                          {item.customer.first_name} {item.customer.last_name}
+                        </td>
+                        <td className='hidden px-3 py-4 text-sm text-gray-500 md:table-cell'>
+
+                            {item.status === 'Pending' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-gray-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
+
+                            {item.status === 'Accepted' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-green-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
+
+                            {item.status === 'Rejected' && (
+                              <span className='inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700'>
+                                <svg
+                                  className='h-1.5 w-1.5 fill-red-500'
+                                  viewBox='0 0 6 6'
+                                  aria-hidden='true'
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
+                          </td>
                         <td className='px-3 py-4 text-sm text-gray-500'>
                           {item.created_at}
                         </td>
-                        <td className='relative py-4 pl-3 text-right text-sm font-medium'>
-                          <a
-                            href='#'
-                            className='text-indigo-600 hover:text-indigo-900'
-                          >
-                            Edit
-                            <span className='sr-only'>, {item.name}</span>
-                          </a>
-                        </td>
+                        <td className='relative py-4 text-center text-sm font-medium'>
+                            <Link
+                              href={`/seller/return-refund/update/${item.return_refund_id}`}
+                              className='text-indigo-600 hover:text-indigo-900'
+                            >
+                              Update
+                            </Link>
+                          </td>
                       </tr>
                     ))}
                   </tbody>

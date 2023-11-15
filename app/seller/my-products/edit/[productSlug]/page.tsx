@@ -62,7 +62,7 @@ const SellerMyProductsEditPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller, product]);
 
   if (
     isLoading ||

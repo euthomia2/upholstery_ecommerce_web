@@ -51,7 +51,7 @@ const SellerMyProductsAddPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller]);
 
   if (isLoading || sellerFetching || categoriesFetching || shopsFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;

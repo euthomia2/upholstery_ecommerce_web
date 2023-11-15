@@ -38,7 +38,7 @@ const SellerBankAccountsPage = () => {
     return () => {
       NProgress.start();
     };
-  }, [user]);
+  }, [user, seller]);
 
   if (isLoading || sellerFetching) {
     return <div className='flex h-full flex-1 bg-white'></div>;
