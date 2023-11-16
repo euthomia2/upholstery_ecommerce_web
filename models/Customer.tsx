@@ -5,6 +5,7 @@ export interface Customer {
   last_name: string;
   gender: string;
   contact_number: string;
+  contact_number_verified_at: Date | null | undefined;
   birth_date: string;
   region: string;
   province: string;
