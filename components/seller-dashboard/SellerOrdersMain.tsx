@@ -119,6 +119,13 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
 
                       <th
                         scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                      >
+                        Status
+                      </th>
+
+                      <th
+                        scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
@@ -161,6 +168,9 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                             totalShippingFee = 0;
                           }
                         }
+                      } else {
+                        totalShippingFee = 39;
+                        totalPrice += totalShippingFee;
                       }
 
                       return (
@@ -230,6 +240,72 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                             {order.payment_method}
                           </td>
 
+                          <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                            {order.status === "Processing" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-gray-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+
+                            {order.status === "Packed" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-yellow-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+
+                            {order.status === "Shipped" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-orange-100 px-1.5 py-0.5 text-xs font-medium text-orange-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-orange-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+
+                            {order.status === "Out For Delivery" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-indigo-100 px-1.5 py-0.5 text-xs font-medium text-indigo-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-indigo-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+
+                            {order.status === "Delivered" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-green-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+                          </td>
                           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {createdAt}
                           </td>

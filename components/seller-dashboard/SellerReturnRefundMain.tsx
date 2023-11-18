@@ -3,6 +3,7 @@ import React from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ReturnRefund } from "@/models/ReturnRefund";
 import Link from "next/link";
+import { format } from "date-fns";
 
 type SellerReturnRefundMainProps = {
   returnRefunds: ReturnRefund[];
@@ -133,97 +134,102 @@ const SellerReturnRefundMain: React.FC<SellerReturnRefundMainProps> = ({
                       </tr>
                     )}
 
-                    {returnRefunds?.map((item) => (
-                      <tr key={item.name}>
-                        <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                          <div className="flex items-center">
-                            <div className="h-24 w-24 flex-shrink-0">
-                              <img
-                                className="h-24 w-24 rounded-md"
-                                src={item.product.image_file}
-                                alt="Product Image"
-                              />
+                    {returnRefunds?.map((item) => {
+                      const createdDate = new Date(item.created_at);
+                      const createdAt = format(createdDate, "yyyy-MM-dd");
+
+                      return (
+                        <tr key={item.name}>
+                          <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
+                            <div className="flex items-center">
+                              <div className="h-24 w-24 flex-shrink-0">
+                                <img
+                                  className="h-24 w-24 rounded-md"
+                                  src={item.product.image_file}
+                                  alt="Product Image"
+                                />
+                              </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                          {item.return_refund_id}
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                          {item.order_id}
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                          {item.product.name}
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                          {item.customer.first_name} {item.customer.last_name}
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                          {item.status === "Pending" && (
-                            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-700">
-                              <svg
-                                className="h-1.5 w-1.5 fill-gray-500"
-                                viewBox="0 0 6 6"
-                                aria-hidden="true"
-                              >
-                                <circle cx={3} cy={3} r={3} />
-                              </svg>
-                              {item.status}
-                            </span>
-                          )}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {item.return_refund_id}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {item.order_id}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                            {item.product.name}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                            {item.customer.first_name} {item.customer.last_name}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                            {item.status === "Pending" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-gray-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
 
-                          {item.status === "Approved" && (
-                            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-indigo-100 px-1.5 py-0.5 text-xs font-medium text-indigo-700">
-                              <svg
-                                className="h-1.5 w-1.5 fill-indigo-500"
-                                viewBox="0 0 6 6"
-                                aria-hidden="true"
-                              >
-                                <circle cx={3} cy={3} r={3} />
-                              </svg>
-                              {item.status}
-                            </span>
-                          )}
+                            {item.status === "Approved" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-indigo-100 px-1.5 py-0.5 text-xs font-medium text-indigo-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-indigo-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
 
-                          {item.status === "Refunded" && (
-                            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                              <svg
-                                className="h-1.5 w-1.5 fill-green-500"
-                                viewBox="0 0 6 6"
-                                aria-hidden="true"
-                              >
-                                <circle cx={3} cy={3} r={3} />
-                              </svg>
-                              {item.status}
-                            </span>
-                          )}
+                            {item.status === "Refunded" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-green-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
 
-                          {item.status === "Rejected" && (
-                            <span className="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700">
-                              <svg
-                                className="h-1.5 w-1.5 fill-red-500"
-                                viewBox="0 0 6 6"
-                                aria-hidden="true"
-                              >
-                                <circle cx={3} cy={3} r={3} />
-                              </svg>
-                              {item.status}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-3 py-4 text-sm text-gray-500">
-                          {item.created_at}
-                        </td>
-                        <td className="relative py-4 text-center text-sm font-medium">
-                          <Link
-                            href={`/seller/return-refund/update/${item.return_refund_id}`}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Update
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
+                            {item.status === "Rejected" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-red-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {item.status}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-3 py-4 text-sm text-gray-500">
+                            {createdAt}
+                          </td>
+                          <td className="relative py-4 text-center text-sm font-medium">
+                            <Link
+                              href={`/seller/return-refund/update/${item.return_refund_id}`}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Update
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

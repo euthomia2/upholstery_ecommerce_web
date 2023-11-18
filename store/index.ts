@@ -14,6 +14,7 @@ import { crudVoucher } from '@/services/crud-voucher';
 import { crudReturnRefund } from '@/services/crud-return-refund';
 import { semaphoreApi } from '@/services/semaphore-api';
 import { crudBankAccount } from '@/services/crud-bank-account';
+import { crudSellerBalance } from '@/services/crud-seller-balance';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   [crudVoucher.reducerPath]: crudVoucher.reducer,
   [crudReturnRefund.reducerPath]: crudReturnRefund.reducer,
   [crudBankAccount.reducerPath]: crudBankAccount.reducer,
+  [crudSellerBalance.reducerPath]: crudSellerBalance.reducer,
   [semaphoreApi.reducerPath]: semaphoreApi.reducer,
 });
 
@@ -48,6 +50,7 @@ export const store = configureStore({
       .concat(crudVoucher.middleware)
       .concat(crudReturnRefund.middleware)
       .concat(crudBankAccount.middleware)
+      .concat(crudSellerBalance.middleware)
       .concat(semaphoreApi.middleware),
 });
 

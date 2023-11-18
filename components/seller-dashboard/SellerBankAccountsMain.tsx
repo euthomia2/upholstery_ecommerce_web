@@ -118,7 +118,7 @@ const SellerBankAccountsMain = ({ bankAccounts }) => {
 
                     {bankAccounts?.map((account) => {
                       const createdDate = new Date(account.created_at);
-                      const createdAt = format(createdDate, "MMMM dd, yyyy");
+                      const createdAt = format(createdDate, "yyyy-MM-dd");
 
                       return (
                         <tr key={account.name}>
