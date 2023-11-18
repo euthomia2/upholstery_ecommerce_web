@@ -1,15 +1,11 @@
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-const bankAccounts = [
-  // {
-  //   name: 'shpfrntr123',
-  //   description:
-  //     'This is the shop where all of the best quality furnitures will be located',
-  //   status: 'Activated',
-  //   created_at: '10/26/2023',
-  // },
-];
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-const SellerBankAccountsMain = () => {
+const SellerBankAccountsMain = ({ bankAccounts }) => {
+  const router = useRouter();
+
   return (
     <>
       <div className="xl:pl-72">
@@ -61,6 +57,7 @@ const SellerBankAccountsMain = () => {
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
                   <button
                     type="button"
+                    onClick={() => router.push("/seller/bank-accounts/add")}
                     className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Add a bank account
@@ -77,7 +74,7 @@ const SellerBankAccountsMain = () => {
                         scope="col"
                         className="relative isolate py-3.5 pr-3 text-left text-sm font-semibold text-gray-900"
                       >
-                        Shop Name
+                        Bank Account
                         <div className="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
                         <div className="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
                       </th>
@@ -85,13 +82,13 @@ const SellerBankAccountsMain = () => {
                         scope="col"
                         className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                       >
-                        Description
+                        Account Number
                       </th>
                       <th
                         scope="col"
                         className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
                       >
-                        Status
+                        Active Status
                       </th>
                       <th
                         scope="col"
@@ -99,8 +96,11 @@ const SellerBankAccountsMain = () => {
                       >
                         Created At
                       </th>
-                      <th scope="col" className="relative py-3.5 pl-3">
-                        <span className="sr-only">Edit</span>
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Action<span className="sr-only">Edit</span>
                       </th>
                     </tr>
                   </thead>
@@ -116,33 +116,71 @@ const SellerBankAccountsMain = () => {
                       </tr>
                     )}
 
-                    {bankAccounts?.map((account) => (
-                      <tr key={account.name}>
-                        <td className="relative py-4 pr-3 text-sm font-medium text-gray-900">
-                          {account.name}
-                          <div className="absolute bottom-0 right-full h-px w-screen bg-gray-100" />
-                          <div className="absolute bottom-0 left-0 h-px w-screen bg-gray-100" />
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                          {account.description}
-                        </td>
-                        <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                          {account.status}
-                        </td>
-                        <td className="px-3 py-4 text-sm text-gray-500">
-                          {account.created_at}
-                        </td>
-                        <td className="relative py-4 pl-3 text-right text-sm font-medium">
-                          <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Edit
-                            <span className="sr-only">, {account.name}</span>
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
+                    {bankAccounts?.map((account) => {
+                      const createdDate = new Date(account.created_at);
+                      const createdAt = format(createdDate, "MMMM dd, yyyy");
+
+                      return (
+                        <tr key={account.name}>
+                          <td className="relative py-4 pr-3 text-sm font-medium text-gray-900">
+                            <div className="h-8 w-8 relative flex items-center gap-3">
+                              <img
+                                className="h-8 w-8 rounded-md"
+                                src={`/assets/${account.name
+                                  .replace(/\s/g, "")
+                                  .toLowerCase()}.png`}
+                                alt="Product Image"
+                              />
+                              <p className="whitespace-nowrap">
+                                {account.name}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {account.contact_number}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
+                            {account.is_active === 1 && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-green-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Activated
+                              </span>
+                            )}
+
+                            {account.is_active === 0 && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-red-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Deactivated
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-3 py-4 text-sm text-gray-500">
+                            {createdAt}
+                          </td>
+                          <td className="px-3 py-4 text-sm font-medium">
+                            <Link
+                              href={`/seller/bank-accounts/edit/${account.id}`}
+                              className="text-indigo-600 hover:text-indigo-900"
+                            >
+                              Edit
+                              <span className="sr-only">, {account.name}</span>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

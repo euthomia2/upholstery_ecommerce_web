@@ -59,12 +59,12 @@ const navigation = [
     icon: ShoppingBagIcon,
     current: false,
   },
-  {
-    name: "My Income",
-    href: "/seller/my-income",
-    icon: BanknotesIcon,
-    current: false,
-  },
+  // {
+  //   name: "My Income",
+  //   href: "/seller/my-income",
+  //   icon: BanknotesIcon,
+  //   current: false,
+  // },
   {
     name: "My Balance",
     href: "/seller/my-balance",

@@ -46,10 +46,10 @@ const paymentMethods = [
   { id: "gcash", title: "GCash", type: "gcash", url: "/assets/gcash.png" },
 
   {
-    id: "grab-pay",
+    id: "grabpay",
     title: "Grab Pay",
     type: "grab_pay",
-    url: "/assets/grab-pay.png",
+    url: "/assets/grabpay.png",
   },
 ];
 

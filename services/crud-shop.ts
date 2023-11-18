@@ -18,7 +18,7 @@ export const crudShop = createApi({
     baseUrl: 'http://localhost:4000/',
     credentials: 'include',
   }),
-  tagTypes: ['Shops'],
+  tagTypes: ['Shops', 'ERROR'],
   endpoints: (builder) => ({
     getShops: builder.query({
       query: () => ({
@@ -60,7 +60,13 @@ export const crudShop = createApi({
         withCredentials: true,
         body: { details },
       }),
-      invalidatesTags: ['Shops'],
+      invalidatesTags: (result, error, arg) => {
+        if(error?.data.message) {
+          return [{ type: 'ERROR'}]
+        } else {
+          return [{ type: 'Shops'}]
+        }
+      }
     }),
     deactivateShop: builder.mutation({
       query: (id) => ({

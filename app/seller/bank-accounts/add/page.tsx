@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import NProgress from "nprogress";
@@ -10,26 +10,13 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from "@/services/authentication";
-import SellerBankAccountsMain from "@/components/seller-dashboard/SellerBankAccountsMain";
-import { useGetBankAccountsQuery } from "@/services/crud-bank-account";
+import SellerBankAccountsAdd from "@/components/seller-dashboard/SellerBankAccountsAdd";
 
-const SellerBankAccountsPage = () => {
+const SellerMyBankAccountsAddPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
-  const { data: bankAccounts, isFetching: bankAccountsFetching } =
-    useGetBankAccountsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-
-  const sellerBankAccounts = useMemo(() => {
-    if (bankAccounts && seller) {
-      return bankAccounts
-        .filter((el) => el.seller.id === seller.id)
-        .sort((a, b) => b.id - a.id);
-    }
-
-    return [];
-  }, [seller, bankAccounts]);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get("is_authenticated");
@@ -53,15 +40,15 @@ const SellerBankAccountsPage = () => {
     };
   }, [user, seller]);
 
-  if (isLoading || sellerFetching || bankAccountsFetching) {
+  if (isLoading || sellerFetching) {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
   return (
     <SellerDashboard>
-      <SellerBankAccountsMain bankAccounts={sellerBankAccounts} />
+      <SellerBankAccountsAdd />
     </SellerDashboard>
   );
 };
 
-export default SellerBankAccountsPage;
+export default SellerMyBankAccountsAddPage;

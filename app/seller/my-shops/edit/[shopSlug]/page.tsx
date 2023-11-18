@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import SellerDashboard from "@/components/seller-dashboard/SellerDashboard";
 import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
-} from '@/services/authentication';
-import SellerShopsEdit from '@/components/seller-dashboard/SellerShopsEdit';
-import { useParams } from '@/node_modules/next/navigation';
-import { useGetShopBySlugQuery } from '@/services/crud-shop';
-import NotFound from '@/components/NotFound';
+} from "@/services/authentication";
+import SellerShopsEdit from "@/components/seller-dashboard/SellerShopsEdit";
+import { useParams } from "@/node_modules/next/navigation";
+import { useGetShopBySlugQuery } from "@/services/crud-shop";
+import NotFound from "@/components/NotFound";
 
 const SellerMyShopsEditPage = () => {
   const params = useParams();
@@ -25,14 +25,14 @@ const SellerMyShopsEditPage = () => {
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+    const isAuthenticatedCookie = Cookies.get("is_authenticated");
 
     if (!isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push("/seller/login");
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push("/");
     }
 
     if (seller && isAuthenticatedCookie) {
@@ -51,7 +51,7 @@ const SellerMyShopsEditPage = () => {
   }, [user, seller, shop]);
 
   if (isFetching || isLoading || sellerFetching) {
-    return <div className='flex h-full flex-1 bg-white'></div>;
+    return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
   if (!isFetching && !shop && !isVerified) {

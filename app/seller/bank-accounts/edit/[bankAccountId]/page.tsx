@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import NProgress from "nprogress";
@@ -10,26 +10,21 @@ import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
 } from "@/services/authentication";
-import SellerBankAccountsMain from "@/components/seller-dashboard/SellerBankAccountsMain";
-import { useGetBankAccountsQuery } from "@/services/crud-bank-account";
+import { useParams } from "@/node_modules/next/navigation";
+import NotFound from "@/components/NotFound";
+import SellerBankAccountsEdit from "@/components/seller-dashboard/SellerBankAccountsEdit";
+import { useGetBankAccountQuery } from "@/services/crud-bank-account";
 
-const SellerBankAccountsPage = () => {
-  const { data: user, isError } = useCustomerGetUserQuery();
+const SellerBankAccountsEditPage = () => {
+  const params = useParams();
+  const { data: user } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
-  const { data: bankAccounts, isFetching: bankAccountsFetching } =
-    useGetBankAccountsQuery();
+  const { data: bankAccount, isFetching } = useGetBankAccountQuery(
+    params.bankAccountId
+  );
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-
-  const sellerBankAccounts = useMemo(() => {
-    if (bankAccounts && seller) {
-      return bankAccounts
-        .filter((el) => el.seller.id === seller.id)
-        .sort((a, b) => b.id - a.id);
-    }
-
-    return [];
-  }, [seller, bankAccounts]);
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get("is_authenticated");
@@ -46,22 +41,30 @@ const SellerBankAccountsPage = () => {
       setIsLoading(false);
     }
 
+    if (bankAccount) {
+      setIsVerified(true);
+    }
+
     NProgress.done();
 
     return () => {
       NProgress.start();
     };
-  }, [user, seller]);
+  }, [user, seller, bankAccount]);
 
-  if (isLoading || sellerFetching || bankAccountsFetching) {
+  if (isFetching || isLoading || sellerFetching) {
     return <div className="flex h-full flex-1 bg-white"></div>;
+  }
+
+  if (!isFetching && !bankAccount && !isVerified) {
+    return <NotFound />;
   }
 
   return (
     <SellerDashboard>
-      <SellerBankAccountsMain bankAccounts={sellerBankAccounts} />
+      <SellerBankAccountsEdit bankAccount={bankAccount} />
     </SellerDashboard>
   );
 };
 
-export default SellerBankAccountsPage;
+export default SellerBankAccountsEditPage;

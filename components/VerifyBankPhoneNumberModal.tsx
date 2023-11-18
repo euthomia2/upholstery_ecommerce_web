@@ -10,22 +10,30 @@ import {
 import { useRouter } from "next/navigation";
 import { useSendOtpMutation } from "@/services/semaphore-api";
 import toast from "react-hot-toast";
-import { useVerifySellerContactNumberMutation } from "@/services/crud-seller";
+import { useCreateBankAccountMutation } from "@/services/crud-bank-account";
+import { BankAccount } from "@/models/BankAccount";
 
-type VerifySellerPhoneNumberModalProps = {
+type VerifyBankPhoneNumberModalProps = {
+  values: BankAccount;
   sellerId: number;
   open: boolean;
   contact_number: string;
   closeModal: () => void;
+  duplicateBankAcc: (values: string) => void;
 };
 
-const VerifySellerPhoneNumberModal: React.FC<
-  VerifySellerPhoneNumberModalProps
-> = ({ sellerId, open, closeModal, contact_number }) => {
+const VerifyBankPhoneNumberModal: React.FC<VerifyBankPhoneNumberModalProps> = ({
+  values,
+  sellerId,
+  open,
+  closeModal,
+  duplicateBankAcc,
+  contact_number,
+}) => {
   const [sendOtpMessage, { isLoading: loadingOtpMessage }] =
     useSendOtpMutation();
-  const [verifyContactNumber, { isLoading: loadingVerification }] =
-    useVerifySellerContactNumberMutation();
+  const [createBankAccount, { isLoading: loadingVerification }] =
+    useCreateBankAccountMutation();
   const router = useRouter();
   const [sms, setSms] = useState("");
   const [smsCode, setSmsCode] = useState("");
@@ -174,16 +182,19 @@ const VerifySellerPhoneNumberModal: React.FC<
                       } else {
                         setError(false);
                         setMessage("");
-                        verifyContactNumber({ id: sellerId })
+                        createBankAccount(values)
                           .unwrap()
                           .then((payload) => {
-                            window.location.reload();
+                            router.push("/seller/bank-accounts");
 
                             toast.success(
-                              "Verified Phone Number Successfully. You can order now. Enjoy!"
+                              "Verified Bank Account Number Successfully."
                             );
                           })
-                          .catch((error) => console.log(error));
+                          .catch((error) => {
+                            duplicateBankAcc(error.data?.message);
+                            closeModal();
+                          });
                       }
                     }}
                     className="inline-flex text-center w-full justify-center rounded-md bg-indigo-600 text-white border border-indigo-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 "
@@ -200,4 +211,4 @@ const VerifySellerPhoneNumberModal: React.FC<
   );
 };
 
-export default VerifySellerPhoneNumberModal;
+export default VerifyBankPhoneNumberModal;
