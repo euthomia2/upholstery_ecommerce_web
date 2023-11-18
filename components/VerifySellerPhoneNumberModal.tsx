@@ -9,18 +9,18 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useSendOtpMutation } from "@/services/semaphore-api";
-import { useVerifyCustomerContactNumberMutation } from "@/services/crud-customer";
 import toast from "react-hot-toast";
+import { useVerifySellerContactNumberMutation } from "@/services/crud-seller";
 
-type VerifyPhoneNumberModalProps = {
-  customerId: number;
+type VerifySellerPhoneNumberModalProps = {
+  sellerId: number;
   open: boolean;
   contact_number: string;
   closeModal: () => void;
 };
 
-const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
-  customerId,
+const VerifySellerPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
+  sellerId,
   open,
   closeModal,
   contact_number,
@@ -28,7 +28,7 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
   const [sendOtpMessage, { isLoading: loadingOtpMessage }] =
     useSendOtpMutation();
   const [verifyContactNumber, { isLoading: loadingVerification }] =
-    useVerifyCustomerContactNumberMutation();
+    useVerifySellerContactNumberMutation();
   const router = useRouter();
   const [sms, setSms] = useState("");
   const [smsCode, setSmsCode] = useState("");
@@ -177,7 +177,7 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
                       } else {
                         setError(false);
                         setMessage("");
-                        verifyContactNumber({ id: customerId })
+                        verifyContactNumber({ id: sellerId })
                           .unwrap()
                           .then((payload) => {
                             window.location.reload();
@@ -203,4 +203,4 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
   );
 };
 
-export default VerifyPhoneNumberModal;
+export default VerifySellerPhoneNumberModal;

@@ -125,7 +125,7 @@ const SellerReturnRefundMain: React.FC<SellerReturnRefundMainProps> = ({
                     {returnRefunds.length === 0 && (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={8}
                           className="hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell"
                         >
                           No Return / Refund Found...

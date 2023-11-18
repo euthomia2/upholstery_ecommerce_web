@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useMemo } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
+import { useEffect, useState, useMemo } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import SellerDashboard from "@/components/seller-dashboard/SellerDashboard";
 import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
-} from '@/services/authentication';
-import SellerOrdersMain from '@/components/seller-dashboard/SellerOrdersMain';
-import { useGetOrdersQuery } from '@/services/crud-order';
+} from "@/services/authentication";
+import SellerOrdersMain from "@/components/seller-dashboard/SellerOrdersMain";
+import { useGetOrdersQuery } from "@/services/crud-order";
 
 const SellerMyOrdersPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
@@ -19,7 +19,7 @@ const SellerMyOrdersPage = () => {
   const { data: orders, isFetching: ordersFetching } = useGetOrdersQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [allOrders, setAllOrders] = useState(null);
+  const [allOrders, setAllOrders] = useState([]);
 
   const sellerOrders = useMemo(() => {
     if (orders && seller) {
@@ -47,14 +47,14 @@ const SellerMyOrdersPage = () => {
   }, [seller, orders]);
 
   useEffect(() => {
-    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+    const isAuthenticatedCookie = Cookies.get("is_authenticated");
 
     if (!isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push("/seller/login");
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push("/");
     }
 
     if (seller && isAuthenticatedCookie) {
@@ -69,8 +69,10 @@ const SellerMyOrdersPage = () => {
   }, [user, seller]);
 
   if (isLoading || sellerFetching || ordersFetching) {
-    return <div className='flex h-full flex-1 bg-white'></div>;
+    return <div className="flex h-full flex-1 bg-white"></div>;
   }
+
+  console.log(allOrders);
 
   return (
     <SellerDashboard>

@@ -83,6 +83,7 @@ const CustomerAccountSettings: React.FC<CustomerAccountSettingsProps> = ({
   return (
     <>
       <VerifyPhoneNumberModal
+        customerId={customer.id}
         open={openVerifyModal}
         closeModal={closeModal}
         contact_number={customer.contact_number}
@@ -149,7 +150,7 @@ const CustomerAccountSettings: React.FC<CustomerAccountSettingsProps> = ({
                 <div className="space-y-12 sm:space-y-16 p-8 ">
                   <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                      Account Settings
+                      Account Details
                     </h1>
                     <p className="mt-2 text-sm text-gray-500">
                       You can change the information of your account in this

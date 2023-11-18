@@ -12,6 +12,7 @@ import { crudShop } from '@/services/crud-shop';
 import { crudOrder } from '@/services/crud-order';
 import { crudVoucher } from '@/services/crud-voucher';
 import { crudReturnRefund } from '@/services/crud-return-refund';
+import { semaphoreApi } from '@/services/semaphore-api';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   [crudOrder.reducerPath]: crudOrder.reducer,
   [crudVoucher.reducerPath]: crudVoucher.reducer,
   [crudReturnRefund.reducerPath]: crudReturnRefund.reducer,
+  [semaphoreApi.reducerPath]: semaphoreApi.reducer,
 });
 
 export const store = configureStore({
@@ -42,7 +44,8 @@ export const store = configureStore({
       .concat(crudShop.middleware)
       .concat(crudOrder.middleware)
       .concat(crudVoucher.middleware)
-      .concat(crudReturnRefund.middleware),
+      .concat(crudReturnRefund.middleware)
+      .concat(semaphoreApi.middleware),
 });
 
 sagaMiddleware.run(cartSaga);

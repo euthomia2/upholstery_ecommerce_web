@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useMemo } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
+import { useEffect, useState, useMemo } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import SellerDashboard from "@/components/seller-dashboard/SellerDashboard";
 import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
-} from '@/services/authentication';
-import SellerProductsMain from '@/components/seller-dashboard/SellerProductsMain';
-import { useGetProductsQuery } from '@/services/crud-product';
+} from "@/services/authentication";
+import SellerProductsMain from "@/components/seller-dashboard/SellerProductsMain";
+import { useGetProductsQuery } from "@/services/crud-product";
 
 const SellerMyProductsPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
@@ -32,14 +32,14 @@ const SellerMyProductsPage = () => {
   }, [seller, products]);
 
   useEffect(() => {
-    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+    const isAuthenticatedCookie = Cookies.get("is_authenticated");
 
     if (!isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push("/seller/login");
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push("/");
     }
 
     if (seller && isAuthenticatedCookie) {
@@ -54,12 +54,12 @@ const SellerMyProductsPage = () => {
   }, [user, seller]);
 
   if (isLoading || sellerFetching || productsFetching) {
-    return <div className='flex h-full flex-1 bg-white'></div>;
+    return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
   return (
     <SellerDashboard>
-      <SellerProductsMain products={sellerProducts} />
+      <SellerProductsMain products={sellerProducts} seller={seller} />
     </SellerDashboard>
   );
 };

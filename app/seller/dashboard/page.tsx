@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useMemo } from 'react';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import SellerDashboard from '@/components/seller-dashboard/SellerDashboard';
+import { useEffect, useState, useMemo } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import SellerDashboard from "@/components/seller-dashboard/SellerDashboard";
 import {
   useCustomerGetUserQuery,
   useSellerGetUserQuery,
-} from '@/services/authentication';
-import SellerDashboardMain from '@/components/seller-dashboard/SellerDashboardMain';
-import { useGetShopsQuery } from '@/services/crud-shop';
-import { useGetOrdersQuery } from '@/services/crud-order';
-import { useGetProductsQuery } from '@/services/crud-product';
+} from "@/services/authentication";
+import SellerDashboardMain from "@/components/seller-dashboard/SellerDashboardMain";
+import { useGetShopsQuery } from "@/services/crud-shop";
+import { useGetOrdersQuery } from "@/services/crud-order";
+import { useGetProductsQuery } from "@/services/crud-product";
 
 const SellerDashboardPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
@@ -24,6 +24,7 @@ const SellerDashboardPage = () => {
     useGetProductsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [totalOrdersCount, setTotalOrdersCount] = useState(0);
 
   const sellerShopsCount = useMemo(() => {
     if (shops && seller) {
@@ -35,13 +36,17 @@ const SellerDashboardPage = () => {
 
   const sellerOrdersCount = useMemo(() => {
     if (orders && seller) {
-      return orders?.filter((el) => {
+      const ordersFilter = orders?.filter((el) => {
         const parseProducts = JSON.parse(el.products);
 
         return parseProducts.map((el, i) => {
-          return el.shop.seller.id === seller.id;
+          if (el.shop.seller.id === seller.id) {
+            setTotalOrdersCount((prev) => (prev += 1));
+          }
         });
       }).length;
+
+      return ordersFilter;
     }
 
     return 0;
@@ -56,14 +61,14 @@ const SellerDashboardPage = () => {
   }, [seller, products]);
 
   useEffect(() => {
-    const isAuthenticatedCookie = Cookies.get('is_authenticated');
+    const isAuthenticatedCookie = Cookies.get("is_authenticated");
 
     if (!isAuthenticatedCookie) {
-      router.push('/seller/login');
+      router.push("/seller/login");
     }
 
     if (user && isAuthenticatedCookie) {
-      router.push('/');
+      router.push("/");
     }
 
     if (seller && isAuthenticatedCookie) {
@@ -84,14 +89,14 @@ const SellerDashboardPage = () => {
     ordersFetching ||
     productsFetching
   ) {
-    return <div className='flex h-full flex-1 bg-white'></div>;
+    return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
   return (
     <SellerDashboard>
       <SellerDashboardMain
         totalShops={sellerShopsCount}
-        totalOrders={sellerOrdersCount}
+        totalOrders={totalOrdersCount}
         totalProducts={sellerProductsCount}
       />
     </SellerDashboard>

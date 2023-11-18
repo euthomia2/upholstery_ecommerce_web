@@ -76,6 +76,15 @@ export const crudSeller = createApi({
       }),
       invalidatesTags: ['Sellers'],
     }),
+    verifySellerContactNumber: builder.mutation({
+      query: (details) => ({
+        url: `seller/verify-contact-number/${details?.id}`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Sellers'],
+    }),
   }),
 });
 
@@ -83,4 +92,5 @@ export const {
   useGetSellerQuery,
   useCreateSellerMutation,
   useUpdateSellerMutation,
+  useVerifySellerContactNumberMutation
 } = crudSeller;

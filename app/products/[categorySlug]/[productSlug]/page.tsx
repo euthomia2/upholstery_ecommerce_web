@@ -13,47 +13,38 @@ import { fetchingProducts } from "@/slices/cartSlice";
 import { useGetOrdersQuery } from "@/services/crud-order";
 import CustomerAccountSettings from "@/components/account-settings/CustomerAccountSettings";
 import CustomerProducts from "@/components/customer-products/CustomerProducts";
-import { useGetProductsQuery } from "@/services/crud-product";
+import { useGetProductBySlugQuery } from "@/services/crud-product";
 import { useParams } from "next/navigation";
 import CategoryProducts from "@/components/customer-category/CategoryProducts";
 import NotFoundCustomer from "@/components/NotFoundCustomer";
 import { useGetCategoriesQuery } from "@/services/crud-category";
+import CustomerProduct from "@/components/customer-product/CustomerProduct";
 
-export default function AccountSettingsPage() {
+function convertToSlug(inputString: string) {
+  // Convert to lowercase and replace spaces with hyphens
+  let slug = inputString.toLowerCase().replace(/\s+/g, "-");
+
+  slug = inputString
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-\&-/g, "-");
+
+  // Remove special characters using regular expressions
+  slug = slug.replace(/[^a-z0-9-]/g, "");
+
+  return slug;
+}
+
+export default function ProductPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const { data: categoriesData } = useGetCategoriesQuery();
   const { data: user, isFetching } = useCustomerGetUserQuery();
-  const { data: productsData, isFetching: productsFetching } =
-    useGetProductsQuery();
-  const dispatch = useDispatch();
   const params = useParams();
+  const { data: productData, isFetching: productFetching } =
+    useGetProductBySlugQuery(convertToSlug(params.productSlug));
+  const dispatch = useDispatch();
   const [isVerified, setIsVerified] = useState(false);
-
-  function convertToSlug(inputString: string) {
-    // Convert to lowercase and replace spaces with hyphens
-    let slug = inputString.toLowerCase().replace(/\s+/g, "-");
-
-    slug = inputString
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/-\&-/g, "-");
-
-    // Remove special characters using regular expressions
-    slug = slug.replace(/[^a-z0-9-]/g, "");
-
-    return slug;
-  }
-
-  const categoryProducts = useMemo(() => {
-    if (productsData && user) {
-      return productsData?.filter(
-        (el) => convertToSlug(el.category.title) === params.categorySlug
-      );
-    }
-
-    return [];
-  }, [user, productsData]);
 
   const checkCategory = useMemo(() => {
     if (categoriesData && user) {
@@ -85,11 +76,11 @@ export default function AccountSettingsPage() {
     };
   }, [dispatch]);
 
-  if (isLoading || isFetching || productsFetching) {
+  if (isLoading || isFetching || productFetching) {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
-  if (!productsFetching && !checkCategory && !isVerified) {
+  if (!productFetching && !isVerified && !checkCategory) {
     return <NotFoundCustomer />;
   }
 
@@ -98,10 +89,7 @@ export default function AccountSettingsPage() {
       <Cart />
 
       <Header>
-        <CategoryProducts
-          productsData={categoryProducts}
-          category={checkCategory}
-        />
+        <CustomerProduct productData={productData} />
       </Header>
     </div>
   );

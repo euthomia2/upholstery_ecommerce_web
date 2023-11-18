@@ -76,6 +76,15 @@ export const crudCustomer = createApi({
       }),
       invalidatesTags: ['Customers'],
     }),
+    verifyCustomerContactNumber: builder.mutation({
+      query: (details) => ({
+        url: `customer/verify-contact-number/${details?.id}`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['Customers'],
+    }),
   }),
 });
 
@@ -83,4 +92,5 @@ export const {
   useGetCustomerQuery,
   useCreateCustomerMutation,
   useUpdateCustomerMutation,
+  useVerifyCustomerContactNumberMutation
 } = crudCustomer;
