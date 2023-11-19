@@ -8,7 +8,7 @@ const SellerBalanceMain = ({
 }) => {
   return (
     <>
-      <div className="xl:pl-72">
+      <div className="xl:pl-72 bg-gray-100">
         <main>
           <header className="flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
             <div className="flex items-center text-base  leading-7 text-gray-900">
@@ -75,7 +75,7 @@ const SellerBalanceMain = ({
                   </div>
                   <button
                     className="mt-2 bg-blue-600 px-3 py-2 text-md w-full disabled:bg-blue-200"
-                    disabled
+                    disabled={!totalBalanceAmount}
                   >
                     Withdraw
                   </button>
@@ -94,6 +94,12 @@ const SellerBalanceMain = ({
                         Seller Balance ID
                         <div className="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
                         <div className="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                      >
+                        Order ID
                       </th>
                       <th
                         scope="col"
@@ -128,7 +134,7 @@ const SellerBalanceMain = ({
                     {sellerBalances.length === 0 && (
                       <tr>
                         <td
-                          colSpan={4}
+                          colSpan={6}
                           className="hidden text-center px-3 py-4 text-sm text-gray-500 sm:table-cell"
                         >
                           No Balance Found...
@@ -146,6 +152,9 @@ const SellerBalanceMain = ({
                             {balance.seller_balance_id}
                             <div className="absolute bottom-0 right-full h-px w-screen bg-gray-100" />
                             <div className="absolute bottom-0 left-0 h-px w-screen bg-gray-100" />
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {balance.order_id}
                           </td>
                           <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                             {balance.product.name}

@@ -8,11 +8,9 @@ type SellerOrdersMainProps = {
 };
 
 const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
-  console.log(orders);
-
   return (
     <>
-      <div className="xl:pl-72">
+      <div className="xl:pl-72 bg-gray-100">
         <main>
           <header className="flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
             <div className="flex items-center text-base  leading-7 text-gray-900">
@@ -147,7 +145,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                       </tr>
                     )}
 
-                    {orders?.map((order) => {
+                    {orders?.map((order, index) => {
                       const createdDate = new Date(order.created_at);
                       const createdAt = format(createdDate, "yyyy-MM-dd");
                       let totalPrice = order.price;
@@ -174,7 +172,7 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                       }
 
                       return (
-                        <tr key={order.order_id}>
+                        <tr key={index}>
                           <td className="relative py-4 pr-3 text-sm font-medium text-gray-900">
                             {order.order_id}
                             <div className="absolute bottom-0 right-full h-px w-screen bg-gray-100" />
@@ -245,6 +243,19 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                               <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-700">
                                 <svg
                                   className="h-1.5 w-1.5 fill-gray-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {order.status}
+                              </span>
+                            )}
+
+                            {order.status === "Cancelled" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-red-500"
                                   viewBox="0 0 6 6"
                                   aria-hidden="true"
                                 >

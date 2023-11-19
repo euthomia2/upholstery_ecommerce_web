@@ -23,24 +23,26 @@ const SellerMyOrdersPage = () => {
 
   const sellerOrders = useMemo(() => {
     if (orders && seller) {
-      return orders
-        .filter((orderEl) => {
-          const parseProducts = JSON.parse(orderEl.products);
+      let allOrders = [];
 
-          const sellerProducts = parseProducts.filter((el, i) => {
-            return el.shop.seller.id === seller.id;
+      const ordersFilters = orders.filter((orderEl) => {
+        const parseProducts = JSON.parse(orderEl.products);
+
+        const sellerProducts = parseProducts.filter((el, i) => {
+          return el.shop.seller.id === seller.id && el.status !== "Cancelled";
+        });
+
+        if (sellerProducts.length !== 0) {
+          const totalOrders = sellerProducts.map((el) => {
+            return { ...el, ...orderEl, products: undefined };
           });
 
-          if (sellerProducts.length !== 0) {
-            const totalOrders = sellerProducts.map((el) => {
-              return { ...el, ...orderEl, products: undefined };
-            });
+          allOrders.push(...totalOrders);
+        }
+        return [];
+      });
 
-            return setAllOrders(totalOrders);
-          }
-          return [];
-        })
-        .sort((a, b) => b.id - a.id);
+      setAllOrders(allOrders);
     }
 
     return [];
@@ -72,11 +74,9 @@ const SellerMyOrdersPage = () => {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
-  console.log(allOrders);
-
   return (
     <SellerDashboard>
-      <SellerOrdersMain orders={allOrders} />
+      <SellerOrdersMain orders={allOrders.sort((a, b) => b.id - a.id)} />
     </SellerDashboard>
   );
 };

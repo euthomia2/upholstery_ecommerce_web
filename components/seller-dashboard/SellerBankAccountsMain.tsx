@@ -8,7 +8,7 @@ const SellerBankAccountsMain = ({ bankAccounts }) => {
 
   return (
     <>
-      <div className="xl:pl-72">
+      <div className="xl:pl-72 bg-gray-100">
         <main>
           <header className="flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
             <div className="flex items-center text-base  leading-7 text-gray-900">
