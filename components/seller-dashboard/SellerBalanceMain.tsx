@@ -1,13 +1,43 @@
+import { useState } from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { format } from "date-fns";
+import Modal from "../Modal";
+import { useRouter } from "next/navigation";
+import { useWithdrawSellerBalanceMutation } from "@/services/crud-seller-balance";
 
 const SellerBalanceMain = ({
   sellerBalances,
   totalPendingAmount,
   totalBalanceAmount,
+  hasBankAccount,
 }) => {
+  const router = useRouter();
+  const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
+  const [withdrawSellerBalance, { isLoading }] =
+    useWithdrawSellerBalanceMutation();
+
+  const runCloseModal = () => {
+    setShowUnverifiedModal(false);
+  };
+
+  const runAccountDetails = () => {
+    router.push("/seller/bank-accounts");
+  };
+
   return (
     <>
+      <Modal
+        title={`Oops... It look's like you don't have a bank account yet.`}
+        description={`You need to add a bank account first to start withdrawing your balance.`}
+        status="failed"
+        open={showUnverifiedModal}
+        leftBtnTitle="Back"
+        rightBtnTitle="Add a Bank Account"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runAccountDetails}
+      />
+
       <div className="xl:pl-72 bg-gray-100">
         <main>
           <header className="flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
@@ -74,6 +104,12 @@ const SellerBalanceMain = ({
                     </p>
                   </div>
                   <button
+                    onClick={() => {
+                      if (!hasBankAccount) {
+                        setShowUnverifiedModal(true);
+                      } else {
+                      }
+                    }}
                     className="mt-2 bg-blue-600 px-3 py-2 text-md w-full disabled:bg-blue-200"
                     disabled={!totalBalanceAmount}
                   >

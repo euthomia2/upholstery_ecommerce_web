@@ -12,16 +12,29 @@ import {
 } from "@/services/authentication";
 import SellerBalanceMain from "@/components/seller-dashboard/SellerBalanceMain";
 import { useGetSellerBalancesQuery } from "@/services/crud-seller-balance";
+import { useGetBankAccountsQuery } from "@/services/crud-bank-account";
 
 const SellerMyBalancePage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
   const { data: sellerBalances, isFetching: sellerBalancesFetching } =
     useGetSellerBalancesQuery();
+  const { data: bankAccounts, isFetching: bankAccountsFetching } =
+    useGetBankAccountsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [totalPending, setTotalPending] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
+
+  const hasBankAccount = useMemo(() => {
+    if (bankAccounts && seller) {
+      return bankAccounts?.find(
+        (el) => el.seller.id === seller.id && el.is_active
+      );
+    }
+
+    return false;
+  }, [seller, bankAccounts]);
 
   const allSellerBalances = useMemo(() => {
     if (sellerBalances && seller) {
@@ -86,7 +99,12 @@ const SellerMyBalancePage = () => {
     };
   }, [user, seller]);
 
-  if (isLoading || sellerFetching || sellerBalancesFetching) {
+  if (
+    isLoading ||
+    sellerFetching ||
+    sellerBalancesFetching ||
+    bankAccountsFetching
+  ) {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
@@ -96,6 +114,7 @@ const SellerMyBalancePage = () => {
         sellerBalances={allSellerBalances}
         totalPendingAmount={totalPending}
         totalBalanceAmount={totalBalance}
+        hasBankAccount={hasBankAccount}
       />
     </SellerDashboard>
   );

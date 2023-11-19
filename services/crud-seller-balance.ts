@@ -50,6 +50,15 @@ export const crudSellerBalance = createApi({
         }
       }
     }),
+    withdrawSellerBalance: builder.mutation({
+      query: (details) => ({
+        url: `seller-balance/withdraw/${details?.id}`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { details },
+      }),
+      invalidatesTags: ['SellerBalance'],
+    }),
     deactivateSellerBalance: builder.mutation({
       query: (id) => ({
         url: `seller-balance/deactivate/${id}`,
@@ -74,6 +83,7 @@ export const {
   useGetSellerBalanceQuery,
   useCreateSellerBalanceMutation,
   useUpdateSellerBalanceMutation,
+  useWithdrawSellerBalanceMutation,
   useActivateSellerBalanceMutation,
   useDeactivateSellerBalanceMutation,
 } = crudSellerBalance;
