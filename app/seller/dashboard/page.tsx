@@ -15,20 +15,28 @@ import { useGetShopsQuery } from "@/services/crud-shop";
 import { useGetOrdersQuery } from "@/services/crud-order";
 import { useGetProductsQuery } from "@/services/crud-product";
 import { useGetReturnRefundsQuery } from "@/services/crud-return-refund";
+import { useGetSellerBalancesQuery } from "@/services/crud-seller-balance";
+import { useGetBankAccountsQuery } from "@/services/crud-bank-account";
 
 const SellerDashboardPage = () => {
   const { data: user, isError } = useCustomerGetUserQuery();
   const { data: seller, isFetching: sellerFetching } = useSellerGetUserQuery();
   const { data: shops, isFetching: shopsFetching } = useGetShopsQuery();
+  const { data: bankAccounts, isFetching: bankAccountsFetching } =
+    useGetBankAccountsQuery();
   const { data: returnRefunds, isFetching: returnRefundsFetching } =
     useGetReturnRefundsQuery();
   const { data: orders, isFetching: ordersFetching } = useGetOrdersQuery();
   const { data: products, isFetching: productsFetching } =
     useGetProductsQuery();
+  const { data: sellerBalances, isFetching: sellerBalancesFetching } =
+    useGetSellerBalancesQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [totalOrdersCount, setTotalOrdersCount] = useState(0);
   const [totalCancelledCount, setTotalCancelledCount] = useState(0);
+  const [totalPending, setTotalPending] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
 
   const sellerShopsCount = useMemo(() => {
     if (shops && seller) {
@@ -37,6 +45,14 @@ const SellerDashboardPage = () => {
 
     return 0;
   }, [seller, shops]);
+
+  const sellerBankAccountsCount = useMemo(() => {
+    if (bankAccounts && seller) {
+      return bankAccounts?.filter((el) => el.seller.id === seller.id).length;
+    }
+
+    return 0;
+  }, [seller, bankAccounts]);
 
   const sellerOrdersCount = useMemo(() => {
     if (orders && seller) {
@@ -116,6 +132,47 @@ const SellerDashboardPage = () => {
     return 0;
   }, [seller, products]);
 
+  const allSellerBalances = useMemo(() => {
+    if (sellerBalances && seller) {
+      return sellerBalances
+        .filter((el) => el.shop.seller.id === seller.id)
+        .sort((a, b) => b.id - a.id);
+    }
+
+    return [];
+  }, [seller, sellerBalances]);
+
+  const totalPendingCount = useMemo(() => {
+    if (allSellerBalances.length > 0) {
+      const totalPending = allSellerBalances.reduce((accumulator, el) => {
+        if (el.status === "Pending") {
+          return accumulator + el.amount;
+        }
+        return accumulator;
+      }, 0);
+
+      setTotalPending(totalPending);
+      return totalPending;
+    }
+
+    return 0;
+  }, [allSellerBalances]);
+
+  const totalBalanceCount = useMemo(() => {
+    if (allSellerBalances.length > 0) {
+      const totalBalance = allSellerBalances.reduce((accumulator, el) => {
+        if (el.status === "Completed") {
+          return accumulator + el.amount;
+        }
+        return accumulator;
+      }, 0);
+      setTotalBalance(totalBalance);
+      return totalBalance;
+    }
+
+    return 0;
+  }, [allSellerBalances]);
+
   useEffect(() => {
     const isAuthenticatedCookie = Cookies.get("is_authenticated");
 
@@ -144,7 +201,9 @@ const SellerDashboardPage = () => {
     shopsFetching ||
     ordersFetching ||
     productsFetching ||
-    returnRefundsFetching
+    returnRefundsFetching ||
+    sellerBalancesFetching ||
+    bankAccountsFetching
   ) {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
@@ -157,6 +216,9 @@ const SellerDashboardPage = () => {
         totalCancelled={totalCancelledCount}
         totalReturnRefunds={sellerReturnRefundsCount}
         totalProducts={sellerProductsCount}
+        totalPendingAmount={totalPending}
+        totalBalanceAmount={totalBalance}
+        totalBankAccounts={sellerBankAccountsCount}
       />
     </SellerDashboard>
   );

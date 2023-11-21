@@ -18,6 +18,9 @@ type SellerDashboardMainProps = {
   totalCancelled: number;
   totalReturnRefunds: number;
   totalProducts: number;
+  totalPendingAmount: number;
+  totalBalanceAmount: number;
+  totalBankAccounts: number;
 };
 
 const SellerDashboardMain: React.FC<SellerDashboardMainProps> = ({
@@ -26,6 +29,9 @@ const SellerDashboardMain: React.FC<SellerDashboardMainProps> = ({
   totalCancelled,
   totalReturnRefunds,
   totalProducts,
+  totalPendingAmount,
+  totalBalanceAmount,
+  totalBankAccounts,
 }) => {
   const dashboard = [
     {
@@ -53,19 +59,23 @@ const SellerDashboardMain: React.FC<SellerDashboardMainProps> = ({
       title: totalProducts,
       icon: ShoppingBagIcon,
     },
-    // {
-    //   name: "Total Income",
-    //   title: "₱0.00",
-    //   icon: BanknotesIcon,
-    // },
+    {
+      name: "Total Pending Balance",
+      title: `₱${totalPendingAmount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+      })}`,
+      icon: BanknotesIcon,
+    },
     {
       name: "Total Balance",
-      title: "₱0.00",
+      title: `₱${totalBalanceAmount.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+      })}`,
       icon: WalletIcon,
     },
     {
       name: "Total Bank Accounts",
-      title: "0",
+      title: totalBankAccounts,
       icon: CreditCardIcon,
     },
   ];
@@ -118,7 +128,7 @@ const SellerDashboardMain: React.FC<SellerDashboardMainProps> = ({
                 <div className="flex w-full items-center justify-between space-x-6 p-6">
                   <div className="flex-1 truncate">
                     <div className="flex items-center space-x-3">
-                      <h3 className="truncate text-lg font-medium text-gray-900">
+                      <h3 className="text-lg font-medium text-gray-900 whitespace-normal">
                         {item.name}
                       </h3>
                     </div>

@@ -4,8 +4,11 @@ import { format } from "date-fns";
 import Modal from "../Modal";
 import { useRouter } from "next/navigation";
 import { useWithdrawSellerBalanceMutation } from "@/services/crud-seller-balance";
+import { useCreateSellerWithdrawalMutation } from "@/services/crud-seller-withdrawal";
+import toast from "react-hot-toast";
 
 const SellerBalanceMain = ({
+  seller,
   sellerBalances,
   totalPendingAmount,
   totalBalanceAmount,
@@ -13,15 +16,38 @@ const SellerBalanceMain = ({
 }) => {
   const router = useRouter();
   const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
-  const [withdrawSellerBalance, { isLoading }] =
-    useWithdrawSellerBalanceMutation();
+  const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
+  const [createSellerWithdrawal, { isLoading }] =
+    useCreateSellerWithdrawalMutation();
 
   const runCloseModal = () => {
     setShowUnverifiedModal(false);
   };
 
+  const runCloseWithdrawalModal = () => {
+    setShowWithdrawalModal(false);
+  };
+
   const runAccountDetails = () => {
     router.push("/seller/bank-accounts");
+  };
+
+  const runWithdrawalBalance = () => {
+    const values = {
+      amount: totalBalanceAmount,
+      seller_id: seller.id,
+    };
+
+    createSellerWithdrawal(values)
+      .unwrap()
+      .then((payload) => {
+        router.push("/seller/my-balance");
+
+        toast.success("Seller Balance Withdraw Successfully.");
+      })
+      .catch((error) => {
+        console.log(error.data?.message);
+      });
   };
 
   return (
@@ -36,6 +62,18 @@ const SellerBalanceMain = ({
         closeModal={runCloseModal}
         leftBtnFunc={runCloseModal}
         rightBtnFunc={runAccountDetails}
+      />
+
+      <Modal
+        title={`Are you sure you want to withdraw your entire balance.`}
+        description={`This will initiate the withdrawal of your entire balance.`}
+        status="success"
+        open={showWithdrawalModal}
+        leftBtnTitle="Back"
+        rightBtnTitle="Continue"
+        closeModal={runCloseWithdrawalModal}
+        leftBtnFunc={runCloseWithdrawalModal}
+        rightBtnFunc={runWithdrawalBalance}
       />
 
       <div className="xl:pl-72 bg-gray-100">
@@ -108,6 +146,7 @@ const SellerBalanceMain = ({
                       if (!hasBankAccount) {
                         setShowUnverifiedModal(true);
                       } else {
+                        setShowWithdrawalModal(true);
                       }
                     }}
                     className="mt-2 bg-blue-600 px-3 py-2 text-md w-full disabled:bg-blue-200"
@@ -228,6 +267,19 @@ const SellerBalanceMain = ({
                               </span>
                             )}
 
+                            {balance.status === "Pending Withdrawal" && (
+                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-orange-100 px-1.5 py-0.5 text-xs font-medium text-orange-700">
+                                <svg
+                                  className="h-1.5 w-1.5 fill-orange-500"
+                                  viewBox="0 0 6 6"
+                                  aria-hidden="true"
+                                >
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                {balance.status}
+                              </span>
+                            )}
+
                             {balance.status === "Completed" && (
                               <span className="inline-flex items-center gap-x-1.5 rounded-full bg-indigo-100 px-1.5 py-0.5 text-xs font-medium text-indigo-700">
                                 <svg
@@ -241,7 +293,7 @@ const SellerBalanceMain = ({
                               </span>
                             )}
 
-                            {balance.status === "Withdrew" && (
+                            {balance.status === "Processed Withdrawal" && (
                               <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
                                 <svg
                                   className="h-1.5 w-1.5 fill-green-500"

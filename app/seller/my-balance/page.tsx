@@ -111,6 +111,7 @@ const SellerMyBalancePage = () => {
   return (
     <SellerDashboard>
       <SellerBalanceMain
+        seller={seller}
         sellerBalances={allSellerBalances}
         totalPendingAmount={totalPending}
         totalBalanceAmount={totalBalance}

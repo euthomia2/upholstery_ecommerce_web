@@ -12,17 +12,21 @@ import {
 import { toast } from "react-hot-toast";
 import { ReturnRefund } from "@/models/ReturnRefund";
 import CancelOrderModal from "../CancelOrderModal";
+import WriteReviewModal from "../WriteReviewModal";
+import { Review } from "@/models/Review";
 
 type MyOrdersProps = {
   customer: Customer;
   orders: Order[];
   returnRefunds: ReturnRefund[];
+  reviews: Review[];
 };
 
 const MyOrders: React.FC<MyOrdersProps> = ({
   customer,
   orders,
   returnRefunds,
+  reviews,
 }) => {
   const [orderReceived, { isLoading: receivedCancelled }] =
     useOrderReceivedMutation();
@@ -32,8 +36,15 @@ const MyOrders: React.FC<MyOrdersProps> = ({
 
   const [showOrderReceived, setShowOrderReceived] = useState(false);
   const [showCancelOrder, setShowCancelOrder] = useState(false);
+  const [showReview, setShowReview] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [productId, setProductId] = useState(null);
+  const [shopId, setShopId] = useState(null);
+  const [customerId, setCustomerId] = useState(null);
+  const [productImage, setProductImage] = useState(null);
+  const [productName, setProductName] = useState(null);
+  const [productPrice, setProductPrice] = useState(null);
+  const [productShop, setProductShop] = useState(null);
 
   const runOpenModal = ({ order_id, product_id }) => {
     setShowOrderReceived(true);
@@ -47,6 +58,27 @@ const MyOrders: React.FC<MyOrdersProps> = ({
     setProductId(product_id);
   };
 
+  const runOpenReviewModal = ({
+    order_id,
+    product_id,
+    shop_id,
+    customer_id,
+    product_image,
+    product_name,
+    product_price,
+    product_shop,
+  }) => {
+    setShowReview(true);
+    setOrderId(order_id);
+    setProductId(product_id);
+    setShopId(shop_id);
+    setCustomerId(customer_id);
+    setProductImage(product_image);
+    setProductName(product_name);
+    setProductPrice(product_price);
+    setProductShop(product_shop);
+  };
+
   const runCloseModal = () => {
     setShowOrderReceived(false);
     setOrderId(null);
@@ -57,6 +89,18 @@ const MyOrders: React.FC<MyOrdersProps> = ({
     setShowCancelOrder(false);
     setOrderId(null);
     setProductId(null);
+  };
+
+  const runCloseReviewModal = () => {
+    setShowReview(false);
+    setOrderId(null);
+    setProductId(null);
+    setShopId(null);
+    setCustomerId(null);
+    setProductImage(null);
+    setProductName(null);
+    setProductPrice(null);
+    setProductShop(null);
   };
 
   const runOrderReceived = () => {
@@ -109,6 +153,19 @@ const MyOrders: React.FC<MyOrdersProps> = ({
         closeModal={runCloseCancelModal}
         leftBtnFunc={runCloseCancelModal}
         rightBtnFunc={runOrderCancelled}
+      />
+
+      <WriteReviewModal
+        customerId={customerId}
+        orderId={orderId}
+        shopId={shopId}
+        productId={productId}
+        productImage={productImage}
+        productName={productName}
+        productPrice={productPrice}
+        productShop={productShop}
+        open={showReview}
+        closeModal={runCloseReviewModal}
       />
 
       <div className="bg-white">
@@ -422,69 +479,107 @@ const MyOrders: React.FC<MyOrdersProps> = ({
                                 )}
                             </td>
                             <td className="whitespace-nowrap py-6 text-right font-medium space-y-4">
-                              <div>
-                                <button
-                                  onClick={() =>
-                                    runOpenModal({
-                                      order_id: order.id,
-                                      product_id: product.id,
-                                    })
-                                  }
-                                  className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200"
-                                  disabled={
-                                    product.status !== "Delivered" ||
-                                    product.order_received ||
-                                    Boolean(
-                                      returnRefunds.find(
-                                        (el) =>
-                                          el.order_id == order.order_id &&
-                                          el.product.id == product.id &&
-                                          el.customer.id == customer.id
+                              <div className="flex items-center justify-between gap-4">
+                                <div className="w-full">
+                                  <button
+                                    onClick={() =>
+                                      runOpenModal({
+                                        order_id: order.id,
+                                        product_id: product.id,
+                                      })
+                                    }
+                                    className="w-full rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200"
+                                    disabled={
+                                      product.status !== "Delivered" ||
+                                      product.order_received ||
+                                      Boolean(
+                                        returnRefunds.find(
+                                          (el) =>
+                                            el.order_id == order.order_id &&
+                                            el.product.id == product.id &&
+                                            el.customer.id == customer.id
+                                        )
                                       )
-                                    )
-                                  }
-                                >
-                                  Order Received
-                                </button>
-                              </div>
-                              <div>
-                                <button
-                                  onClick={() =>
-                                    router.push(
-                                      `/my-orders/return-refund/${order.order_id}/${product.id}`
-                                    )
-                                  }
-                                  className="flex w-full justify-center rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 disabled:bg-gray-200"
-                                  disabled={
-                                    product.status !== "Delivered" ||
-                                    product.order_received ||
-                                    Boolean(
-                                      returnRefunds.find(
-                                        (el) =>
-                                          el.order_id == order.order_id &&
-                                          el.product.id == product.id &&
-                                          el.customer.id == customer.id
+                                    }
+                                  >
+                                    Order Received
+                                  </button>
+                                </div>
+                                <div className="w-full">
+                                  <button
+                                    onClick={() =>
+                                      router.push(
+                                        `/my-orders/return-refund/${order.order_id}/${product.id}`
                                       )
-                                    )
-                                  }
-                                >
-                                  Return / Refund
-                                </button>
+                                    }
+                                    className="w-full rounded-md bg-gray-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-600 disabled:bg-gray-200"
+                                    disabled={
+                                      product.status !== "Delivered" ||
+                                      product.order_received ||
+                                      Boolean(
+                                        returnRefunds.find(
+                                          (el) =>
+                                            el.order_id == order.order_id &&
+                                            el.product.id == product.id &&
+                                            el.customer.id == customer.id
+                                        )
+                                      )
+                                    }
+                                  >
+                                    Return / Refund
+                                  </button>
+                                </div>
                               </div>
-                              <div>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    runOpenCancelModal({
-                                      order_id: order.id,
-                                      product_id: product.id,
-                                    })
-                                  }
-                                  className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-red-200"
-                                  disabled={product.status !== "Processing"}
-                                >
-                                  Cancel Order
-                                </button>
+                              <div className="flex items-center justify-between gap-4">
+                                <div className="w-full">
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      runOpenCancelModal({
+                                        order_id: order.id,
+                                        product_id: product.id,
+                                      })
+                                    }
+                                    className="w-full rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:bg-red-200"
+                                    disabled={product.status !== "Processing"}
+                                  >
+                                    Cancel Order
+                                  </button>
+                                </div>
+
+                                <div className="w-full">
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      runOpenReviewModal({
+                                        order_id: order.order_id,
+                                        product_id: product.id,
+                                        shop_id: product.shop.id,
+                                        customer_id: order.customer.id,
+                                        product_image: product.image_file,
+                                        product_name: product.name,
+                                        product_price: product.price,
+                                        product_shop: product.shop.name,
+                                      });
+                                    }}
+                                    className="w-full rounded-md bg-yellow-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-600 disabled:bg-yellow-200"
+                                    disabled={
+                                      product.status !== "Delivered" ||
+                                      !product.order_received ||
+                                      Boolean(
+                                        reviews.find(
+                                          (el) =>
+                                            el.order_id == order.order_id &&
+                                            el.product.id == product.id &&
+                                            el.customer.id == customer.id &&
+                                            el.shop.id == product.shop.id
+                                        )
+                                      )
+                                    }
+                                  >
+                                    Write a Review
+                                  </button>
+                                </div>
                               </div>
                             </td>
                           </tr>
