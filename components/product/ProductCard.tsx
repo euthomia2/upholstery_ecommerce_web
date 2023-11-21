@@ -77,7 +77,8 @@ const ProductCard = ({ product }) => {
           onClick={() => dispatch(addProduct(product))}
           className="border rounded-lg border-gray-900 text-gray-900 w-full text-sm py-4 hover:bg-gray-100 duration-150 transition disabled:bg-gray-300 "
           disabled={
-            cartProducts && product.quantity - cartProducts.quantity === 0
+            (cartProducts && product.quantity - cartProducts.quantity === 0) ||
+            product.quantity === 0
           }
         >
           {cartProducts && product.quantity - cartProducts.quantity === 0

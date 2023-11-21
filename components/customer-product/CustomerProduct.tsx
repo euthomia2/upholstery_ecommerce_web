@@ -4,6 +4,8 @@ import { Product } from "@/models/Product";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "@/slices/cartSlice";
+import CustomerReviews from "../CustomerReviews";
+import { Review } from "@/models/Review";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -26,9 +28,13 @@ function convertToSlug(inputString: string) {
 
 type CustomerProductProps = {
   productData: Product;
+  reviews: Review[];
 };
 
-const CustomerProduct: React.FC<CustomerProductProps> = ({ productData }) => {
+const CustomerProduct: React.FC<CustomerProductProps> = ({
+  productData,
+  reviews,
+}) => {
   const { products } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const cartProducts = products.find((el) => el.name === productData.name);
@@ -156,10 +162,11 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({ productData }) => {
               <button
                 onClick={() => dispatch(addProduct(productData))}
                 type="button"
-                className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                className="flex w-full disabled:bg-indigo-200 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 disabled={
-                  cartProducts &&
-                  productData.quantity - cartProducts.quantity === 0
+                  (cartProducts &&
+                    productData.quantity - cartProducts.quantity === 0) ||
+                  productData.quantity === 0
                 }
               >
                 {cartProducts &&
@@ -169,6 +176,9 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({ productData }) => {
               </button>
             </div>
           </section>
+        </div>
+        <div className="py-20 col-span-2">
+          <CustomerReviews reviews={reviews} />
         </div>
       </div>
     </div>

@@ -19,6 +19,7 @@ import CategoryProducts from "@/components/customer-category/CategoryProducts";
 import NotFoundCustomer from "@/components/NotFoundCustomer";
 import { useGetCategoriesQuery } from "@/services/crud-category";
 import CustomerProduct from "@/components/customer-product/CustomerProduct";
+import { useGetReviewsQuery } from "@/services/crud-review";
 
 function convertToSlug(inputString: string) {
   // Convert to lowercase and replace spaces with hyphens
@@ -43,8 +44,18 @@ export default function ProductPage() {
   const params = useParams();
   const { data: productData, isFetching: productFetching } =
     useGetProductBySlugQuery(convertToSlug(params.productSlug));
+  const { data: reviewsData, isFetching: reviewsFetching } =
+    useGetReviewsQuery();
   const dispatch = useDispatch();
   const [isVerified, setIsVerified] = useState(false);
+
+  const customerReviews = useMemo(() => {
+    if (reviewsData && productData) {
+      return reviewsData?.filter((el) => el.product.id == productData.id);
+    }
+
+    return [];
+  }, [productData, reviewsData]);
 
   const checkCategory = useMemo(() => {
     if (categoriesData && user) {
@@ -76,7 +87,7 @@ export default function ProductPage() {
     };
   }, [dispatch]);
 
-  if (isLoading || isFetching || productFetching) {
+  if (isLoading || isFetching || productFetching || reviewsFetching) {
     return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
@@ -89,7 +100,7 @@ export default function ProductPage() {
       <Cart />
 
       <Header>
-        <CustomerProduct productData={productData} />
+        <CustomerProduct productData={productData} reviews={customerReviews} />
       </Header>
     </div>
   );
