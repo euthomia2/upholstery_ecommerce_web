@@ -189,7 +189,8 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
                           .catch((error) => console.log(error));
                       }
                     }}
-                    className="inline-flex text-center w-full justify-center rounded-md bg-indigo-600 text-white border border-indigo-600 px-3 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 "
+                    className="inline-flex disabled:bg-indigo-200 text-center w-full justify-center rounded-md bg-indigo-600 text-white px-3 py-2 text-sm font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 "
+                    disabled={!smsCode || !sms}
                   >
                     Submit
                   </button>

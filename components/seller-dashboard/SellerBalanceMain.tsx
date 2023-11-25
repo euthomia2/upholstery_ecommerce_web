@@ -33,8 +33,12 @@ const SellerBalanceMain = ({
   };
 
   const runWithdrawalBalance = () => {
+    const onePercent = totalBalanceAmount * 0.01;
+
     const values = {
       amount: totalBalanceAmount,
+      commission_fee: Math.round(onePercent),
+      total_withdrawal: totalBalanceAmount - Math.round(onePercent),
       seller_id: seller.id,
     };
 
