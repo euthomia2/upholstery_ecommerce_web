@@ -1,15 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { format } from "date-fns";
 import { Order } from "@/models/Order";
+import Modal from "../Modal";
+import { useUpdateOrderMutation } from "@/services/crud-order";
+import toast from "react-hot-toast";
 
 type SellerOrdersMainProps = {
   orders: Order[];
 };
 
 const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
+  // State to store only the status of orders
+  const [updateOrder, { isLoading: updateLoading }] = useUpdateOrderMutation();
+  const [pendingOrderDetails, setPendingOrderDetails] = useState({});
+  const [showPackedStatus, setShowPackedStatus] = useState(false);
+
+  const runCloseModal = () => {
+    setPendingOrderDetails({});
+    setShowPackedStatus(false);
+  };
+
+  const runPackedFunc = () => {
+    updateOrder(pendingOrderDetails)
+      .unwrap()
+      .then((payload) => {
+        toast.success("Order Packed Successfully");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  console.log(orders);
+
   return (
     <>
+      <Modal
+        title={`Are you sure that this order is already packed?`}
+        description={`Please double check it first because this action is irreversible.`}
+        status="failed"
+        open={showPackedStatus}
+        leftBtnTitle="Back"
+        rightBtnTitle="Continue"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runPackedFunc}
+      />
+
       <div className="xl:pl-72 bg-gray-100">
         <main>
           <header className="flex items-center justify-between border-b border-gray-500 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
@@ -127,6 +163,13 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
+                      </th>
+
+                      <th
+                        scope="col"
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
+                        Action<span className="sr-only">Edit</span>
                       </th>
                       <th scope="col" className="relative py-3.5 pl-3">
                         <span className="sr-only">Edit</span>
@@ -319,6 +362,25 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                           </td>
                           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {createdAt}
+                          </td>
+
+                          <td className="relative py-4 text-center text-sm font-medium">
+                            <button
+                              onClick={() => {
+                                setPendingOrderDetails({
+                                  id: order.id,
+                                  purpose: "Seller Packed",
+                                  customer_id: order.customer.id,
+                                  product_id: order.product_id,
+                                  status: "Packed",
+                                });
+                                setShowPackedStatus(true);
+                              }}
+                              disabled={order.status !== "Processing"}
+                              className="text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-lg mx-2 disabled:bg-blue-200"
+                            >
+                              Packed
+                            </button>
                           </td>
                         </tr>
                       );

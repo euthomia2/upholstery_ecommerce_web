@@ -34,7 +34,12 @@ const SellerMyOrdersPage = () => {
 
         if (sellerProducts.length !== 0) {
           const totalOrders = sellerProducts.map((el) => {
-            return { ...el, ...orderEl, products: undefined };
+            return {
+              ...el,
+              ...orderEl,
+              products: undefined,
+              product_id: el.id,
+            };
           });
 
           allOrders.push(...totalOrders);

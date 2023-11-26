@@ -1,8 +1,9 @@
-import { Product } from './Product';
+import { Customer } from "./Customer";
+import { Product } from "./Product";
 
 export interface Order {
   order_id: string;
-  customer_id: string;
+  customer: Customer;
   products: Product[];
   status: string;
   is_active: number;
