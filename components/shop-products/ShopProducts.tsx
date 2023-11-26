@@ -67,7 +67,7 @@ const ShopProducts: React.FC<ShopProductsProps> = ({
         leftBtnFunc={runLoginNav}
         rightBtnFunc={runSignUpNav}
       />
-      <section className="h-screen">
+      <section className="h-full">
         <div className="py-8 sm:py-16 lg:mx-auto lg:max-w-7xl lg:px-8">
           <div className="flex items-center justify-between">
             <div>
