@@ -21,6 +21,7 @@ import "nprogress/nprogress.css";
 import { useSellerGetUserQuery } from "@/services/authentication";
 import { useRouter } from "next/navigation";
 import { useGetCategoriesQuery } from "@/services/crud-category";
+import Notification from "./Notification";
 
 const Navbar = () => {
   const { data: user, isError } = useSellerGetUserQuery();
@@ -76,7 +77,7 @@ const Navbar = () => {
       aria-label="Top"
       className="relative z-20 bg-white bg-opacity-90 backdrop-blur-xl backdrop-filter"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="flex h-16 items-center">
           <button
             type="button"
@@ -181,7 +182,9 @@ const Navbar = () => {
                 ? navigation.pages
                     .filter(
                       (el) =>
-                        el.name == "Products" || el.name == "Discount Vouchers"
+                        el.name == "Products" ||
+                        el.name == "Discount Vouchers" ||
+                        el.name == "Shops"
                     )
                     .map((page) => (
                       <a
@@ -223,21 +226,25 @@ const Navbar = () => {
             ) : null} */}
 
             {!isLoading ? (
-              <div className="ml-4 flow-root lg:ml-6">
-                <button
-                  onClick={() => dispatch(openCart())}
-                  className="group -m-2 flex items-center p-2"
-                >
-                  <ShoppingBagIcon
-                    className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                    aria-hidden="true"
-                  />
-                  <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                    {totalQuantity}
-                  </span>
-                  <span className="sr-only">items in cart, view bag</span>
-                </button>
-              </div>
+              <>
+                <Notification />
+
+                <div className="ml-4 flow-root">
+                  <button
+                    onClick={() => dispatch(openCart())}
+                    className="group -m-2 flex items-center p-2"
+                  >
+                    <ShoppingBagIcon
+                      className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                      aria-hidden="true"
+                    />
+                    <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
+                      {totalQuantity}
+                    </span>
+                    <span className="sr-only">items in cart, view bag</span>
+                  </button>
+                </div>
+              </>
             ) : null}
           </div>
         </div>

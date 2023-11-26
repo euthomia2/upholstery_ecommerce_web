@@ -17,6 +17,8 @@ import { crudBankAccount } from '@/services/crud-bank-account';
 import { crudSellerBalance } from '@/services/crud-seller-balance';
 import { crudSellerWithdrawal } from '@/services/crud-seller-withdrawal';
 import { crudReview } from '@/services/crud-review';
+import { crudFollow } from '@/services/crud-follow';
+import { crudNotification } from '@/services/crud-notification';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -36,6 +38,8 @@ const rootReducer = combineReducers({
   [crudSellerBalance.reducerPath]: crudSellerBalance.reducer,
   [crudSellerWithdrawal.reducerPath]: crudSellerWithdrawal.reducer,
   [crudReview.reducerPath]: crudReview.reducer,
+  [crudFollow.reducerPath]: crudFollow.reducer,
+  [crudNotification.reducerPath]: crudNotification.reducer,
   [semaphoreApi.reducerPath]: semaphoreApi.reducer,
 });
 
@@ -57,6 +61,8 @@ export const store = configureStore({
       .concat(crudSellerBalance.middleware)
       .concat(crudSellerWithdrawal.middleware)
       .concat(crudReview.middleware)
+      .concat(crudFollow.middleware)
+      .concat(crudNotification.middleware)
       .concat(semaphoreApi.middleware),
 });
 

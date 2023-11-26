@@ -58,6 +58,7 @@ const initialState = {
     pages: [
       { name: 'Products', href: '/products' },
       { name: 'Discount Vouchers', href: '/discount-vouchers' },
+      { name: 'Shops', href: '/shops' },
       { name: 'Seller Centre', href: '/seller/login' },
       { name: 'Start Selling', href: '/seller/signup' },
     ],
