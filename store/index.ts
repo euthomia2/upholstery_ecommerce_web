@@ -19,6 +19,7 @@ import { crudSellerWithdrawal } from '@/services/crud-seller-withdrawal';
 import { crudReview } from '@/services/crud-review';
 import { crudFollow } from '@/services/crud-follow';
 import { crudNotification } from '@/services/crud-notification';
+import { crudSellerNotification } from '@/services/crud-seller-notification';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   [crudReview.reducerPath]: crudReview.reducer,
   [crudFollow.reducerPath]: crudFollow.reducer,
   [crudNotification.reducerPath]: crudNotification.reducer,
+  [crudSellerNotification.reducerPath]: crudSellerNotification.reducer,
   [semaphoreApi.reducerPath]: semaphoreApi.reducer,
 });
 
@@ -63,6 +65,7 @@ export const store = configureStore({
       .concat(crudReview.middleware)
       .concat(crudFollow.middleware)
       .concat(crudNotification.middleware)
+      .concat(crudSellerNotification.middleware)
       .concat(semaphoreApi.middleware),
 });
 

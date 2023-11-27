@@ -15,6 +15,7 @@ import {
   BanknotesIcon,
   WalletIcon,
   CreditCardIcon,
+  BellIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname, useRouter } from "next/navigation";
 import TransparentLogo from "../TransparentLogo";
@@ -81,13 +82,20 @@ const navigation = [
 const settings = [
   {
     id: 1,
+    name: "Notifications",
+    href: "/seller/notifications",
+    icon: BellIcon,
+    current: false,
+  },
+  {
+    id: 2,
     name: "Account Details",
     href: "/seller/account-details",
     icon: Cog6ToothIcon,
     current: false,
   },
   {
-    id: 2,
+    id: 3,
     name: "Update Password",
     href: "/seller/update-password",
     icon: LockClosedIcon,
