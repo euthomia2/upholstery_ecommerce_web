@@ -70,6 +70,15 @@ export const crudProduct = createApi({
           details.image_file,
           details.image_file.name
         );
+
+        if(details.video_file) {
+          formData.append(
+            'video_file',
+            details.video_file,
+            details.video_file.name
+          );
+        }
+
         formData.append('details', JSON.stringify(details));
 
         return {
@@ -91,6 +100,14 @@ export const crudProduct = createApi({
             'image_file',
             details.image_file,
             details.image_file.name
+          );
+        }
+        
+        if(details?.video_file) {
+          formData.append(
+            'video_file',
+            details.video_file,
+            details.video_file.name
           );
         }
         formData.append('details', JSON.stringify(details));

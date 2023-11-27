@@ -12,9 +12,15 @@ const OverviewFooter = () => {
       { name: "Returns & Exchanges", href: "/my-return-refunds" },
     ],
     connect: [
-      { name: "Facebook", href: "https://www.facebook.com/CCLDOCabuyao/" },
-      { name: "Twitter", href: "https://twitter.com/CabuyaoCcldo" },
-      { name: "Instagram", href: "https://www.instagram.com/ccldo.cabuyao" },
+      {
+        name: "Facebook",
+        href: "https://www.facebook.com/profile.php?id=61553623062166 ",
+      },
+      { name: "Twitter", href: "https://twitter.com/RTCU" },
+      {
+        name: "Instagram",
+        href: "https://instagram.com/rtcu14?igshid=OGQ5ZDc2ODk2ZA==",
+      },
     ],
   };
 

@@ -9,8 +9,11 @@ import { CloudArrowUpIcon } from "@heroicons/react/20/solid";
 
 const SellerProductsAdd = ({ seller, categories, shops }) => {
   const fileInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState("/assets/empty_product.jpg");
   const [imageFileName, setImageFileName] = useState("");
+  const [videoPreview, setVideoPreview] = useState("/assets/empty_product.jpg");
+  const [videoFileName, setVideoFileName] = useState("");
   const [createProduct, { isLoading }] = useCreateProductMutation();
   const router = useRouter();
   const initialValues = {
@@ -21,6 +24,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
     category_id: "",
     shop_id: "",
     image_file: "",
+    video_file: "",
   };
 
   return (
@@ -36,6 +40,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
         category_id: Yup.string().required("Category is required"),
         shop_id: Yup.string().required("Shop is required"),
         image_file: Yup.string().required("Image is required"),
+        video_file: Yup.string().notRequired(),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         createProduct(values)
@@ -321,7 +326,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <input
                             ref={fileInputRef}
-                            name="avatar"
+                            name="image_file"
                             accept="image/*"
                             id="contained-button-file"
                             type="file"
@@ -336,8 +341,6 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
                                     e.target.files[0]
                                   );
                                   setImageFileName(e.target.files[0].name);
-
-                                  console.log(values.image_file);
                                 }
                               };
                               fileReader.readAsDataURL(e.target.files[0]);
@@ -351,13 +354,83 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
                         )}
                       </div>
                     </div>
+
+                    <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+                      <label
+                        htmlFor="name"
+                        className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
+                      >
+                        Product Video (Optional)
+                      </label>
+                      <div className="mt-2 sm:col-span-2 sm:mt-0">
+                        <div className="flex flex-col rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md">
+                          <div className="flex flex-col text-center items-center justify-center gap-2 my-4">
+                            <video
+                              src={videoPreview}
+                              width="750"
+                              height="500"
+                              controls
+                            />
+
+                            {videoFileName && (
+                              <p className="text-blue-500">
+                                File Name: {videoFileName}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              videoInputRef.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Video (Optional)
+                          </button>
+
+                          <input
+                            ref={videoInputRef}
+                            name="video_file"
+                            accept="video/*"
+                            id="contained-button-video"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setVideoPreview(fileReader.result);
+                                  setFieldValue(
+                                    "video_file",
+                                    e.target.files[0]
+                                  );
+                                  setVideoFileName(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+                        {touched.video_file && errors.video_file && (
+                          <p className="text-red-500 text-sm mt-2">
+                            {errors.video_file}
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className="p-10 flex items-center justify-end gap-x-6">
                 <Link
-                  href="/seller/my-shops"
+                  href="/seller/my-products"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Cancel
