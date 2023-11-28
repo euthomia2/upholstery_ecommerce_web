@@ -45,7 +45,7 @@ interface UpdateSeller {
 export const crudSeller = createApi({
   reducerPath: 'crudSeller',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Sellers'],
