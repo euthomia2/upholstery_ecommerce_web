@@ -61,6 +61,14 @@ const Shops: React.FC<ShopsProps> = ({ shops }) => {
           role="list"
           className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
         >
+          {!shops ||
+            (shops?.length === 0 && (
+              <div className="py-8 my-8 bg-gray-100 sm:col-span-2 lg:col-span-4">
+                <p className="text-center w-full text-gray-900 font-semibold">
+                  No Shops Found..
+                </p>
+              </div>
+            ))}
           {shops.map((shop) => (
             <li
               key={shop.id}

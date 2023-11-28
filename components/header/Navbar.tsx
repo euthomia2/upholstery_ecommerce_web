@@ -156,6 +156,15 @@ const Navbar = () => {
                                         aria-labelledby={`categories-heading`}
                                         className="py-6 sm:py-4"
                                       >
+                                        {!categoriesData ||
+                                          (categoriesData?.length === 0 && (
+                                            <li className="flex">
+                                              <p className="bg-white w-full py-3 sm:py-2 px-8">
+                                                No Category Found
+                                              </p>
+                                            </li>
+                                          ))}
+
                                         {categoriesData?.map((item) => (
                                           <li key={item.title} className="flex">
                                             <a
@@ -225,11 +234,13 @@ const Navbar = () => {
                 </div>
               ) : null}
 
+              {isLoading ? null : isAuthenticated && !isLoading ? (
+                <Notification />
+              ) : null}
+
               {!isLoading ? (
                 <>
-                  <Notification />
-
-                  <div className="ml-4 flow-root">
+                  <div className="ml-6 flow-root">
                     <button
                       onClick={() => dispatch(openCart())}
                       className="group -m-2 flex items-center p-2"

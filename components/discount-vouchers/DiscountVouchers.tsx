@@ -58,6 +58,15 @@ const DiscountVouchers: React.FC<DiscountVouchersProps> = ({ vouchers }) => {
           role="list"
           className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4"
         >
+          {!vouchers ||
+            (vouchers?.length === 0 && (
+              <div className="py-8 my-8 bg-gray-100 sm:col-span-2 lg:col-span-4">
+                <p className="text-center w-full text-gray-900 font-semibold">
+                  No Discount Vouchers Found..
+                </p>
+              </div>
+            ))}
+
           {vouchers.map((voucher) => (
             <li
               key={voucher.voucher_id}
