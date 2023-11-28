@@ -12,7 +12,7 @@ const CategoriesMain = () => {
       {!categoriesData && <SkeletonCategories />}
 
       {categoriesData && categoriesData?.length === 0 && (
-        <div className="py-8 my-8 bg-gray-100">
+        <div className="py-8 my-8 bg-gray-100 sm:col-span-3 md:col-span-4 lg:col-span-6">
           <p className="text-center w-full text-gray-900 font-semibold">
             No Categories Found..
           </p>

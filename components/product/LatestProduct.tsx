@@ -68,7 +68,7 @@ const LatestProduct = () => {
                 {!productsData && <SkeletonProductCards />}
 
                 {productsData?.length === 0 && (
-                  <div className="py-8 my-8 bg-gray-100">
+                  <div className="py-8 my-8 bg-gray-100 lg:grid lg:col-span-4">
                     <p className="text-center w-full text-gray-900 font-semibold">
                       No Latest Products Found..
                     </p>
