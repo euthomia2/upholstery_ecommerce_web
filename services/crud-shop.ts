@@ -15,7 +15,7 @@ interface UpdateShop {
 export const crudShop = createApi({
   reducerPath: 'crudShop',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Shops', 'ERROR'],
