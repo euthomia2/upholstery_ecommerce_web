@@ -219,7 +219,7 @@ const Navbar = () => {
                 <VisitorNavItem />
               )}
 
-              {!isLoading ? (
+              {isLoading ? null : isAuthenticated && !isLoading ? (
                 <div className="flex mt-2 lg:ml-6">
                   <SearchProduct />
                 </div>
