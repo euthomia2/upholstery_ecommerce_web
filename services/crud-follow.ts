@@ -4,7 +4,7 @@ import { Follow } from '../models/Follow';
 export const crudFollow = createApi({
   reducerPath: 'crudFollow',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Follow', 'ERROR'],
