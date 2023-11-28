@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "@/slices/cartSlice";
 import CustomerReviews from "../CustomerReviews";
 import { Review } from "@/models/Review";
+import ReactPlayer from "react-player";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -41,6 +42,20 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({
 
   return (
     <div className="bg-white">
+      {/* Product video */}
+
+      {productData?.video_file && (
+        <div className="w-full bg-black">
+          <ReactPlayer
+            url={productData.video_file}
+            playing={true}
+            muted={true}
+            loop={true}
+            width="100%"
+          />
+        </div>
+      )}
+
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
         {/* Product details */}
         <div className="lg:max-w-lg lg:self-end">
