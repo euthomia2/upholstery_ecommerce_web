@@ -370,8 +370,6 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
                                     e.target.files[0]
                                   );
                                   setImageFileName(e.target.files[0].name);
-
-                                  console.log(values.image_file);
                                 }
                               };
                               fileReader.readAsDataURL(e.target.files[0]);

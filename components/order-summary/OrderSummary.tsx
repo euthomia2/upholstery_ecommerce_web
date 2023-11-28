@@ -166,7 +166,6 @@ const listenToPayment = async (
           return response.json();
         })
         .then((response) => {
-          console.log(response.data);
           return response.data;
         });
 
@@ -186,7 +185,7 @@ const listenToPayment = async (
         })
           .unwrap()
           .then((payload) => {
-            console.log(payload);
+            console.log("Ordered Successfully");
           })
           .catch((error) => console.log(error));
         let productDescription = "Payment for ";

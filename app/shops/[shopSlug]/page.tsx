@@ -70,8 +70,6 @@ export default function ShopListPage() {
     return {};
   }, [user, followsData, shopData]);
 
-  console.log(checkUserFollowed);
-
   useEffect(() => {
     if (!Cookies.get("is_authenticated")) {
       router.push("/");

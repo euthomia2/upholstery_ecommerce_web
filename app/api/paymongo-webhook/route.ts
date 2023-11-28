@@ -4,9 +4,6 @@ export async function POST(req: NextRequest) {
   if (req.method === 'POST') {
     try {
       const body = await req.json();
-      console.log('=== Webhook triggered ===');
-      console.log(body.data);
-      console.log('=== Webhook end ===');
       return NextResponse.json(
         { message: 'Webhook Received' },
         { status: 200 }

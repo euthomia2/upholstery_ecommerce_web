@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Cart from '@/components/cart/Cart';
-import Header from '@/components/header/Header';
-import OrderSummary from '@/components/order-summary/OrderSummary';
-import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { useCustomerGetUserQuery } from '@/services/authentication';
-import { fetchingProducts } from '@/slices/cartSlice';
+import { useState, useEffect } from "react";
+import Cart from "@/components/cart/Cart";
+import Header from "@/components/header/Header";
+import OrderSummary from "@/components/order-summary/OrderSummary";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useCustomerGetUserQuery } from "@/services/authentication";
+import { fetchingProducts } from "@/slices/cartSlice";
 
 export default function OrderSummaryPage() {
   const router = useRouter();
@@ -27,17 +27,15 @@ export default function OrderSummaryPage() {
   } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
-  console.log(products);
-
   const totalShippingFee = shippingFee * products.length;
 
   useEffect(() => {
-    if (!Cookies.get('is_authenticated')) {
-      router.push('/');
+    if (!Cookies.get("is_authenticated")) {
+      router.push("/");
     }
 
-    if (Cookies.get('is_authenticated') && !localStorage.getItem('cart')) {
-      router.push('/');
+    if (Cookies.get("is_authenticated") && !localStorage.getItem("cart")) {
+      router.push("/");
     }
 
     dispatch(fetchingProducts());
@@ -52,11 +50,11 @@ export default function OrderSummaryPage() {
   }, [dispatch]);
 
   if (isLoading || isFetching || productsLoading) {
-    return <div className='flex h-full flex-1 bg-white'></div>;
+    return <div className="flex h-full flex-1 bg-white"></div>;
   }
 
   return (
-    <div className='bg-white'>
+    <div className="bg-white">
       <Cart />
 
       <Header>

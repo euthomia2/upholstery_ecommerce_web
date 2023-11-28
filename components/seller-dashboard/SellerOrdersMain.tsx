@@ -30,8 +30,6 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
       .catch((error) => console.log(error));
   };
 
-  console.log(orders);
-
   return (
     <>
       <Modal
