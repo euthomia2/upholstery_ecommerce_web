@@ -25,7 +25,7 @@ interface UpdateProduct {
 export const crudProduct = createApi({
   reducerPath: 'crudProduct',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Products'],
