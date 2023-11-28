@@ -4,7 +4,7 @@ import { Notification } from '../models/Notification';
 export const crudNotification = createApi({
   reducerPath: 'crudNotification',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Notification', 'ERROR'],
