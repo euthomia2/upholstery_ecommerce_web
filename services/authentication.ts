@@ -35,7 +35,7 @@ interface UpdatePass {
 export const authentication = createApi({
   reducerPath: 'authentication',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['Authentication'],
