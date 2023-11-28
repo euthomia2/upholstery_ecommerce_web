@@ -4,7 +4,7 @@ import { SellerNotification } from '../models/SellerNotification';
 export const crudSellerNotification = createApi({
   reducerPath: 'crudSellerNotification',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:4000/',
+    baseUrl: process.env.NEXT_PUBLIC_API_URL,
     credentials: 'include',
   }),
   tagTypes: ['SellerNotification', 'ERROR'],
