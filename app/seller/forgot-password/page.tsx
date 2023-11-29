@@ -1,20 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import LoginCover from "@/components/customer-login/LoginCover";
-import LoginMain from "@/components/customer-login/LoginMain";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import ForgotPasswordMain from "@/components/seller-forgot-password/ForgotPasswordMain";
 
-const CustomerLogin = () => {
+const SellerForgotPassword = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (Cookies.get("is_authenticated")) {
-      router.push("/");
+      router.push("/seller/dashboard");
     }
     setIsLoading(false);
 
@@ -32,11 +31,10 @@ const CustomerLogin = () => {
   return (
     <div className="flex min-h-full flex-1 ">
       <>
-        <LoginMain />
-        <LoginCover />
+        <ForgotPasswordMain />
       </>
     </div>
   );
 };
 
-export default CustomerLogin;
+export default SellerForgotPassword;

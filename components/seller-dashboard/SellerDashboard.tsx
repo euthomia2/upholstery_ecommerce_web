@@ -22,6 +22,7 @@ import TransparentLogo from "../TransparentLogo";
 import { useSellerLogoutMutation } from "@/services/authentication";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import Modal from "../Modal";
 
 const navigation = [
   {
@@ -109,6 +110,7 @@ function classNames(...classes) {
 
 const SellerDashboard = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const pathname = usePathname();
   const [logout] = useSellerLogoutMutation();
   const router = useRouter();
@@ -125,8 +127,28 @@ const SellerDashboard = (props) => {
     return log;
   }, [router, logout]);
 
+  const runOpenModal = () => {
+    setShowLogoutModal(true);
+  };
+
+  const runCloseModal = () => {
+    setShowLogoutModal(false);
+  };
+
   return (
     <>
+      <Modal
+        title={`Are you sure that you want to logout?`}
+        description={`Please confirm if you want to logout.`}
+        status="failed"
+        open={Boolean(showLogoutModal)}
+        leftBtnTitle="Back"
+        rightBtnTitle="Confirm"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={handleLogOut}
+      />
+
       <div className="bg-gray-100 h-full">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -331,8 +353,8 @@ const SellerDashboard = (props) => {
                 </li>
                 <li className="-mx-6 mt-auto">
                   <button
-                    onClick={handleLogOut}
-                    className="flex w-full justify-center items-center py-3 text-sm font-semibold leading-6 text-red-500 hover:bg-gray-500 hover:text-red-600"
+                    onClick={runOpenModal}
+                    className="flex w-full justify-center items-center py-3 text-sm font-semibold leading-6 text-red-500 hover:bg-gray-400 hover:text-red-600"
                   >
                     <p className="text-center">Log Out</p>
                   </button>

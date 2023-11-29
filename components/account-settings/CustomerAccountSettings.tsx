@@ -83,6 +83,8 @@ const CustomerAccountSettings: React.FC<CustomerAccountSettingsProps> = ({
   return (
     <>
       <VerifyPhoneNumberModal
+        title="Hello, please verify your phone number here to order. We
+      will send you a one-time SMS code."
         customerId={customer.id}
         open={openVerifyModal}
         closeModal={closeModal}

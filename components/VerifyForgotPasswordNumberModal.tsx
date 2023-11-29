@@ -11,26 +11,26 @@ import { useRouter } from "next/navigation";
 import { useSendOtpMutation } from "@/services/semaphore-api";
 import { useVerifyCustomerContactNumberMutation } from "@/services/crud-customer";
 import toast from "react-hot-toast";
+import { useCustomerResetPasswordMutation } from "@/services/authentication";
 
-type VerifyPhoneNumberModalProps = {
+type VerifyForgotPasswordNumberModalProps = {
   customerId: number;
   open: boolean;
   contact_number: string;
   closeModal: () => void;
   title: string;
+  email: string;
 };
 
-const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
-  customerId,
-  open,
-  closeModal,
-  contact_number,
-  title,
-}) => {
+const VerifyForgotPasswordNumberModal: React.FC<
+  VerifyForgotPasswordNumberModalProps
+> = ({ customerId, open, closeModal, contact_number, title, email }) => {
   const [sendOtpMessage, { isLoading: loadingOtpMessage }] =
     useSendOtpMutation();
   const [verifyContactNumber, { isLoading: loadingVerification }] =
     useVerifyCustomerContactNumberMutation();
+  const [resetPassword, { isLoading: resetPasswordLoading }] =
+    useCustomerResetPasswordMutation();
   const router = useRouter();
   const [sms, setSms] = useState("");
   const [smsCode, setSmsCode] = useState("");
@@ -176,14 +176,14 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
                       } else {
                         setError(false);
                         setMessage("");
-                        verifyContactNumber({ id: customerId })
+                        resetPassword({ email })
                           .unwrap()
                           .then((payload) => {
-                            window.location.reload();
-
                             toast.success(
-                              "Verified Phone Number Successfully. You can order now. Enjoy!"
+                              "Password Reset Successfully. Please log in using your new password!"
                             );
+
+                            router.push("/customer/login");
                           })
                           .catch((error) => console.log(error));
                       }
@@ -203,4 +203,4 @@ const VerifyPhoneNumberModal: React.FC<VerifyPhoneNumberModalProps> = ({
   );
 };
 
-export default VerifyPhoneNumberModal;
+export default VerifyForgotPasswordNumberModal;

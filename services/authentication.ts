@@ -49,6 +49,42 @@ export const authentication = createApi({
       }),
       invalidatesTags: ['Authentication'],
     }),
+    customerForgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: `auth/customer/forgot-password`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { email },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    customerResetPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: `auth/customer/reset-password`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { email },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerForgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: `auth/seller/forgot-password`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { email },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
+    sellerResetPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: `auth/seller/reset-password`,
+        method: 'PATCH',
+        withCredentials: true,
+        body: { email },
+      }),
+      invalidatesTags: ['Authentication'],
+    }),
     customerLogout: builder.mutation({
       query: () => ({
         url: `auth/customer/logout`,
@@ -132,11 +168,15 @@ export const authentication = createApi({
 export const {
   useCustomerLoginMutation,
   useCustomerLogoutMutation,
+  useCustomerForgotPasswordMutation,
+  useCustomerResetPasswordMutation,
   useCustomerGetUserQuery,
   useCustomerUpdateUserMutation,
   useCustomerUpdatePassMutation,
   useSellerLoginMutation,
   useSellerLogoutMutation,
+  useSellerForgotPasswordMutation,
+  useSellerResetPasswordMutation,
   useSellerGetUserQuery,
   useSellerUpdateUserMutation,
   useSellerUpdatePassMutation,
