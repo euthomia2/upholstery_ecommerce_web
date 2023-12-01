@@ -287,8 +287,8 @@ const cartSlice = createSlice({
         );
 
         const newTotalPrice = state.products.reduce(
-          (accu, el) => accu - el.original_price,
-          state.totalPrice
+          (accu, el) => accu + el.price,
+          0
         );
 
         state.totalQuantity = newTotalQuantity;
