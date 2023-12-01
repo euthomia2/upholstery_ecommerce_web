@@ -6,6 +6,7 @@ export type Product = {
   name: string;
   description: string;
   price: number;
+  original_price: number;
   category_id: string;
   shop_id: string;
   quantity: number;
@@ -177,6 +178,133 @@ const cartSlice = createSlice({
         })
       );
     },
+    addQuantity(state: InitialState, action) {
+      state.isAddedProduct = true;
+      if (state.isLoggedIn) {
+        const sameProduct = state.products.find(
+          (el) => el.id === action.payload.id
+        );
+
+        if (sameProduct) {
+          const filteredProduct = state.products.map((el) => {
+            if (el.id === sameProduct.id) {
+              el.quantity += 1;
+              el.price += action.payload.original_price;
+            }
+
+            return el;
+          });
+
+          state.products = [...filteredProduct];
+        } else {
+          const newProduct = { ...action.payload, quantity: 1 };
+          state.products.push(newProduct);
+        }
+
+        const newTotalQuantity = state.products.reduce(
+          (accu, el) => accu + el.quantity,
+          0
+        );
+
+        const newTotalPrice = state.products.reduce(
+          (accu, el) => accu + el.price,
+          0
+        );
+
+        state.totalQuantity = newTotalQuantity;
+        state.totalPrice = newTotalPrice;
+
+        const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+        localStorage.setItem(
+          'cart',
+          JSON.stringify({
+            data: state.products,
+            expiration: inOneDay.toISOString(),
+          })
+        );
+      }
+    },
+    removeQuantity(state: InitialState, action) {
+      state.isAddedProduct = true;
+      if (state.isLoggedIn) {
+        const sameProduct = state.products.find(
+          (el) => el.id === action.payload.id
+        );
+
+        if (sameProduct) {
+          if(action.payload.quantity === 1) {
+            const filteredProducts = state.products.filter(
+              (el) => el.id !== action.payload.id
+            );
+      
+            state.products = [...filteredProducts];
+      
+            const newTotalQuantity = state.products.reduce(
+              (accu, el) => accu + el.quantity,
+              0
+            );
+      
+            const newTotalPrice = state.products.reduce(
+              (accu, el) => accu + el.price,
+              0
+            );
+      
+            state.totalQuantity = newTotalQuantity;
+            state.totalPrice = newTotalPrice;
+      
+            const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+      
+            localStorage.setItem(
+              'cart',
+              JSON.stringify({
+                data: state.products,
+                expiration: inOneDay.toISOString(),
+              })
+            );
+            
+            return;
+          }
+
+          const filteredProduct = state.products.map((el) => {
+            if (el.id === sameProduct.id) {
+              el.quantity -= 1;
+              el.price -= action.payload.original_price;
+            }
+
+            return el;
+          });
+
+          state.products = [...filteredProduct];
+        } else {
+          const newProduct = { ...action.payload, quantity: 1 };
+          state.products.push(newProduct);
+        }
+
+        const newTotalQuantity = state.products.reduce(
+          (accu, el) => accu - el.quantity,
+          0
+        );
+
+        const newTotalPrice = state.products.reduce(
+          (accu, el) => accu - el.original_price,
+          state.totalPrice
+        );
+
+        state.totalQuantity = newTotalQuantity;
+        state.totalPrice = newTotalPrice;
+
+        const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+        localStorage.setItem(
+          'cart',
+          JSON.stringify({
+            data: state.products,
+            expiration: inOneDay.toISOString(),
+          })
+        );
+      }
+    },
     clearCart(state: InitialState) {
       localStorage.removeItem('cart');
     },
@@ -196,5 +324,7 @@ export const {
   clearCart,
   addProduct,
   removeProduct,
+  addQuantity,
+  removeQuantity,
 } = cartSlice.actions;
 export default cartSlice.reducer;
