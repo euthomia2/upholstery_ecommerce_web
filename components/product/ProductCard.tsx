@@ -74,7 +74,9 @@ const ProductCard = ({ product }) => {
 
       <div className="mt-auto">
         <button
-          onClick={() => dispatch(addProduct(product))}
+          onClick={() =>
+            dispatch(addProduct({ ...product, original_price: product.price }))
+          }
           className="border rounded-lg border-gray-900 text-gray-900 w-full text-sm py-4 hover:bg-gray-100 duration-150 transition disabled:bg-gray-300 "
           disabled={
             (cartProducts && product.quantity - cartProducts.quantity === 0) ||
