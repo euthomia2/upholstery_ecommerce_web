@@ -16,7 +16,7 @@ const OverviewFooter = () => {
         name: "Facebook",
         href: "https://www.facebook.com/profile.php?id=61553623062166 ",
       },
-      { name: "Twitter", href: "https://twitter.com/RTCU" },
+      { name: "Twitter", href: "https://twitter.com/RTCU_" },
       {
         name: "Instagram",
         href: "https://instagram.com/rtcu14?igshid=OGQ5ZDc2ODk2ZA==",
