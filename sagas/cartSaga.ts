@@ -3,7 +3,8 @@ import { fetchProducts, checkAuth } from '@/slices/cartSlice';
 import Cookies from 'js-cookie';
 
 function* workFetchingProducts() {
-  const cart = yield call(() => localStorage.getItem('cart'));
+  const userId = yield call(() => localStorage.getItem('user-id'));
+  const cart = yield call(() => localStorage.getItem(`cart-${userId}`));
   const formattedCart = yield JSON.parse(cart);
 
   if (!Cookies.get('is_authenticated')) {
