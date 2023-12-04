@@ -31,9 +31,12 @@ const Notification = () => {
   const dispatch = useDispatch();
 
   return (
-    <Menu as="div" className="relative inline-block text-left ml-4">
+    <Menu
+      as="div"
+      className="relative inline-block text-left ml-2 -mr-6 lg:-mr-2 lg:ml-4"
+    >
       <div>
-        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white py-3 text-sm font-semibold text-gray-900 px-2">
+        <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md py-3 text-sm font-semibold text-gray-900 px-2">
           <BellIcon
             className="h-6 w-6 flex-shrink-0 text-gray-400 hover:text-gray-500"
             aria-hidden="true"
