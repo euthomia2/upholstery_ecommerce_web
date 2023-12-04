@@ -7,6 +7,7 @@ import { addProduct } from "@/slices/cartSlice";
 import CustomerReviews from "../CustomerReviews";
 import { Review } from "@/models/Review";
 import ReactPlayer from "react-player";
+import { useCustomerGetUserQuery } from "@/services/authentication";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -39,6 +40,7 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({
   const { products } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const cartProducts = products.find((el) => el.name === productData.name);
+  const { data: user, isFetching } = useCustomerGetUserQuery();
 
   return (
     <div className="bg-white">
@@ -175,7 +177,9 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({
 
             <div className="mt-10">
               <button
-                onClick={() => dispatch(addProduct(productData))}
+                onClick={() =>
+                  dispatch(addProduct({ ...productData, user_id: user.id }))
+                }
                 type="button"
                 className="flex w-full disabled:bg-indigo-200 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                 disabled={
