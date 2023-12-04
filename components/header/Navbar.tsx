@@ -154,7 +154,7 @@ const Navbar = () => {
                                       <ul
                                         role="list"
                                         aria-labelledby={`categories-heading`}
-                                        className="py-6 sm:py-4"
+                                        className="py-6 sm:py-4 shadow"
                                       >
                                         {!categoriesData ||
                                           (categoriesData?.length === 0 && (
@@ -171,7 +171,7 @@ const Navbar = () => {
                                               href={`/products/${convertToSlug(
                                                 item.title
                                               )}`}
-                                              className="hover:text-gray-800 hover:bg-gray-100 w-full py-3 sm:py-2 px-8 shadow"
+                                              className="hover:text-gray-800 hover:bg-gray-100 w-full py-3 sm:py-2 px-8"
                                             >
                                               {item.title}
                                             </a>
