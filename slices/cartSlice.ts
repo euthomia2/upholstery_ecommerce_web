@@ -138,7 +138,7 @@ const cartSlice = createSlice({
         const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         localStorage.setItem(
-          'cart',
+          `cart-${action.payload.user_id}`,
           JSON.stringify({
             data: state.products,
             expiration: inOneDay.toISOString(),
@@ -171,7 +171,7 @@ const cartSlice = createSlice({
       const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
       localStorage.setItem(
-        'cart',
+        `cart-${action.payload.user_id}`,
         JSON.stringify({
           data: state.products,
           expiration: inOneDay.toISOString(),
@@ -217,7 +217,7 @@ const cartSlice = createSlice({
         const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         localStorage.setItem(
-          'cart',
+          `cart-${action.payload.user_id}`,
           JSON.stringify({
             data: state.products,
             expiration: inOneDay.toISOString(),
@@ -256,7 +256,7 @@ const cartSlice = createSlice({
             const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
       
             localStorage.setItem(
-              'cart',
+              `cart-${action.payload.user_id}`,
               JSON.stringify({
                 data: state.products,
                 expiration: inOneDay.toISOString(),
@@ -297,7 +297,7 @@ const cartSlice = createSlice({
         const inOneDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         localStorage.setItem(
-          'cart',
+          `cart-${action.payload.user_id}`,
           JSON.stringify({
             data: state.products,
             expiration: inOneDay.toISOString(),
