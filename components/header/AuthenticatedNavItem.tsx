@@ -30,11 +30,11 @@ const AuthenticatedNavItem = () => {
   const dispatch = useDispatch();
 
   const handleLogOut = useCallback(async () => {
-    dispatch(clearCart());
     const log = await logout()
       .unwrap()
       .then(() => {
         Cookies.remove("is_authenticated");
+        localStorage.removeItem("user-id");
         router.push("/customer/login");
       })
       .catch((error) => console.log(error));
