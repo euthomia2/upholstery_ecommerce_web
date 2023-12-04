@@ -130,7 +130,7 @@ const Navbar = () => {
                           <Popover.Panel className="absolute inset-x-0 top-full left-48 max-w-xs bg-white text-sm text-gray-500">
                             {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                             <div
-                              className="absolute inset-0 top-1/2 bg-white shadow"
+                              className="absolute inset-0 top-1/2 bg-white"
                               aria-hidden="true"
                             />
                             {/* Fake border when menu is open */}
@@ -171,7 +171,7 @@ const Navbar = () => {
                                               href={`/products/${convertToSlug(
                                                 item.title
                                               )}`}
-                                              className="hover:text-gray-800 hover:bg-gray-100 w-full py-3 sm:py-2 px-8"
+                                              className="hover:text-gray-800 hover:bg-gray-100 w-full py-3 sm:py-2 px-8 shadow"
                                             >
                                               {item.title}
                                             </a>
