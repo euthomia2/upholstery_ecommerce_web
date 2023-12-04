@@ -12,6 +12,7 @@ import {
   removeQuantity,
 } from "@/slices/cartSlice";
 import { useRouter } from "next/navigation";
+import { useCustomerGetUserQuery } from "@/services/authentication";
 
 const Cart = () => {
   const router = useRouter();
@@ -19,6 +20,7 @@ const Cart = () => {
     (state) => state.cart
   );
   const dispatch = useDispatch();
+  const { data: user, isFetching } = useCustomerGetUserQuery();
 
   useEffect(() => {
     dispatch(fetchingProducts());
@@ -126,7 +128,12 @@ const Cart = () => {
                                       Qty:
                                       <button
                                         onClick={() =>
-                                          dispatch(removeQuantity(product))
+                                          dispatch(
+                                            removeQuantity({
+                                              ...product,
+                                              user_id: user.id,
+                                            })
+                                          )
                                         }
                                         className="bg-blue-100 px-2 mx-2 rounded-md"
                                       >
@@ -137,7 +144,12 @@ const Cart = () => {
                                       </span>
                                       <button
                                         onClick={() =>
-                                          dispatch(addQuantity(product))
+                                          dispatch(
+                                            addQuantity({
+                                              ...product,
+                                              user_id: user.id,
+                                            })
+                                          )
                                         }
                                         className="bg-blue-100 px-2 mx-2 rounded-md"
                                       >
@@ -148,7 +160,12 @@ const Cart = () => {
                                     <div className="flex">
                                       <button
                                         onClick={() =>
-                                          dispatch(removeProduct(product))
+                                          dispatch(
+                                            removeProduct({
+                                              ...product,
+                                              user_id: user.id,
+                                            })
+                                          )
                                         }
                                         type="button"
                                         className="font-medium text-indigo-600 hover:text-indigo-500"
