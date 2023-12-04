@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { addProduct } from "@/slices/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useCustomerGetUserQuery } from "@/services/authentication";
 
 const ProductCard = ({ product }) => {
   const { products } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const cartProducts = products.find((el) => el.name === product.name);
+  const { data: user, isFetching } = useCustomerGetUserQuery();
 
   function convertToSlug(inputString: string) {
     // Convert to lowercase and replace spaces with hyphens
@@ -75,7 +77,13 @@ const ProductCard = ({ product }) => {
       <div className="mt-auto">
         <button
           onClick={() =>
-            dispatch(addProduct({ ...product, original_price: product.price }))
+            dispatch(
+              addProduct({
+                ...product,
+                original_price: product.price,
+                user_id: user.id,
+              })
+            )
           }
           className="border rounded-lg border-gray-900 text-gray-900 w-full text-sm py-4 hover:bg-gray-100 duration-150 transition disabled:bg-gray-300 "
           disabled={
