@@ -34,7 +34,10 @@ export default function OrderSummaryPage() {
       router.push("/");
     }
 
-    if (Cookies.get("is_authenticated") && !localStorage.getItem("cart")) {
+    if (
+      Cookies.get("is_authenticated") &&
+      !localStorage.getItem(`cart-${user.id}`)
+    ) {
       router.push("/");
     }
 
