@@ -243,7 +243,7 @@ const Navbar = () => {
                   <div className="ml-6 flow-root">
                     <button
                       onClick={() => dispatch(openCart())}
-                      className="group -m-2 flex items-center p-2"
+                      className="group lg:-m-2 flex items-center p-2"
                     >
                       <ShoppingBagIcon
                         className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
