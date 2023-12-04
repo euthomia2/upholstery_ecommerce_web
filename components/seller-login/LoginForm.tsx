@@ -4,9 +4,12 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { useState } from "react";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 const LoginForm = () => {
   const [login, { isLoading }] = useSellerLoginMutation();
+  const [showPass, setShowPass] = useState(false);
   const router = useRouter();
   const initialValues = {
     email: "",
@@ -92,22 +95,36 @@ const LoginForm = () => {
             >
               Password
             </label>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 id="password"
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 name="password"
-                type="password"
+                type={showPass ? "text" : "password"}
                 autoComplete="current-password"
                 required
                 className={`${
                   touched.password && errors.password
                     ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
                     : " ring-gray-300 focus:ring-indigo-600"
-                } block w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
+                } block w-full pr-12 border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
               />
+
+              {showPass ? (
+                <EyeIcon
+                  onClick={() => setShowPass(false)}
+                  className="h-6 w-6 text-gray-600 absolute top-1.5 right-3 cursor-pointer rounded-full hover:text-gray-900"
+                  aria-hidden="true"
+                />
+              ) : (
+                <EyeSlashIcon
+                  onClick={() => setShowPass(true)}
+                  className="h-6 w-6 text-gray-600 absolute top-1.5 right-3 cursor-pointer rounded-full hover:text-gray-900"
+                  aria-hidden="true"
+                />
+              )}
             </div>
             {touched.password && errors.password && (
               <p className="text-red-500 text-sm mt-2">{errors.password}</p>
