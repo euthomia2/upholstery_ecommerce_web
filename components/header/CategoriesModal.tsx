@@ -236,19 +236,19 @@ const CategoriesModal = () => {
                   <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                     <div className="flow-root">
                       <Link
-                        href="/buyer/login"
+                        href="/customer/login"
                         className="-m-2 block p-2 font-medium text-gray-900"
                       >
                         Login
                       </Link>
                     </div>
                     <div className="flow-root">
-                      <a
-                        href="#"
+                      <Link
+                        href="/customer/signup"
                         className="-m-2 block p-2 font-medium text-gray-900"
                       >
                         Create account
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
