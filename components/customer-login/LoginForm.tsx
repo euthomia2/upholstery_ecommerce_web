@@ -36,6 +36,8 @@ const LoginForm = () => {
 
             Cookies.set("is_authenticated", true, { expires: inOneDay });
 
+            localStorage.setItem("user-id", payload.customer_id);
+
             router.push("/");
             setSubmitting(false);
           })
