@@ -62,6 +62,14 @@ export const crudProduct = createApi({
       }),
       providesTags: ['Products'],
     }),
+    getProductBySlugAndShop: builder.query({
+      query: ({ slug, shop }: { slug: string, shop: string }) => ({
+        url: `product/slug/${shop}/${slug}`,
+        method: 'GET',
+        withCredentials: true,
+      }),
+      providesTags: ['Products'],
+    }),
     createProduct: builder.mutation({
       query: (details) => {
         const formData = new FormData();
@@ -146,6 +154,7 @@ export const {
   useGetProductsQuery,
   useGetProductQuery,
   useGetProductBySlugQuery,
+  useGetProductBySlugAndShopQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   useActivateProductMutation,
