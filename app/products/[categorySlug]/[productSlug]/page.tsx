@@ -57,10 +57,6 @@ export default function ProductPage() {
     return [];
   }, [productData, reviewsData]);
 
-  console.log(reviewsData);
-  console.log(customerReviews);
-  console.log(productData);
-
   const checkCategory = useMemo(() => {
     if (categoriesData && user) {
       return categoriesData?.find(
