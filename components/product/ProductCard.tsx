@@ -57,9 +57,9 @@ const ProductCard = ({ product }) => {
           <p className="text-sm text-gray-500">{product.category?.title}</p>
           <h3 className="mt-1 font-semibold text-gray-900 truncate whitespace-nowrap">
             <Link
-              href={`/products/${convertToSlug(
-                product.category.title
-              )}/${convertToSlug(product.name)}`}
+              href={`/products/${convertToSlug(product.category.title)}/${
+                product.shop.name
+              }/${convertToSlug(product.name)}`}
             >
               <span className="absolute inset-0" />
               {product.name}
