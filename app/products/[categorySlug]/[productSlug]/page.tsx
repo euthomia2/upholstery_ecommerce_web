@@ -57,6 +57,7 @@ export default function ProductPage() {
     return [];
   }, [productData, reviewsData]);
 
+  console.log(reviewsData);
   console.log(customerReviews);
 
   const checkCategory = useMemo(() => {
