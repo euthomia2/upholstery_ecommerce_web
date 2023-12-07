@@ -48,7 +48,7 @@ export default function AccountSettingsPage() {
   const categoryProducts = useMemo(() => {
     if (productsData && user) {
       return productsData?.filter(
-        (el) => convertToSlug(el.category.title) === params.categorySlug
+        (el) => convertToSlug(el.category.title) === params.categorySlug && el.is_active === 1
       );
     }
 
