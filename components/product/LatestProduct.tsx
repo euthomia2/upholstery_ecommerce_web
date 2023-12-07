@@ -75,7 +75,7 @@ const LatestProduct = () => {
                   </div>
                 )}
 
-                {productsData?.map((product) => (
+                {productsData?.filter(el => el.is_active === 1).map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
               </ul>
