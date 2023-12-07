@@ -21,6 +21,7 @@ import {
 } from "@/slices/cartSlice";
 import { useDispatch } from "react-redux";
 import Modal from "../Modal";
+import { useCustomerGetUserQuery } from "@/services/authentication";
 
 type OrderSummaryProps = {
   customer: Customer;
@@ -138,80 +139,6 @@ const createPayment = async (source, value, productDescription) => {
     .catch((err) => console.error(err));
 };
 
-// Function to Listen to the Source in the Front End
-const listenToPayment = async (
-  sourceId,
-  setStatus,
-  customerOrder,
-  values,
-  paymentMethod
-) => {
-  let i = 5;
-  for (let i = 5; i > 0; i--) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    if (i == 1) {
-      const sourceData = await fetch(
-        "https://api.paymongo.com/v1/sources/" + sourceId,
-        {
-          headers: {
-            // Base64 encoded public PayMongo API key.
-            Authorization: `Basic ${Buffer.from(
-              "sk_test_tmrubUC8AfpmLWeGn9k2EYUR"
-            ).toString("base64")}`,
-          },
-        }
-      )
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          return response.data;
-        });
-
-      if (
-        sourceData.attributes.status === "expired" ||
-        sourceData.attributes.status === "cancelled"
-      ) {
-        setStatus("failed");
-        i = 0;
-      } else if (sourceData.attributes.status === "chargeable") {
-        setStatus("success");
-        localStorage.removeItem("cart");
-        customerOrder({
-          ...values,
-          source_id: sourceData.id,
-          payment_method: paymentMethod,
-        })
-          .unwrap()
-          .then((payload) => {
-            console.log("Ordered Successfully");
-          })
-          .catch((error) => console.log(error));
-        let productDescription = "Payment for ";
-
-        // Loop through the array and build the description
-        values.product_list.forEach((product, index) => {
-          productDescription += `${product.quantity} pc${
-            product.quantity > 1 ? "s" : ""
-          } of ${product.name}`;
-          if (index < values.product_list.length - 1) {
-            productDescription += ", ";
-          }
-        });
-        const payment = await createPayment(
-          sourceData,
-          values,
-          productDescription
-        );
-        i = 0;
-      } else {
-        i = 5;
-      }
-    }
-  }
-};
-
 const OrderSummary: React.FC<OrderSummaryProps> = ({
   customer,
   products,
@@ -235,6 +162,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [initialTotalPrice, setInitialTotalPrice] = useState(totalPrice);
   const [initialShippingFee, setInitialShippingFee] = useState(shippingFee);
   const [subtotalPrice, setSubtotalPrice] = useState(totalPrice + shippingFee);
+  const { data: user } = useCustomerGetUserQuery();
 
   const initialValues = {
     customer_id: customer.id,
@@ -260,6 +188,80 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       appliedVoucher?.type === "Shipping Discount" ? appliedVoucher?.amount : 0,
     discount_mode:
       appliedVoucher?.mode === "Percentage" ? "Percentage" : "Price",
+  };
+
+  // Function to Listen to the Source in the Front End
+  const listenToPayment = async (
+    sourceId,
+    setStatus,
+    customerOrder,
+    values,
+    paymentMethod
+  ) => {
+    let i = 5;
+    for (let i = 5; i > 0; i--) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      if (i == 1) {
+        const sourceData = await fetch(
+          "https://api.paymongo.com/v1/sources/" + sourceId,
+          {
+            headers: {
+              // Base64 encoded public PayMongo API key.
+              Authorization: `Basic ${Buffer.from(
+                "sk_test_tmrubUC8AfpmLWeGn9k2EYUR"
+              ).toString("base64")}`,
+            },
+          }
+        )
+          .then((response) => {
+            return response.json();
+          })
+          .then((response) => {
+            return response.data;
+          });
+
+        if (
+          sourceData.attributes.status === "expired" ||
+          sourceData.attributes.status === "cancelled"
+        ) {
+          setStatus("failed");
+          i = 0;
+        } else if (sourceData.attributes.status === "chargeable") {
+          setStatus("success");
+          localStorage.removeItem(`cart-${user.id}`);
+          customerOrder({
+            ...values,
+            source_id: sourceData.id,
+            payment_method: paymentMethod,
+          })
+            .unwrap()
+            .then((payload) => {
+              console.log("Ordered Successfully");
+            })
+            .catch((error) => console.log(error));
+          let productDescription = "Payment for ";
+
+          // Loop through the array and build the description
+          values.product_list.forEach((product, index) => {
+            productDescription += `${product.quantity} pc${
+              product.quantity > 1 ? "s" : ""
+            } of ${product.name}`;
+            if (index < values.product_list.length - 1) {
+              productDescription += ", ";
+            }
+          });
+          const payment = await createPayment(
+            sourceData,
+            values,
+            productDescription
+          );
+          i = 0;
+        } else {
+          i = 5;
+        }
+      }
+    }
   };
 
   const checkVoucherCode = async () => {
@@ -427,7 +429,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           };
 
           if (selectedDeliveryMethod.title === "Cash on Delivery") {
-            localStorage.removeItem("cart");
+            localStorage.removeItem(`cart-${user.id}`);
             customerOrder({
               ...modifiedValues,
               payment_method: selectedDeliveryMethod.title,
