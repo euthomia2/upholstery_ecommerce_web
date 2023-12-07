@@ -22,7 +22,7 @@ function* workFetchingProducts() {
       yield put(fetchProducts(formattedCart.data));
     } else {
       // Data is expired, remove it from localStorage
-      localStorage.removeItem('cart');
+      localStorage.removeItem(`cart-${userId}`);
       yield put(fetchProducts([]));
     }
   } else {
