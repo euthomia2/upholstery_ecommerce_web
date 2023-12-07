@@ -45,7 +45,7 @@ export default function DiscountVouchersPage() {
       <Cart />
 
       <Header>
-        <DiscountVouchers vouchers={vouchers} />
+        <DiscountVouchers vouchers={vouchers.filter(el => el.is_active === 1)} />
       </Header>
     </div>
   );
