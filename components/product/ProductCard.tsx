@@ -81,7 +81,7 @@ const ProductCard = ({ product }) => {
               addProduct({
                 ...product,
                 original_price: product.price,
-                user_id: user.id,
+                user_id: user?.id,
               })
             )
           }
