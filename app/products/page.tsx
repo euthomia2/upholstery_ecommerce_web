@@ -28,7 +28,7 @@ export default function AccountSettingsPage() {
   const queryProducts = useMemo(() => {
     if (productsData && user && search) {
       return productsData?.filter((el) =>
-        el.name.toLowerCase().includes(search.toLowerCase())
+        el.name.toLowerCase().includes(search.toLowerCase()) || el.is_active === 1
       );
     }
 
