@@ -16,7 +16,13 @@ import Modal from "../Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const SellerInventoryMain = ({ products, seller }) => {
+const SellerInventoryMain = ({
+  products,
+  seller,
+  orders,
+  productsNeedsRestock,
+  returnRefunds,
+}) => {
   const router = useRouter();
   const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
 
@@ -28,20 +34,39 @@ const SellerInventoryMain = ({ products, seller }) => {
     router.push("/seller/account-details");
   };
 
+  function findMaxValueObject(obj) {
+    let maxKey = null;
+    let maxValue = -Infinity;
+
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        if (obj[key] > maxValue) {
+          maxKey = key;
+          maxValue = obj[key];
+        }
+      }
+    }
+
+    return { title: maxKey, value: maxValue };
+  }
+
+  const mostOrdered = findMaxValueObject(orders);
+  const mostReturned = findMaxValueObject(returnRefunds);
+
   const dashboard = [
     {
       name: "Most Ordered Product",
-      title: 0,
+      title: mostOrdered?.title ?? "None",
       icon: ShoppingBagIcon,
     },
     {
       name: "Most Returned Product",
-      title: 0,
+      title: mostReturned?.title ?? "None",
       icon: ReceiptRefundIcon,
     },
     {
       name: "Product Needs Restock",
-      title: 0,
+      title: productsNeedsRestock ?? "None",
       icon: NoSymbolIcon,
     },
   ];

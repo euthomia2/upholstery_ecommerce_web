@@ -42,7 +42,6 @@ export default function ProductPage() {
   const { data: categoriesData } = useGetCategoriesQuery();
   const { data: user, isFetching } = useCustomerGetUserQuery();
   const params = useParams();
-  console.log(params);
   const { data: productData, isFetching: productFetching } =
     useGetProductBySlugAndShopQuery({
       slug: convertToSlug(params.productSlug),
