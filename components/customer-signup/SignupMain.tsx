@@ -3,33 +3,26 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
-import {
-  cities,
-  regionByCode,
-  barangays,
-  provinceByName,
-} from "select-philippines-address";
 import { useCreateCustomerMutation } from "@/services/crud-customer";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { useSelectRegion } from "@/app/hooks/useSelectRegion";
+import { useSelectProvince } from "@/app/hooks/useSelectProvince";
+import { useSelectCity } from "@/app/hooks/useSelectCity";
+import { useSelectBarangay } from "@/app/hooks/useSelectBarangay";
 
 const SignupMain = () => {
   const [createCustomer, { isLoading }] = useCreateCustomerMutation();
-  const [regionData, setRegionData] = useState();
-  const [provinceData, setProvinceData] = useState();
-  const [cityData, setCityData] = useState();
-  const [barangaysData, setBarangaysData] = useState();
+  // const [regionData, setRegionData] = useState();
+  // const [provinceData, setProvinceData] = useState();
+  // const [cityData, setCityData] = useState();
+  // const [barangaysData, setBarangaysData] = useState();
+  const regions = useSelectRegion();
+  const [provinces, setRegionCode] = useSelectProvince();
+  const [cities, setProvinceCode] = useSelectCity();
+  const [barangays, setCityCode] = useSelectBarangay();
 
   const router = useRouter();
-
-  useEffect(() => {
-    regionByCode("04").then((region) => setRegionData(region.region_name));
-    provinceByName("Laguna").then((province) => setProvinceData(province));
-    cities("0434").then((city) =>
-      setCityData(city.find((el) => el.city_name === "Cabuyao City"))
-    );
-    barangays("043404").then((barangays) => setBarangaysData(barangays));
-  }, []);
 
   let today = new Date().toISOString().split("T")[0];
 
@@ -373,7 +366,16 @@ const SignupMain = () => {
                           name="region"
                           placeholder="Select Region"
                           value={values.region}
-                          onChange={handleChange}
+                          onChange={(e) => {
+                            const selectedRegion = regions?.find(
+                              (el) => el.region_name === e.target.value
+                            );
+                            setRegionCode(selectedRegion.region_code);
+                            setFieldValue('region', e.target.value);
+                            setFieldValue('province', '');
+                            setFieldValue('city', '');
+                            setFieldValue('barangay', '');
+                          }}
                           onBlur={handleBlur}
                           className={`${
                             touched.region && errors.region
@@ -384,7 +386,13 @@ const SignupMain = () => {
                           <option value="" hidden>
                             Select Region
                           </option>
-                          <option value={regionData}>{regionData}</option>
+                          {regions?.map((el) => {
+                            return (
+                              <option key={el.id} value={el.region_name}>
+                                {el.region_name}
+                              </option>
+                            );
+                          })}
                         </select>
                         {touched.region && errors.region && (
                           <p className="text-red-500 text-sm mt-2">
@@ -407,8 +415,20 @@ const SignupMain = () => {
                           name="province"
                           placeholder="Select Province"
                           value={values.province}
-                          onChange={handleChange}
+                          onChange={(e) => {
+                            const selectedProvince = provinces?.find(
+                              (el) => el.province_name === e.target.value
+                            );
+                            setProvinceCode(selectedProvince.province_code);
+                            setFieldValue('province', e.target.value);
+                            setFieldValue('city', '');
+                            setFieldValue('barangay', '');
+                          }}
                           onBlur={handleBlur}
+                          disabled={
+                            Boolean(provinces?.length === 0) ||
+                            Boolean(!values.region)
+                          }
                           className={`${
                             touched.province && errors.province
                               ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
@@ -418,9 +438,13 @@ const SignupMain = () => {
                           <option value="" hidden>
                             Select Province
                           </option>
-                          <option value={provinceData?.province_name}>
-                            {provinceData?.province_name}
-                          </option>
+                          {provinces?.map((el) => {
+                            return (
+                              <option key={el.id} value={el.province_name}>
+                                {el.province_name}
+                              </option>
+                            );
+                          })}
                         </select>
                         {touched.province && errors.province && (
                           <p className="text-red-500 text-sm mt-2">
@@ -445,8 +469,19 @@ const SignupMain = () => {
                           name="city"
                           placeholder="Select City"
                           value={values.city}
-                          onChange={handleChange}
+                          onChange={(e) => {
+                            const selectedCity = cities?.find(
+                              (el) => el.city_name === e.target.value
+                            );
+                            setCityCode(selectedCity.city_code);
+                            setFieldValue('city', e.target.value);
+                            setFieldValue('barangay', '');
+                          }}
                           onBlur={handleBlur}
+                          disabled={
+                            Boolean(cities?.length === 0) ||
+                            Boolean(!values.province)
+                          }
                           className={`${
                             touched.city && errors.city
                               ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
@@ -456,9 +491,13 @@ const SignupMain = () => {
                           <option value="" hidden>
                             Select City
                           </option>
-                          <option value={cityData?.city_name}>
-                            {cityData?.city_name}
-                          </option>
+                          {cities?.map((el) => {
+                            return (
+                              <option key={el.id} value={el.city_name}>
+                                {el.city_name}
+                              </option>
+                            );
+                          })}
                         </select>
                         {touched.city && errors.city && (
                           <p className="text-red-500 text-sm mt-2">
@@ -483,6 +522,10 @@ const SignupMain = () => {
                           value={values.barangay}
                           onChange={handleChange}
                           onBlur={handleBlur}
+                          disabled={
+                            Boolean(barangays?.length === 0) ||
+                            Boolean(!values.city)
+                          }
                           className={`${
                             touched.barangay && errors.barangay
                               ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
@@ -492,9 +535,9 @@ const SignupMain = () => {
                           <option value="" hidden>
                             Select Barangay
                           </option>
-                          {barangaysData?.map((el) => {
+                          {barangays?.map((el) => {
                             return (
-                              <option key={el.brgy_name} value={el.brgy_name}>
+                              <option key={el.id} value={el.brgy_name}>
                                 {el.brgy_name}
                               </option>
                             );

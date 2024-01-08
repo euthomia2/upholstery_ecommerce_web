@@ -16,6 +16,7 @@ import {
   WalletIcon,
   CreditCardIcon,
   BellIcon,
+  TruckIcon,
 } from "@heroicons/react/24/outline";
 import { usePathname, useRouter } from "next/navigation";
 import TransparentLogo from "../TransparentLogo";
@@ -77,6 +78,12 @@ const navigation = [
     name: "Bank Accounts",
     href: "/seller/bank-accounts",
     icon: CreditCardIcon,
+    current: false,
+  },
+  {
+    name: "Inventory Management",
+    href: "/seller/inventory-management",
+    icon: TruckIcon,
     current: false,
   },
 ];

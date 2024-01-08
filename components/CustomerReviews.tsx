@@ -30,7 +30,7 @@ const CustomerReviews: React.FC<CustomerReviewsProps> = ({ reviews }) => {
   return (
     <div className="bg-white">
       <div>
-        <h1 className="pb-8 text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+        <h1 className="pb-8 text-xl font-bold tracking-tight text-gray-900">
           Customer Reviews ({reviews.length})
         </h1>
         <h2 className="sr-only">Customer Reviews ({reviews.length})</h2>

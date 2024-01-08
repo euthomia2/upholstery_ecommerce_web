@@ -51,10 +51,10 @@ const SellerCancellationsMain: React.FC<SellerCancellationsMainProps> = ({
               <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
                   <h1 className="text-base font-semibold leading-6 text-gray-900">
-                    Orders
+                    Cancellations
                   </h1>
                   <p className="mt-2 text-sm text-gray-700">
-                    A list of all the orders in your seller centre account.
+                    A list of all the cancellations in your seller centre account.
                   </p>
                 </div>
               </div>

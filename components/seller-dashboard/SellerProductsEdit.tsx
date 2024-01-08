@@ -9,11 +9,69 @@ import { CloudArrowUpIcon } from "@heroicons/react/20/solid";
 
 const SellerProductsEdit = ({ seller, categories, shops, product }) => {
   const fileInputRef = useRef(null);
+  const fileInputRef2 = useRef(null);
+  const fileInputRef3 = useRef(null);
+  const fileInputRef4 = useRef(null);
+  const fileInputRef5 = useRef(null);
+  const fileInputRef6 = useRef(null);
+  const fileInputRef7 = useRef(null);
+  const fileInputRef8 = useRef(null);
+  const fileInputRef9 = useRef(null);
   const videoInputRef = useRef(null);
   const [imagePreview, setImagePreview] = useState(product.image_file);
   const [imageFileName, setImageFileName] = useState(
     product.image_name.replace(/^[^-]+-/, "")
   );
+
+  const [imagePreview2, setImagePreview2] = useState(
+    product?.image_file_2 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName2, setImageFileName2] = useState(
+    product.image_name_2.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview3, setImagePreview3] = useState(
+    product?.image_file_3 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName3, setImageFileName3] = useState(
+    product.image_name_3.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview4, setImagePreview4] = useState(
+    product?.image_file_4 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName4, setImageFileName4] = useState(
+    product.image_name_4.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview5, setImagePreview5] = useState(
+    product?.image_file_5 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName5, setImageFileName5] = useState(
+    product.image_name_5.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview6, setImagePreview6] = useState(
+    product?.image_file_6 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName6, setImageFileName6] = useState(
+    product.image_name_6.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview7, setImagePreview7] = useState(
+    product?.image_file_7 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName7, setImageFileName7] = useState(
+    product.image_name_7.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview8, setImagePreview8] = useState(
+    product?.image_file_8 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName8, setImageFileName8] = useState(
+    product.image_name_8.replace(/^[^-]+-/, "") ?? ""
+  );
+  const [imagePreview9, setImagePreview9] = useState(
+    product?.image_file_9 ?? "/assets/empty_product.jpg"
+  );
+  const [imageFileName9, setImageFileName9] = useState(
+    product.image_name_9.replace(/^[^-]+-/, "") ?? ""
+  );
+
   const [videoPreview, setVideoPreview] = useState(product?.video_file);
   const [videoFileName, setVideoFileName] = useState(
     product?.video_name?.replace(/^[^-]+-/, "")
@@ -29,6 +87,14 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
     category_id: product.category.id,
     shop_id: product.shop.id,
     image_file: product.image_file,
+    image_file_2: product?.image_file_2,
+    image_file_3: product?.image_file_3,
+    image_file_4: product?.image_file_4,
+    image_file_5: product?.image_file_5,
+    image_file_6: product?.image_file_6,
+    image_file_7: product?.image_file_7,
+    image_file_8: product?.image_file_8,
+    image_file_9: product?.image_file_9,
     video_file: product?.video_file,
   };
 
@@ -203,38 +269,6 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
                         )}
                       </div>
                     </div>
-
-                    <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-                      <label
-                        htmlFor="quantity"
-                        className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
-                      >
-                        Quantity
-                      </label>
-                      <div className="mt-2 sm:col-span-2 sm:mt-0">
-                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                          <input
-                            id="quantity"
-                            type="number"
-                            name="quantity"
-                            value={values.quantity}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            className={`${
-                              touched.quantity && errors.quantity
-                                ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                                : " ring-gray-300 focus:ring-indigo-600"
-                            } block w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                          />
-                        </div>
-                        {touched.quantity && errors.quantity && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.quantity}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
                     <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
                       <label
                         htmlFor="category_id"
@@ -320,11 +354,14 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
                         htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
                       >
-                        Product Image
+                        <p>Product Image (At least 500x500 pixels)</p>
+                        <span className="text-gray-400">
+                          (You can upload up to 9 images)
+                        </span>
                       </label>
-                      <div className="mt-2 sm:col-span-2 sm:mt-0">
-                        <div className="flex flex-col rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-md">
-                          <div className="flex flex-col text-center items-center justify-center gap-2 my-4">
+                      <div className="mt-2 sm:col-span-2 sm:mt-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
                             <img
                               className="h-48 w-48"
                               alt="Product Image"
@@ -340,7 +377,7 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef.current.click();
@@ -355,7 +392,7 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <input
                             ref={fileInputRef}
-                            name="avatar"
+                            name="image_file"
                             accept="image/*"
                             id="contained-button-file"
                             type="file"
@@ -376,11 +413,444 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
                             }}
                           />
                         </div>
+
                         {touched.image_file && errors.image_file && (
                           <p className="text-red-500 text-sm mt-2">
                             {errors.image_file}
                           </p>
                         )}
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48 mb-auto"
+                              alt="Product Image"
+                              src={imagePreview2}
+                            />
+
+                            {imageFileName2 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName2}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef2.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef2}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview2(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_2",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName2(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview3}
+                            />
+
+                            {imageFileName3 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName3}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef3.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef3}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview3(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_3",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName3(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview4}
+                            />
+
+                            {imageFileName4 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName4}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef4.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef4}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview4(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_4",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName4(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview5}
+                            />
+
+                            {imageFileName5 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName5}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef5.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef5}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview5(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_5",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName5(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview6}
+                            />
+
+                            {imageFileName6 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName6}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef6.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef6}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview6(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_6",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName6(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview7}
+                            />
+
+                            {imageFileName7 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName7}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef7.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef7}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview7(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_7",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName7(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview8}
+                            />
+
+                            {imageFileName8 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName8}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef8.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef8}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview8(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_8",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName8(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
+
+                        <div className="flex flex-col justify-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 sm:max-w-xs">
+                          <div className="flex flex-col mb-auto text-center items-center justify-center gap-2 my-4">
+                            <img
+                              className="h-48 w-48"
+                              alt="Product Image"
+                              src={imagePreview9}
+                            />
+
+                            {imageFileName9 && (
+                              <p className="text-blue-500">
+                                File Name: {imageFileName9}
+                              </p>
+                            )}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            onClick={() => {
+                              // Trigger the click event on the file input when the button is clicked
+                              fileInputRef9.current.click();
+                            }}
+                          >
+                            <CloudArrowUpIcon
+                              className="h-6 w-6 mr-2 shrink-0"
+                              aria-hidden="true"
+                            />
+                            Upload Product Image
+                          </button>
+
+                          <input
+                            ref={fileInputRef9}
+                            name="image_file"
+                            accept="image/*"
+                            id="contained-button-file"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              const fileReader = new FileReader();
+                              fileReader.onload = () => {
+                                if (fileReader.readyState === 2) {
+                                  setImagePreview9(fileReader.result);
+                                  setFieldValue(
+                                    "image_file_9",
+                                    e.target.files[0]
+                                  );
+                                  setImageFileName9(e.target.files[0].name);
+                                }
+                              };
+                              fileReader.readAsDataURL(e.target.files[0]);
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
 

@@ -1,11 +1,22 @@
-import { HomeIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import {
+  BuildingStorefrontIcon,
+  ClipboardIcon,
+  NoSymbolIcon,
+  ReceiptRefundIcon,
+  ShoppingBagIcon,
+  BanknotesIcon,
+  WalletIcon,
+  CreditCardIcon,
+  HomeIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/20/solid";
 import { format } from "date-fns";
 import Link from "next/link";
 import Modal from "../Modal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const SellerProductsMain = ({ products, seller }) => {
+const SellerInventoryMain = ({ products, seller }) => {
   const router = useRouter();
   const [showUnverifiedModal, setShowUnverifiedModal] = useState(false);
 
@@ -16,6 +27,24 @@ const SellerProductsMain = ({ products, seller }) => {
   const runAccountDetails = () => {
     router.push("/seller/account-details");
   };
+
+  const dashboard = [
+    {
+      name: "Most Ordered Product",
+      title: 0,
+      icon: ShoppingBagIcon,
+    },
+    {
+      name: "Most Returned Product",
+      title: 0,
+      icon: ReceiptRefundIcon,
+    },
+    {
+      name: "Product Needs Restock",
+      title: 0,
+      icon: NoSymbolIcon,
+    },
+  ];
 
   return (
     <>
@@ -60,35 +89,67 @@ const SellerProductsMain = ({ products, seller }) => {
                 />
               </span>
 
-              <span className="font-semibold">My Products</span>
+              <span className="font-semibold">Inventory Management</span>
             </div>
           </header>
+
+          <div className="px-8 py-4">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              Inventory Management
+            </h1>
+            <p className="mt-2 text-sm text-gray-700">
+              This is the inventory management of your seller centre account.
+            </p>
+          </div>
+
+          {/* Dashboard List */}
+          <ul
+            role="list"
+            className="grid p-8 grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {dashboard.map((item) => (
+              <li
+                key={item.name}
+                className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow"
+              >
+                <div className="flex w-full items-center justify-between space-x-6 p-6">
+                  <div className="flex-1 truncate">
+                    <div className="flex items-center space-x-3">
+                      <h3 className="text-lg font-medium text-gray-900 whitespace-normal">
+                        {item.name}
+                      </h3>
+                    </div>
+                    <p className="mt-1 truncate text-md text-gray-500">
+                      {item.title}
+                    </p>
+                  </div>
+                  <item.icon
+                    className="h-8 w-8 shrink-0 text-gray-900"
+                    aria-hidden="true"
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
 
           {/* Products List */}
           <div>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
-              <div className="sm:flex sm:items-center">
-                <div className="sm:flex-auto">
-                  <h1 className="text-base font-semibold leading-6 text-gray-900">
-                    Products
-                  </h1>
-                  <p className="mt-2 text-sm text-gray-700">
-                    A list of all the products in your seller centre account.
-                  </p>
-                </div>
-                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+              <div className="sm:flex sm:flex-end">
+                <div className="sm:flex-auto"></div>
+                <div className="mt-4 sm:mt-0 sm:flex-none">
                   <button
                     type="button"
                     onClick={() => {
                       if (!Boolean(seller.contact_number_verified_at)) {
                         setShowUnverifiedModal(true);
                       } else {
-                        router.push("/seller/my-products/add");
+                        router.push("/seller/inventory-management/add");
                       }
                     }}
                     className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
-                    Add a product
+                    Add stocks
                   </button>
                 </div>
               </div>
@@ -100,47 +161,47 @@ const SellerProductsMain = ({ products, seller }) => {
                     <tr>
                       <th
                         scope="col"
-                        className="relative isolate py-3.5 pr-3 text-sm font-semibold text-gray-900"
+                        className="relative pl-3 isolate py-3.5 pr-3 text-sm font-semibold text-gray-900"
                       >
-                        Product Image
+                        Product Name
                         <div className="absolute inset-y-0 right-full -z-10 w-screen border-b border-b-gray-200" />
                         <div className="absolute inset-y-0 left-0 -z-10 w-screen border-b border-b-gray-200" />
                       </th>
                       <th
                         scope="col"
-                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
                       >
-                        Product Name
+                        Description
                       </th>
                       <th
                         scope="col"
                         className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
                       >
-                        Price
+                        Unit Price
                       </th>
                       <th
                         scope="col"
                         className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
                       >
-                        Shop's Name
+                        Quantity
                       </th>
                       <th
                         scope="col"
                         className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
                       >
-                        Product Status
+                        Inventory Value
+                      </th>
+                      <th
+                        scope="col"
+                        className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                      >
+                        Category
                       </th>
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Action<span className="sr-only">Edit</span>
                       </th>
                     </tr>
                   </thead>
@@ -162,21 +223,13 @@ const SellerProductsMain = ({ products, seller }) => {
 
                       return (
                         <tr key={product.id}>
-                          <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm sm:pl-0">
-                            <div className="flex items-center">
-                              <div className="h-24 w-24 flex-shrink-0">
-                                <img
-                                  className="h-24 w-24 rounded-md"
-                                  src={product.image_file}
-                                  alt="Product Image"
-                                />
-                              </div>
-                            </div>
-                          </td>
                           <td className="relative py-4 px-3 text-sm font-medium text-gray-900">
                             {product.name}
                             <div className="absolute bottom-0 right-full h-px w-screen bg-gray-100" />
                             <div className="absolute bottom-0 left-0 h-px w-screen bg-gray-100" />
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {product.description}
                           </td>
                           <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                             ₱
@@ -185,46 +238,23 @@ const SellerProductsMain = ({ products, seller }) => {
                             })}
                           </td>
                           <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                            {product.shop.name}
+                            {product.quantity ?? 0}{" "}
+                            {product.quantity ? "pcs" : "pc"}
                           </td>
-                          <td className="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">
-                            {product.is_active === 1 && (
-                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-700">
-                                <svg
-                                  className="h-1.5 w-1.5 fill-green-500"
-                                  viewBox="0 0 6 6"
-                                  aria-hidden="true"
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Activated
-                              </span>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            ₱
+                            {(product.price * product.quantity).toLocaleString(
+                              "en-US",
+                              {
+                                minimumFractionDigits: 2,
+                              }
                             )}
-
-                            {product.is_active === 0 && (
-                              <span className="inline-flex items-center gap-x-1.5 rounded-full bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-700">
-                                <svg
-                                  className="h-1.5 w-1.5 fill-red-500"
-                                  viewBox="0 0 6 6"
-                                  aria-hidden="true"
-                                >
-                                  <circle cx={3} cy={3} r={3} />
-                                </svg>
-                                Deactivated
-                              </span>
-                            )}
+                          </td>
+                          <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
+                            {product.category.title}
                           </td>
                           <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {createdAt}
-                          </td>
-                          <td className="relative py-4  text-center text-sm font-medium">
-                            <Link
-                              href={`/seller/my-products/edit/${product.slug}`}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit
-                              <span className="sr-only">, {product.name}</span>
-                            </Link>
                           </td>
                         </tr>
                       );
@@ -240,4 +270,4 @@ const SellerProductsMain = ({ products, seller }) => {
   );
 };
 
-export default SellerProductsMain;
+export default SellerInventoryMain;

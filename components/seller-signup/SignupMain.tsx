@@ -41,11 +41,11 @@ const SignupMain = () => {
     contact_number: "",
     gender: "",
     birth_date: null,
-    region: "",
-    province: "",
-    city: "",
+    region: "Region IV-A (CALABARZON)",
+    province: "Laguna",
+    city: "Cabuyao City",
     barangay: "",
-    zip_code: "",
+    zip_code: "4025",
     street_address: "",
     password: "",
     confirm_password: "",
@@ -381,9 +381,6 @@ const SignupMain = () => {
                               : " ring-gray-300 focus:ring-indigo-600"
                           } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                         >
-                          <option value="" hidden>
-                            Select Region
-                          </option>
                           <option value={regionData}>{regionData}</option>
                         </select>
                         {touched.region && errors.region && (
@@ -415,9 +412,6 @@ const SignupMain = () => {
                               : " ring-gray-300 focus:ring-indigo-600"
                           } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                         >
-                          <option value="" hidden>
-                            Select Province
-                          </option>
                           <option value={provinceData?.province_name}>
                             {provinceData?.province_name}
                           </option>
@@ -453,9 +447,6 @@ const SignupMain = () => {
                               : " ring-gray-300 focus:ring-indigo-600"
                           } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
                         >
-                          <option value="" hidden>
-                            Select City
-                          </option>
                           <option value={cityData?.city_name}>
                             {cityData?.city_name}
                           </option>

@@ -15,10 +15,16 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
   const [updateOrder, { isLoading: updateLoading }] = useUpdateOrderMutation();
   const [pendingOrderDetails, setPendingOrderDetails] = useState({});
   const [showPackedStatus, setShowPackedStatus] = useState(false);
+  const [showShippedStatus, setShowShippedStatus] = useState(false);
+  const [showForDeliveryStatus, setShowForDeliveryStatus] = useState(false);
+  const [showDeliveredStatus, setShowDeliveredStatus] = useState(false);
 
   const runCloseModal = () => {
     setPendingOrderDetails({});
     setShowPackedStatus(false);
+    setShowShippedStatus(false);
+    setShowForDeliveryStatus(false);
+    setShowDeliveredStatus(false);
   };
 
   const runPackedFunc = () => {
@@ -26,6 +32,33 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
       .unwrap()
       .then((payload) => {
         toast.success("Order Packed Successfully");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const runShippedFunc = () => {
+    updateOrder(pendingOrderDetails)
+      .unwrap()
+      .then((payload) => {
+        toast.success("Order Shipped Successfully");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const runForDeliveryFunc = () => {
+    updateOrder(pendingOrderDetails)
+      .unwrap()
+      .then((payload) => {
+        toast.success("Order For Delivery Successfully");
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const runDeliveredFunc = () => {
+    updateOrder(pendingOrderDetails)
+      .unwrap()
+      .then((payload) => {
+        toast.success("Order Delivered Successfully");
       })
       .catch((error) => console.log(error));
   };
@@ -42,6 +75,42 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
         closeModal={runCloseModal}
         leftBtnFunc={runCloseModal}
         rightBtnFunc={runPackedFunc}
+      />
+
+      <Modal
+        title={`Are you sure that this order is already shipped?`}
+        description={`Please double check it first because this action is irreversible.`}
+        status="failed"
+        open={showShippedStatus}
+        leftBtnTitle="Back"
+        rightBtnTitle="Continue"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runShippedFunc}
+      />
+
+      <Modal
+        title={`Are you sure that this order is already for delivery?`}
+        description={`Please double check it first because this action is irreversible.`}
+        status="failed"
+        open={showForDeliveryStatus}
+        leftBtnTitle="Back"
+        rightBtnTitle="Continue"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runForDeliveryFunc}
+      />
+
+      <Modal
+        title={`Are you sure that this order is already delivered?`}
+        description={`Please double check it first because this action is irreversible.`}
+        status="failed"
+        open={showDeliveredStatus}
+        leftBtnTitle="Back"
+        rightBtnTitle="Continue"
+        closeModal={runCloseModal}
+        leftBtnFunc={runCloseModal}
+        rightBtnFunc={runDeliveredFunc}
       />
 
       <div className="xl:pl-72 bg-gray-100">
@@ -156,12 +225,12 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                         Status
                       </th>
 
-                      <th
+                      {/* <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Created At
-                      </th>
+                      </th> */}
 
                       <th
                         scope="col"
@@ -358,27 +427,82 @@ const SellerOrdersMain: React.FC<SellerOrdersMainProps> = ({ orders }) => {
                               </span>
                             )}
                           </td>
-                          <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                          {/* <td className="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                             {createdAt}
-                          </td>
+                          </td> */}
 
-                          <td className="relative py-4 text-center text-sm font-medium">
-                            <button
-                              onClick={() => {
-                                setPendingOrderDetails({
-                                  id: order.id,
-                                  purpose: "Seller Packed",
-                                  customer_id: order.customer.id,
-                                  product_id: order.product_id,
-                                  status: "Packed",
-                                });
-                                setShowPackedStatus(true);
-                              }}
-                              disabled={order.status !== "Processing"}
-                              className="text-white bg-blue-600 hover:bg-blue-700 p-2 rounded-lg mx-2 disabled:bg-blue-200"
-                            >
-                              Packed
-                            </button>
+                          <td className="relative py-4 text-center text-sm font-medium space-y-4">
+                            <div className="flex">
+                              <button
+                                onClick={() => {
+                                  setPendingOrderDetails({
+                                    id: order.id,
+                                    purpose: "Seller Packed",
+                                    customer_id: order.customer.id,
+                                    product_id: order.product_id,
+                                    status: "Packed",
+                                  });
+                                  setShowPackedStatus(true);
+                                }}
+                                disabled={order.status !== "Processing"}
+                                className="text-white bg-gray-600 hover:bg-gray-700 p-2 rounded-lg mx-2 disabled:bg-gray-200"
+                              >
+                                Packed
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setPendingOrderDetails({
+                                    id: order.id,
+                                    purpose: "Seller Shipped",
+                                    customer_id: order.customer.id,
+                                    product_id: order.product_id,
+                                    status: "Shipped",
+                                  });
+                                  setShowShippedStatus(true);
+                                }}
+                                disabled={order.status !== "Packed"}
+                                className="text-white bg-yellow-600 hover:bg-yellow-700 p-2 rounded-lg mx-2 disabled:bg-yellow-200"
+                              >
+                                Shipped
+                              </button>
+                            </div>
+
+                            <div className="flex">
+                              <button
+                                onClick={() => {
+                                  setPendingOrderDetails({
+                                    id: order.id,
+                                    purpose: "Seller For Delivery",
+                                    customer_id: order.customer.id,
+                                    product_id: order.product_id,
+                                    status: "Out For Delivery",
+                                  });
+                                  setShowForDeliveryStatus(true);
+                                }}
+                                disabled={order.status !== "Shipped"}
+                                className="text-white w-max bg-blue-600 hover:bg-blue-700 p-2 rounded-lg mx-2 disabled:bg-blue-200"
+                              >
+                                For Delivery
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  setPendingOrderDetails({
+                                    id: order.id,
+                                    purpose: "Seller Delivered",
+                                    customer_id: order.customer.id,
+                                    product_id: order.product_id,
+                                    status: "Delivered",
+                                  });
+                                  setShowDeliveredStatus(true);
+                                }}
+                                disabled={order.status !== "Out For Delivery"}
+                                className="text-white bg-green-600 hover:bg-green-700 p-2 rounded-lg mx-2 disabled:bg-green-200"
+                              >
+                                Delivered
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       );

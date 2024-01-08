@@ -196,7 +196,108 @@ const CustomerProduct: React.FC<CustomerProductProps> = ({
             </div>
           </section>
         </div>
-        <div className="py-20 col-span-2">
+        {productData.image_file_2 && (
+          <div className="p-8 my-12 flex flex-col justify-center col-span-2 space-y-8 shadow-xl">
+            <h1 className="text-xl font-bold tracking-tight text-gray-900">
+              More Images
+            </h1>
+
+            <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+              <div className="overflow-hidden rounded-lg">
+                <img
+                  src={productData.image_file_2}
+                  alt={productData.image_name_2}
+                  className="max-w-3xl object-cover object-center"
+                />
+              </div>
+            </div>
+
+            {productData.image_file_3 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_3}
+                    alt={productData.image_name_3}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_4 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_4}
+                    alt={productData.image_name_4}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_5 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_5}
+                    alt={productData.image_name_5}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_6 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_6}
+                    alt={productData.image_name_6}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_7 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_7}
+                    alt={productData.image_name_7}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_8 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_8}
+                    alt={productData.image_name_8}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+
+            {productData.image_file_9 && (
+              <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 mx-auto">
+                <div className="overflow-hidden rounded-lg">
+                  <img
+                    src={productData.image_file_9}
+                    alt={productData.image_name_9}
+                    className="max-w-3xl object-cover object-center"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        <div className="p-8 col-span-2 shadow-xl">
           <CustomerReviews reviews={reviews} />
         </div>
       </div>

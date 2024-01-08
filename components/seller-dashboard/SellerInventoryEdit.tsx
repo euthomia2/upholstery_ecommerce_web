@@ -4,10 +4,10 @@ import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
-import { useCreateProductMutation } from "@/services/crud-product";
+import { useUpdateProductMutation } from "@/services/crud-product";
 import { CloudArrowUpIcon } from "@heroicons/react/20/solid";
 
-const SellerProductsAdd = ({ seller, categories, shops }) => {
+const SellerProductsEdit = ({ seller, categories, shops, product }) => {
   const fileInputRef = useRef(null);
   const fileInputRef2 = useRef(null);
   const fileInputRef3 = useRef(null);
@@ -18,62 +18,103 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
   const fileInputRef8 = useRef(null);
   const fileInputRef9 = useRef(null);
   const videoInputRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState("/assets/empty_product.jpg");
-  const [imageFileName, setImageFileName] = useState("");
+  const [imagePreview, setImagePreview] = useState(product.image_file);
+  const [imageFileName, setImageFileName] = useState(
+    product.image_name.replace(/^[^-]+-/, "")
+  );
+
   const [imagePreview2, setImagePreview2] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_2 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName2, setImageFileName2] = useState("");
+  const [imageFileName2, setImageFileName2] = useState(
+    product.image_name_2.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview3, setImagePreview3] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_3 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName3, setImageFileName3] = useState("");
+  const [imageFileName3, setImageFileName3] = useState(
+    product.image_name_3.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview4, setImagePreview4] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_4 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName4, setImageFileName4] = useState("");
+  const [imageFileName4, setImageFileName4] = useState(
+    product.image_name_4.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview5, setImagePreview5] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_5 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName5, setImageFileName5] = useState("");
+  const [imageFileName5, setImageFileName5] = useState(
+    product.image_name_5.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview6, setImagePreview6] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_6 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName6, setImageFileName6] = useState("");
+  const [imageFileName6, setImageFileName6] = useState(
+    product.image_name_6.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview7, setImagePreview7] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_7 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName7, setImageFileName7] = useState("");
+  const [imageFileName7, setImageFileName7] = useState(
+    product.image_name_7.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview8, setImagePreview8] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_8 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName8, setImageFileName8] = useState("");
+  const [imageFileName8, setImageFileName8] = useState(
+    product.image_name_8.replace(/^[^-]+-/, "") ?? ""
+  );
   const [imagePreview9, setImagePreview9] = useState(
-    "/assets/empty_product.jpg"
+    product?.image_file_9 ?? "/assets/empty_product.jpg"
   );
-  const [imageFileName9, setImageFileName9] = useState("");
-  const [videoPreview, setVideoPreview] = useState("/assets/empty_product.jpg");
-  const [videoFileName, setVideoFileName] = useState("");
-  const [createProduct, { isLoading }] = useCreateProductMutation();
+  const [imageFileName9, setImageFileName9] = useState(
+    product.image_name_9.replace(/^[^-]+-/, "") ?? ""
+  );
+
+  const [videoPreview, setVideoPreview] = useState(product?.video_file);
+  const [videoFileName, setVideoFileName] = useState(
+    product?.video_name?.replace(/^[^-]+-/, "")
+  );
+  const [updateProduct, { isLoading }] = useUpdateProductMutation();
   const router = useRouter();
+
   const initialValues = {
-    name: "",
-    description: "",
-    price: "",
-    quantity: "",
-    category_id: "",
-    shop_id: "",
-    image_file: "",
-    image_file_2: "",
-    image_file_3: "",
-    image_file_4: "",
-    image_file_5: "",
-    image_file_6: "",
-    image_file_7: "",
-    image_file_8: "",
-    image_file_9: "",
-    video_file: "",
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    quantity: product.quantity,
+    category_id: product.category.id,
+    shop_id: product.shop.id,
+    image_file: product.image_file,
+    image_file_2: product?.image_file_2,
+    image_file_3: product?.image_file_3,
+    image_file_4: product?.image_file_4,
+    image_file_5: product?.image_file_5,
+    image_file_6: product?.image_file_6,
+    image_file_7: product?.image_file_7,
+    image_file_8: product?.image_file_8,
+    image_file_9: product?.image_file_9,
+    video_file: product?.video_file,
   };
+
+  function findChangedProperties(oldObj, newObj, id: number | undefined) {
+    const changedProperties = {};
+
+    // Iterate through the keys of newObj
+    for (const key in newObj) {
+      if (Object.prototype.hasOwnProperty.call(newObj, key)) {
+        // Check if the key exists in oldObj and the values are different
+        if (oldObj[key] !== newObj[key]) {
+          changedProperties[key] = newObj[key];
+        }
+      }
+    }
+
+    changedProperties.id = id;
+
+    return changedProperties;
+  }
 
   return (
     <Formik
@@ -91,12 +132,18 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
         video_file: Yup.string().notRequired(),
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-        createProduct(values)
+        const updatedValues = findChangedProperties(
+          initialValues,
+          values,
+          product?.id
+        );
+
+        updateProduct(updatedValues)
           .unwrap()
           .then((payload) => {
             router.push("/seller/my-products");
 
-            toast.success("Added Product Successfully!");
+            toast.success("Updated Product Successfully!");
           })
           .catch((error) => setErrors({ name: error.data?.message }));
       }}
@@ -422,8 +469,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef2.current.click();
@@ -477,8 +523,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_2}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef3.current.click();
@@ -532,8 +577,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_3}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef4.current.click();
@@ -587,8 +631,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_4}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef5.current.click();
@@ -642,8 +685,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_5}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef6.current.click();
@@ -697,8 +739,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_6}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef7.current.click();
@@ -752,8 +793,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_7}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef8.current.click();
@@ -807,8 +847,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
 
                           <button
                             type="button"
-                            disabled={!values.image_file_8}
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef9.current.click();
@@ -932,7 +971,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
                   className="flex justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-200"
                   disabled={isSubmitting || !dirty || !isValid || isLoading}
                 >
-                  {isSubmitting || isLoading ? "Loading..." : "Save"}
+                  {isSubmitting || isLoading ? "Loading..." : "Update details"}
                 </button>
               </div>
             </form>
@@ -943,4 +982,4 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
   );
 };
 
-export default SellerProductsAdd;
+export default SellerProductsEdit;
