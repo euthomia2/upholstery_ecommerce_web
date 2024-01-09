@@ -687,7 +687,7 @@ const SignupMain = () => {
               </div>
 
               <p className="mt-10 text-center text-sm text-gray-100">
-                Copyright © 2023 CCLDO, Inc.
+                Copyright © 2024 CCLDO, Inc.
               </p>
             </div>
           </div>
