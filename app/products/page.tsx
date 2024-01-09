@@ -32,7 +32,7 @@ export default function AccountSettingsPage() {
       );
     }
 
-    return productsData;
+    return productsData?.filter((el) => el.is_active === 1);
   }, [user, productsData, search]);
 
   useEffect(() => {
