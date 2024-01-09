@@ -27,49 +27,49 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
     product?.image_file_2 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName2, setImageFileName2] = useState(
-    product.image_name_2.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_2?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview3, setImagePreview3] = useState(
     product?.image_file_3 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName3, setImageFileName3] = useState(
-    product.image_name_3.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_3?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview4, setImagePreview4] = useState(
     product?.image_file_4 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName4, setImageFileName4] = useState(
-    product.image_name_4.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_4?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview5, setImagePreview5] = useState(
     product?.image_file_5 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName5, setImageFileName5] = useState(
-    product.image_name_5.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_5?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview6, setImagePreview6] = useState(
     product?.image_file_6 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName6, setImageFileName6] = useState(
-    product.image_name_6.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_6?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview7, setImagePreview7] = useState(
     product?.image_file_7 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName7, setImageFileName7] = useState(
-    product.image_name_7.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_7?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview8, setImagePreview8] = useState(
     product?.image_file_8 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName8, setImageFileName8] = useState(
-    product.image_name_8.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_8?.replace(/^[^-]+-/, "") ?? ""
   );
   const [imagePreview9, setImagePreview9] = useState(
     product?.image_file_9 ?? "/assets/empty_product.jpg"
   );
   const [imageFileName9, setImageFileName9] = useState(
-    product.image_name_9.replace(/^[^-]+-/, "") ?? ""
+    product?.image_name_9?.replace(/^[^-]+-/, "") ?? ""
   );
 
   const [videoPreview, setVideoPreview] = useState(product?.video_file);
@@ -437,7 +437,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef2.current.click();
@@ -491,7 +492,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_2}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef3.current.click();
@@ -545,7 +547,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_3}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef4.current.click();
@@ -599,7 +602,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_4}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef5.current.click();
@@ -653,7 +657,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_5}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef6.current.click();
@@ -707,7 +712,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_6}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef7.current.click();
@@ -761,7 +767,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_7}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef8.current.click();
@@ -815,7 +822,8 @@ const SellerProductsEdit = ({ seller, categories, shops, product }) => {
 
                           <button
                             type="button"
-                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold"
+                            disabled={!values.image_file_8}
+                            className="flex mt-2 justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold disabled:bg-indigo-300"
                             onClick={() => {
                               // Trigger the click event on the file input when the button is clicked
                               fileInputRef9.current.click();
