@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
             <Link
               href={`/products/${convertToSlug(product.category.title)}/${
                 product.shop.name
-              }/${convertToSlug(product.name)}`}
+              }/${product.slug}`}
             >
               <span className="absolute inset-0" />
               {product.name}
