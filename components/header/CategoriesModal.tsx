@@ -151,7 +151,6 @@ const CategoriesModal = () => {
                               className="mt-6 flex flex-col space-y-6"
                             >
                               {categoriesData?.map((item) => {
-                                console.log(item);
                                 return (
                                   <li key={item.name} className="flow-root">
                                     <a
