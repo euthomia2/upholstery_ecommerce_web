@@ -88,7 +88,7 @@ const OverviewFooter = () => {
 
         <div className="border-t border-gray-200 py-10">
           <p className="text-sm text-gray-500">
-            Copyright &copy; 2023 CCLDO E-Commerce, Inc.
+            Copyright &copy; 2024 CCLDO E-Commerce, Inc.
           </p>
         </div>
       </div>
