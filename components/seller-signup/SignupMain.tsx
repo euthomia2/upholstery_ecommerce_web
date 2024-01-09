@@ -368,26 +368,9 @@ const SignupMain = () => {
                         Region
                       </label>
                       <div className="mt-2">
-                        <select
-                          id="region"
-                          name="region"
-                          placeholder="Select Region"
-                          value={values.region}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          className={`${
-                            touched.region && errors.region
-                              ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                              : " ring-gray-300 focus:ring-indigo-600"
-                          } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                        >
-                          <option value={regionData}>{regionData}</option>
-                        </select>
-                        {touched.region && errors.region && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.region}
-                          </p>
-                        )}
+                        <div className="flex sm:max-w-md text-gray-900">
+                          <p>{regionData}</p>
+                        </div>
                       </div>
                     </div>
 
@@ -399,28 +382,9 @@ const SignupMain = () => {
                         Province
                       </label>
                       <div className="mt-2">
-                        <select
-                          id="province"
-                          name="province"
-                          placeholder="Select Province"
-                          value={values.province}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          className={`${
-                            touched.province && errors.province
-                              ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                              : " ring-gray-300 focus:ring-indigo-600"
-                          } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                        >
-                          <option value={provinceData?.province_name}>
-                            {provinceData?.province_name}
-                          </option>
-                        </select>
-                        {touched.province && errors.province && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.province}
-                          </p>
-                        )}
+                        <div className="flex sm:max-w-md text-gray-900">
+                          <p>{provinceData?.province_name}</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -434,28 +398,9 @@ const SignupMain = () => {
                         City
                       </label>
                       <div className="mt-2">
-                        <select
-                          id="city"
-                          name="city"
-                          placeholder="Select City"
-                          value={values.city}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          className={`${
-                            touched.city && errors.city
-                              ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                              : " ring-gray-300 focus:ring-indigo-600"
-                          } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                        >
-                          <option value={cityData?.city_name}>
-                            {cityData?.city_name}
-                          </option>
-                        </select>
-                        {touched.city && errors.city && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.city}
-                          </p>
-                        )}
+                        <div className="flex sm:max-w-md text-gray-900">
+                          <p>{cityData?.city_name}</p>
+                        </div>
                       </div>
                     </div>
 
@@ -509,19 +454,9 @@ const SignupMain = () => {
                         Zip Code
                       </label>
                       <div className="mt-2">
-                        <input
-                          type="text"
-                          id="zip_code"
-                          name="zip_code"
-                          value={values.zip_code}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          className={`${
-                            touched.zip_code && errors.zip_code
-                              ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                              : " ring-gray-300 focus:ring-indigo-600"
-                          } block px-3 w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                        />
+                        <div className="flex sm:max-w-md text-gray-900">
+                          <p>{values.zip_code}</p>
+                        </div>
                       </div>
                       {touched.zip_code && errors.zip_code && (
                         <p className="text-red-500 text-sm mt-2">
