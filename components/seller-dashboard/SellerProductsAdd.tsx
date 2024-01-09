@@ -62,7 +62,7 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
     price: "",
     quantity: "",
     category_id: "",
-    shop_id: "",
+    shop_id: shops.find((el) => el.is_active).id ?? shops[0].id,
     image_file: "",
     image_file_2: "",
     image_file_3: "",
@@ -303,34 +303,14 @@ const SellerProductsAdd = ({ seller, categories, shops }) => {
                         Shop
                       </label>
                       <div className="mt-2 sm:col-span-2 sm:mt-0">
-                        <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                          <select
-                            id="shop_id"
-                            name="shop_id"
-                            value={values.shop_id}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder="Select Category"
-                            className={`${
-                              touched.shop_id && errors.shop_id
-                                ? " border-red-500 ring-red-500 focus:ring-red-500 focus:border-0 "
-                                : " ring-gray-300 focus:ring-indigo-600"
-                            } block w-full border-0 text-gray-700 rounded-md py-1.5 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6`}
-                          >
-                            <option value="" hidden>
-                              Select Shop
-                            </option>
-
-                            {shops?.map((shop) => (
-                              <option value={shop.id}>{shop.name}</option>
-                            ))}
-                          </select>
-                        </div>
-                        {touched.shop_id && errors.shop_id && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.shop_id}
+                        <div className="flex rounded-md shadow-sm sm:max-w-md text-gray-900">
+                          <p>
+                            {
+                              shops?.find((shop) => shop.id === values.shop_id)
+                                .name
+                            }
                           </p>
-                        )}
+                        </div>
                       </div>
                     </div>
 
