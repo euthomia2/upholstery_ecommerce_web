@@ -44,7 +44,7 @@ export default function ProductPage() {
   const params = useParams();
   const { data: productData, isFetching: productFetching } =
     useGetProductBySlugAndShopQuery({
-      slug: convertToSlug(params.productSlug),
+      slug: params.productSlug,
       shop: params.shopName,
     });
   const { data: reviewsData, isFetching: reviewsFetching } =
