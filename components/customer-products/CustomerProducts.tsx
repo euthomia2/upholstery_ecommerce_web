@@ -35,6 +35,8 @@ const CustomerProducts: React.FC<CustomerProductsProps> = ({
     router.push("/customer/signup");
   };
 
+  console.log(productsData);
+
   return (
     <>
       <Modal
