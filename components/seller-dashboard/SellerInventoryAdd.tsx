@@ -151,7 +151,7 @@ const SellerInventoryAdd = ({ products, seller, categories, shops }) => {
 
               <div className="p-10 flex items-center justify-end gap-x-6">
                 <Link
-                  href="/seller/my-products"
+                  href="/seller/inventory-management"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
                   Cancel
