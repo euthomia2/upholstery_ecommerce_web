@@ -32,7 +32,7 @@ const HeroSection = () => {
                     </div>
                     <div className='h-64 w-44 overflow-hidden rounded-lg'>
                       <img
-                        src='https://www.furniturezone.co.nz/wp-content/uploads/2023/05/HOMESTEAD-DINING-CHAIR-760x684.webp'
+                        src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1916&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt=''
                         className='h-full w-full object-cover object-center'
                       />
